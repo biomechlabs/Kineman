@@ -3,13 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KINEMAN eğitim v1.5</title>
+    <title>KINEMAN eğitim (beta)</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <header class="navbar">
-        <h1>KINEMAN eğitim v1.5</h1>
+    <header class="navbar" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px;">
+        <div style="display: flex; align-items: center; gap: 30px;">
+            <h1 style="margin: 0;">KINEMAN eğitim (beta)</h1>
+            <div id="studentInfoDisplay" style="font-size: 0.85em; color: #ecf0f1; display: flex; flex-direction: column; gap: 3px; border-left: 2px solid #34495e; padding-left: 20px;">
+                <button id="btnOpenStudentModal" style="background: #27ae60; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold;">Öğrenci Bilgileri Gir</button>
+            </div>
+        </div>
         <div class="menu-buttons" id="mainMenu">
             <button class="active" data-target="module-vbt">Halter Hızı (VBT)</button>
             <button data-target="module-sprint">20m Sprint</button>
@@ -20,11 +25,24 @@
         </div>
     </header>
 
+    <div id="studentModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 400px; padding: 20px;">
+            <h3 style="margin-top:0; color:#2c3e50; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px;">Öğrenci Bilgileri</h3>
+            <label style="font-size: 0.9em; font-weight: bold;">Öğrenci No:</label>
+            <input type="text" id="stdNo" style="width:100%; margin-bottom:10px; padding:8px; border: 1px solid #bdc3c7; border-radius: 4px;">
+            <label style="font-size: 0.9em; font-weight: bold;">Adı Soyadı:</label>
+            <input type="text" id="stdName" style="width:100%; margin-bottom:10px; padding:8px; border: 1px solid #bdc3c7; border-radius: 4px;">
+            <label style="font-size: 0.9em; font-weight: bold;">E-posta Adresi:</label>
+            <input type="email" id="stdEmail" style="width:100%; margin-bottom:20px; padding:8px; border: 1px solid #bdc3c7; border-radius: 4px;">
+            <button id="btnSaveStudentInfo" style="background:#2980b9; color:white; border:none; padding:10px 15px; width:100%; cursor:pointer; font-weight:bold; border-radius:4px;">Bilgileri Gir</button>
+        </div>
+    </div>
+
     <main class="container">
         
         <section class="left-panel">
-            <div class="video-container" id="videoWrapper">
-                <p id="uploadText">Analiz edilecek videoyu seçin</p>
+            <div class="video-container" id="videoWrapper" style="position: relative; display: flex; align-items: center; justify-content: center; background-color: #000;">
+                <p id="uploadText" style="position: absolute; color: white; font-weight: bold; z-index: 10; pointer-events: none;">Analiz edilecek videoyu seçin</p>
                 <input type="file" id="videoUploader" accept="video/mp4,video/x-m4v,video/*" style="opacity: 0; position: absolute; width: 100%; height: 100%; cursor: pointer; z-index: 20;">
                 <video id="mainVideo" style="display: none; width: 100%; z-index: 1;"></video>
             </div>
@@ -53,7 +71,10 @@
         <section class="right-panel">
             
             <div id="module-vbt" class="module-content active">
-                <h2>Halter Hızı Analizi</h2>
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-bottom: 15px;">
+                    <h2 style="margin: 0; border: none; padding: 0;">Halter Hızı Analizi</h2>
+                    <button class="guide-btn" onclick="openGuide('vbt')">📖 Kılavuz</button>
+                </div>
                 <div class="data-group">
                     <h3 class="step-title">Aşama 1: Kalibrasyon <span class="tooltip-container">?<span class="tooltip-content">Piksel/metre dönüşümü yapabilmek için videodaki referans objesinin gerçek ölçüsünün sisteme tanıtıldığı mekansal kalibrasyon aşamasıdır.</span></span></h3>
                     <button id="btnCalibrate" class="action-btn">🎯 Kalibrasyon İçin Tıkla</button>
@@ -98,7 +119,7 @@
 
                 <div id="set2" class="tab-content">
                     <div class="data-group">
-                        <h3 class="step-title">Aşama 2: Kinematik Veri Toplama <span class="tooltip-container">?<span class="tooltip-content">Halter kaldırışının konsantrik fazını analiz etmek için hareketin başlama ve bitiş anlarının işaretlendiği aşamadır.</span></span></h3>
+                        <h3 class="step-title">Aşama 2: Kinematik Veri Toplama</h3>
                         <label>Kaldırılan Ağırlık (kg):</label>
                         <input type="number" class="sync-weight" data-set="2" id="weight_2" placeholder="Bu sette kaldırılan toplam ağırlık (kg)">
                         <button id="btnVbtMark2" class="action-btn" style="background-color: #2980b9; margin-top: 10px;">⏱️ Tıklama (İşaretleme) Başlat</button>
@@ -120,7 +141,7 @@
 
                 <div id="set3" class="tab-content">
                     <div class="data-group">
-                        <h3 class="step-title">Aşama 2: Kinematik Veri Toplama <span class="tooltip-container">?<span class="tooltip-content">Halter kaldırışının konsantrik fazını analiz etmek için hareketin başlama ve bitiş anlarının işaretlendiği aşamadır.</span></span></h3>
+                        <h3 class="step-title">Aşama 2: Kinematik Veri Toplama</h3>
                         <label>Kaldırılan Ağırlık (kg):</label>
                         <input type="number" class="sync-weight" data-set="3" id="weight_3" placeholder="Bu sette kaldırılan toplam ağırlık (kg)">
                         <button id="btnVbtMark3" class="action-btn" style="background-color: #2980b9; margin-top: 10px;">⏱️ Tıklama (İşaretleme) Başlat</button>
@@ -149,6 +170,11 @@
                         <tr><td>3 (%80)</td><td id="sumW_3">-</td><td id="sumS_3">-</td></tr>
                     </table>
                     <div class="instruction-box">
+                        <div style="font-size: 0.85em; color: #2c3e50; background: #e8f8f5; padding: 10px; border-left: 4px solid #1abc9c; margin-bottom: 15px;">
+                            <strong>💡 MVT (Minimum Hız Eşiği) Değerleri:</strong><br>
+                            • Bench Press: 0.15 m/sn &nbsp;|&nbsp; • Squat: 0.30 m/sn<br>
+                            • Deadlift: 0.30 m/sn &nbsp;|&nbsp; • Overhead Press: 0.20 m/sn
+                        </div>
                         <label style="font-weight:bold;">Öğrenci Hesabı: Eğimi girin</label>
                         <input type="number" id="inputSlope" placeholder="Formül: (Hız3 - Hız1) / (Yük3 - Yük1)">
                         
@@ -157,14 +183,6 @@
                         
                         <label style="font-weight:bold; margin-top:10px; display:block;">Öğrenci Hesabı: 1TM değerini girin</label>
                         <input type="number" id="input1RM" placeholder="Formül: (MVT - Kesişim) / Eğim">
-                        <div style="font-size: 0.85em; color: #2c3e50; background: #e8f8f5; padding: 10px; border-left: 4px solid #1abc9c; margin-bottom: 15px;">
-                            <strong>💡 MVT (Minimum Hız Eşiği) Değerleri:</strong><br>
-                            • Bench Press: 0.15 m/sn &nbsp;|&nbsp; • Squat: 0.30 m/sn<br>
-                            • Deadlift: 0.30 m/sn &nbsp;|&nbsp; • Overhead Press: 0.20 m/sn
-                        </div>
-                        
-                        <label style="font-weight:bold;">Öğrenci Hesabı: Eğimi girin</label>
-                        <input type="number" id="inputSlope" placeholder="Formül: (Hız3 - Hız1) / (Yük3 - Yük1)">
                     </div>
                     <div style="display: flex; gap: 10px; margin-top: 15px;">
                         <button class="print-btn" id="btnPrintReportVbt">🖨️ Raporu Oluştur</button>
@@ -174,7 +192,10 @@
             </div>
 
             <div id="module-sprint" class="module-content">
-                <h2>20m Sprint (İvmelenme) Analizi</h2>
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-bottom: 15px;">
+                    <h2 style="margin: 0; border: none; padding: 0;">20m Sprint (İvmelenme) Analizi</h2>
+                    <button class="guide-btn" onclick="openGuide('sprint')">📖 Kılavuz</button>
+                </div>
                 <div class="data-group">
                     <h3 class="step-title">Aşama 1: Kalibrasyon <span class="tooltip-container">?<span class="tooltip-content">Sprint koridorundaki 5. ve 10. metre hunileri referans alınarak piksel boyutlarının metreye dönüştürüldüğü aşamadır.</span></span></h3>
                     <button id="btnSprintCalibrate" class="action-btn">🎯 Kalibrasyon İçin Tıkla (5m ve 10m Hunisi)</button>
@@ -218,8 +239,7 @@
                             <thead>
                                 <tr><th>Adım</th><th>Evre Seçimi</th><th>Uzunluk (m)</th><th>Temas (sn)</th></tr>
                             </thead>
-                            <tbody id="sprintAutoSummaryBody">
-                                </tbody>
+                            <tbody id="sprintAutoSummaryBody"></tbody>
                         </table>
                     </div>
 
@@ -258,7 +278,10 @@
             </div>
             
             <div id="module-fms" class="module-content">
-                <h2>FMS: Overhead Squat Analizi</h2>
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-bottom: 15px;">
+                    <h2 style="margin: 0; border: none; padding: 0;">FMS: Overhead Squat Analizi</h2>
+                    <button class="guide-btn" onclick="openGuide('fms')">📖 Kılavuz</button>
+                </div>
                 <div class="tabs">
                     <button class="mod-tab-btn ohs-tab-btn active" data-target="ohs-side">Yandan Görünüm Analizi</button>
                     <button class="mod-tab-btn ohs-tab-btn" data-target="ohs-front">Önden Görünüm Analizi</button>
@@ -375,13 +398,6 @@
                         FMS Skoru: <span id="final_fms_score_display" style="color: #c0392b; font-size: 1.5em;">-</span>
                     </div>
                     
-                    <div style="margin-top: 15px; font-size: 0.85em; color: #7f8c8d; line-height: 1.4;">
-                        * 3 PUAN (Mükemmel Mekanik): Tüm alt skorlar 100 Puan olmalıdır.<br>
-                        * 2 PUAN (Kompansasyonlu Mekanik): Hiçbir alt skor 0 Puan olmamalıdır. En az bir alt skor 70 Puan ise bu puan verilir.<br>
-                        * 1 PUAN (Disfonksiyonel Mekanik): Alt skorlardan herhangi biri 0 Puan ise hareket doğrudan 1 puan olarak değerlendirilir.<br>
-                        * 0 PUAN (Ağrılı Mekanik): Sadece sporcu hareket sırasında ağrı belirtirse manuel olarak verilir.
-                    </div>
-
                     <div style="display: flex; gap: 10px; margin-top: 20px;">
                         <button class="print-btn" id="btnOhsPrint">🖨️ Raporu Oluştur</button>
                         <button class="submit-btn" id="btnOhsSubmit">📤 Değerlendirme Dosyasını Gönder</button>
@@ -390,7 +406,10 @@
             </div>
 
             <div id="module-posture" class="module-content">
-                <h2>Statik Postür Analizi</h2>
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-bottom: 15px;">
+                    <h2 style="margin: 0; border: none; padding: 0;">Statik Postür Analizi</h2>
+                    <button class="guide-btn" onclick="openGuide('posture')">📖 Kılavuz</button>
+                </div>
                 <div class="tabs">
                     <button class="mod-tab-btn pos-tab-btn active" data-target="pos-side">Yandan Görünüm Analizi</button>
                     <button class="mod-tab-btn pos-tab-btn" data-target="pos-front">Önden Görünüm Analizi</button>
@@ -512,13 +531,6 @@
                         Statik Postür Puanı: <span id="final_posture_score_display" style="color: #c0392b; font-size: 1.5em;">-</span>
                     </div>
 
-                    <div style="margin-top: 15px; font-size: 0.85em; color: #7f8c8d; line-height: 1.4;">
-                        * 3 PUAN (Mükemmel Postür): Tüm alt skorlar 100 Puan olmalıdır.<br>
-                        * 2 PUAN (Hafif Kusurlu Postür): Hiçbir alt skor 0 Puan olmamalıdır. En az bir alt skor 70 Puan ise nihai olarak bu puan verilir.<br>
-                        * 1 PUAN (Disfonksiyonel / Ağır Kusurlu Postür): Alt skorlardan herhangi biri 0 Puan ise postür acil düzeltilmesi gereken kategoride değerlendirilir ve nihai skor doğrudan 1 olur.<br>
-                        * 0 PUAN (Ağrılı Durum): Sadece sporcu değerlendirme sırasında ağrı belirtirse manuel olarak verilir.
-                    </div>
-
                     <div style="display: flex; gap: 10px; margin-top: 20px;">
                         <button class="print-btn" id="btnPosPrint">🖨️ Raporu Oluştur</button>
                         <button class="submit-btn" id="btnPosSubmit">📤 Değerlendirme Dosyasını Gönder</button>
@@ -527,7 +539,10 @@
             </div>
 
             <div id="module-jump" class="module-content">
-                <h2>Dikey Sıçrama (SJ / CMJ) Yükseklik ve Güç Analizi</h2>
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-bottom: 15px;">
+                    <h2 style="margin: 0; border: none; padding: 0;">Dikey Sıçrama (SJ / CMJ) Yükseklik ve Güç Analizi</h2>
+                    <button class="guide-btn" onclick="openGuide('jump')">📖 Kılavuz</button>
+                </div>
                 
                 <div class="data-group">
                     <h3 class="step-title">Aşama 1: Sporcu Verisi <span class="tooltip-container">?<span class="tooltip-content">Zirve güç hesabında kullanılmak üzere sporcunun kütlesinin sisteme girildiği aşamadır.</span></span></h3>
@@ -573,7 +588,10 @@
             </div>
 
             <div id="module-agility" class="module-content">
-                <h2>505 Çeviklik ve Yön Değiştirme Analizi</h2>
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-bottom: 15px;">
+                    <h2 style="margin: 0; border: none; padding: 0;">505 Çeviklik ve Yön Değiştirme Analizi</h2>
+                    <button class="guide-btn" onclick="openGuide('agility')">📖 Kılavuz</button>
+                </div>
                 
                 <div class="tabs">
                     <button class="mod-tab-btn agility-tab-btn active" data-target="agility-right">Sağ Bacak Dönüşü (Video 1)</button>
@@ -670,11 +688,6 @@
 
                     <div style="margin-top: 20px; text-align: center; font-size: 1.2em; font-weight: bold; background: #e8f8f5; padding: 15px; border-radius: 5px; border: 2px solid #1abc9c;">
                         Asimetri Değerlendirmesi: <span id="final_agility_score_display" style="color: #c0392b; font-size: 1.1em;">-</span>
-                    </div>
-
-                    <div style="margin-top: 15px; font-size: 0.85em; color: #7f8c8d; line-height: 1.4;">
-                        * Dengeli (Asimetri Yok): İki bacağın Toplam Süresi veya Temas Süresi arasındaki mutlak fark <= %10.<br>
-                        * Kuvvetlendirme Gerekli (Dengesiz): İki bacak arasındaki süre farkı > %10. Daha yavaş olan bacağa tek taraflı (unilateral) yüklenilmelidir.
                     </div>
                     
                     <div style="display: flex; gap: 10px; margin-top: 20px;">

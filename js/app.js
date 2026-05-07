@@ -1,3 +1,75 @@
+// --- ÖĞRENCİ BİLGİLERİ VE KILAVUZ KONTROLLERİ ---
+window.studentData = { no: '', name: '', email: '' };
+
+document.getElementById('btnOpenStudentModal').addEventListener('click', () => {
+    document.getElementById('studentModal').style.display = 'flex';
+});
+
+document.getElementById('btnSaveStudentInfo').addEventListener('click', () => {
+    window.studentData.no = document.getElementById('stdNo').value || '-';
+    window.studentData.name = document.getElementById('stdName').value || '-';
+    window.studentData.email = document.getElementById('stdEmail').value || '-';
+    
+    document.getElementById('studentModal').style.display = 'none';
+    
+    document.getElementById('studentInfoDisplay').innerHTML = `
+        <strong style="color:#2ecc71; font-size: 1.1em;">${window.studentData.name}</strong>
+        <span>No: ${window.studentData.no}</span>
+        <span>E-posta: ${window.studentData.email}</span>
+        <button id="btnEditStudentModal" style="background: #95a5a6; color: white; border: none; padding: 2px 5px; border-radius: 4px; cursor: pointer; font-size: 0.8em; margin-top: 3px; width: fit-content;">Bilgileri Düzenle</button>
+    `;
+    
+    document.getElementById('btnEditStudentModal').addEventListener('click', () => {
+        document.getElementById('studentModal').style.display = 'flex';
+    });
+});
+
+window.openGuide = function(module) {
+    const guides = {
+        'vbt': `<h2>Halter Hızı (VBT) Analizi Laboratuvar Kılavuzu</h2>
+            <p>Hız Temelli Antrenman (Velocity Based Training - VBT) analizi, sporcunun farklı ağırlık (yük) seviyelerindeki konsantrik kaldırış hızını hesaplayarak, doğrusal regresyon mantığıyla maksimal kuvvetini (1TM) tahmin etmeye yarayan kinematik bir ölçüm protokolüdür.</p>
+            <h3>Ön Hazırlık ve Video Çekim Standartları</h3><ul><li><strong>Kamera Açısı:</strong> Kamera yere sabitlenmeli ve harekete tam yandan (sagittal düzlem), 90 derecelik dik bir açıyla bakmalıdır.</li><li><strong>Referans Objesi:</strong> Videonun çekildiği düzlemde, barın hareket hattı ile aynı derinlikte fiziksel uzunluğu bilinen bir obje bulunmalıdır.</li></ul>
+            <h3>Aşama 1: Sistemsel Kalibrasyon</h3><ol><li>Videoyu yükleyin.</li><li><strong>"Kalibrasyon İçin Tıkla"</strong> butonuna basın.</li><li>Referans objenin üst ve alt noktasına tıklayın.</li><li>Gerçek uzunluğu girin.</li><li><code>Gerçek Uzunluk / |Y_üst - Y_alt|</code> formülüyle katsayıyı hesaplayın.</li></ol>
+            <h3>Aşama 2: Kinematik Veri Toplama</h3><ol><li>Kaldırılan ağırlığı girin.</li><li>Konsantrik fazın başladığı anı bulup <strong>"Tıklama Başlat"</strong> diyerek bara tıklayın.</li><li>Bitiş anına ilerleyip tekrar tıklayın.</li><li>Formülleri kullanarak Süre, Mesafe ve Ortalama Hızı hesaplayın.</li></ol>
+            <h3>Aşama 3: 1TM Kestirimi</h3><ol><li>Regresyon Eğimini <code>(Hız3 - Hız1) / (Yük3 - Yük1)</code> ile hesaplayın.</li><li>Kesişimi <code>Hız1 - (Eğim x Yük1)</code> ile hesaplayın.</li><li>MVT'yi seçip 1TM'yi <code>(MVT - Kesişim) / Eğim</code> formülüyle bulun.</li></ol>`,
+        
+        'sprint': `<h2>20m Sprint (İvmelenme) Analizi Laboratuvar Kılavuzu</h2>
+            <p>Sporcunun kalkış, ivmelenme, geçiş ve maksimum hız evrelerindeki kinematik parametrelerini (adım uzunluğu, temas süresi, hız ve ivme) hesaplamak için kullanılır.</p>
+            <h3>Kamera Yerleşimi</h3><p>20 metrelik alanı yandan dik görecek, 20m'nin 0, 5, 10, 15 ve 20. metrelerine huni yerleştirilecek, kalibrasyon 5. ve 10. metrelerdeki hunilerle yapılacaktır.</p>
+            <h3>Aşama 1: Kalibrasyon</h3><ol><li>Videoyu yükleyin ve <strong>"Kalibrasyon İçin Tıkla"</strong>ya basın.</li><li>5. ve 10. metre hunilerine tıklayın.</li><li><code>5 / |X_10m - X_5m|</code> formülüyle katsayıyı hesaplayın.</li></ol>
+            <h3>Aşama 2: Süre Analizi</h3><ol><li>0m kalkış anını işaretleyin.</li><li>Sırasıyla 5, 10, 15 ve 20. metre geçişlerini işaretleyin.</li></ol>
+            <h3>Aşama 3 & 4: Adım Döngüleri ve Hesaplamalar</h3><ol><li><strong>"Yeni Adım Döngüsü Ekle"</strong>ye basarak adımın yerden kesilme ve yere temas anlarını tıklayın.</li><li>Temas ve uzunluğu hesaplayın.</li><li>Evre ortalamalarını bularak matrise girin.</li></ol>`,
+        
+        'fms': `<h2>FMS: Overhead Squat Analizi Laboratuvar Kılavuzu</h2>
+            <p>Sporcunun sagittal ve frontal düzlemlerdeki bilateral simetrisini ve mekaniğini değerlendiren ölçüm protokolüdür.</p>
+            <h3>Aşama 1: Yandan Görünüm</h3><ol><li>En alt noktada Omuz, Kalça, Diz ve Bilek noktalarına tıklayın.</li><li><strong>Derinlik:</strong> Femur eğimi yatay açısını hesaplayıp puan verin (Kalça dizin altındaysa 100 Puan).</li><li><strong>Paralellik:</strong> Gövde ve Tibia açıları farkını bulun (Fark <= 5° ise 100 Puan).</li></ol>
+            <h3>Aşama 2: Önden Görünüm</h3><ol><li>Kalça (ASIS), Diz Kapağı ve Ayak Bileği orta noktasına tıklayın.</li><li><strong>Hizalanma:</strong> Uyluk ve Kaval kemiği dikey açıları sapmasını bulun (Sapma <= 5° ise 100 Puan).</li></ol>`,
+        
+        'posture': `<h2>Statik Postür Analizi Laboratuvar Kılavuzu</h2>
+            <p>Nötral duruştaki omurga eğriliklerini ve vücut asimetrilerini açısal olarak tespit eden klinik protokoldür.</p>
+            <h3>Aşama 1: Yandan Görünüm</h3><ol><li><strong>CVA:</strong> C7 Omuru ve Kulağa (Tragus) tıklayarak açıyı bulun (Açı >= 50° ise 100 Puan).</li><li><strong>Şakül Çizgisi:</strong> Bilek ve Omuza tıklayıp dikey hizalamayı bulun (Açı >= 87° ise 100 Puan).</li></ol>
+            <h3>Aşama 2: Önden Görünüm</h3><ol><li><strong>Omuz Asimetrisi:</strong> Sağ ve Sol omuz noktalarını işaretleyin (Sapma <= 2° ise 100 Puan).</li><li><strong>Pelvis Asimetrisi:</strong> Sağ ve Sol kalça çıkıntılarını işaretleyin.</li></ol>`,
+        
+        'jump': `<h2>Dikey Sıçrama (SJ/CMJ) Analizi Laboratuvar Kılavuzu</h2>
+            <p>Sıçrama yüksekliği ve patlayıcı güç, uçuş süresi üzerinden hesaplanır.</p>
+            <h3>Uygulama</h3><ol><li>Sporcunun kütlesini girin.</li><li>Kalkış anını ve İniş anını işaretleyin.</li><li><code>İniş Zamanı - Kalkış Zamanı</code> ile uçuş süresini bulun.</li><li><code>[9.81 x (Uçuş Süresi²)] / 8</code> formülüyle metre cinsinden yüksekliği bulun.</li><li>Sayers denklemi <code>(60.7 x Yükseklik[cm]) + (45.3 x Ağırlık[kg]) - 2055</code> ile zirve gücü hesaplayın.</li></ol>`,
+        
+        'agility': `<h2>505 Çeviklik ve Yön Değiştirme Analizi Laboratuvar Kılavuzu</h2>
+            <p>Sporcunun hızlanma, sert frenleme ve 180 derece yön değiştirme (COD) mekaniğini ve sağ/sol bacak arası kuvvet asimetrilerini inceler.</p>
+            <h3>Uygulama</h3><ol><li>Sağ ayak dönüş videosunu yükleyin.</li><li>10m giriş ve çıkışını işaretleyip Toplam Süreyi hesaplayın.</li><li>Frenleme (Dönüş) ayağının ilk temas ve yerden kesilme anlarını işaretleyip Dönüş Temas Süresini hesaplayın.</li><li>Sol ayak için tekrarlayın.</li><li>Sistem mutlak farkı hesaplayarak %10 asimetri eşiğine göre "Dengeli" veya "Kuvvetlendirme Gerekli" kararını verecektir.</li></ol>`
+    };
+
+    const guideContent = `
+        <html><head><title>Laboratuvar Kılavuzu</title>
+        <style>body{font-family:Arial,sans-serif; padding:30px; line-height:1.6; color:#2c3e50; max-width:800px; margin:auto;} h2{color:#2980b9; border-bottom:2px solid #ecf0f1; padding-bottom:10px;} h3{color:#16a085; margin-top:25px;}</style>
+        </head><body>${guides[module]}</body></html>
+    `;
+    
+    const win = window.open('', '_blank');
+    win.document.write(guideContent);
+    win.document.close();
+};
+
 // app.js - Çekirdek Motor ve Zaman Damgalı Kırmızı Nokta (Red Dot) Mekanizması
 
 window.currentVideoContext = 'vbt_set1';
@@ -211,6 +283,11 @@ videoTimeline.addEventListener('input', function() {
     updateDotsVisibility();
 });
 
+// --- app.js SON KISIM GÜNCELLEMESİ (GÖRSEL HAFIZA EKLENDİ) ---
+
+// Kinetik kareleri saklayacağımız global bellek
+window.KineFrameBuffer = {};
+
 mainVideo.addEventListener('mousedown', function(event) {
     mainVideo.style.opacity = '0.6'; setTimeout(() => { mainVideo.style.opacity = '1'; }, 150);
     
@@ -226,5 +303,17 @@ mainVideo.addEventListener('mousedown', function(event) {
     dot.setAttribute('data-time', timeStr); 
     videoWrapper.appendChild(dot);
     
+    // ANLIK KARE YAKALAMA VE BELLEĞE YAZMA (Canvas Frame Buffer)
+    try {
+        const offCanvas = document.createElement('canvas');
+        offCanvas.width = mainVideo.videoWidth;
+        offCanvas.height = mainVideo.videoHeight;
+        offCanvas.getContext('2d').drawImage(mainVideo, 0, 0, offCanvas.width, offCanvas.height);
+        // İlgili modülün sekme adına göre son kareyi hafızaya alıyoruz (OHS ve Postür çizimleri için kullanılacak)
+        window.KineFrameBuffer[window.currentVideoContext] = offCanvas.toDataURL('image/jpeg', 0.8);
+    } catch(e) {
+        console.warn("Kare yakalanamadı. Video yüklenmemiş olabilir.");
+    }
+
     document.dispatchEvent(new CustomEvent('videoTiklandi', { detail: { x: lastX, y: lastY, zaman: timeStr } }));
 });

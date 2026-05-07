@@ -165,3 +165,32 @@ body { background-color: #f4f7f6; color: #333; display: flex; flex-direction: co
     border-bottom: 3px solid #3498db;
     color: #2c3e50;
 }
+
+/* Açılır Pencere (Modal) Genel Stilleri */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: none; /* Sayfa ilk açıldığında gizli kalmasını sağlar */
+    align-items: center;
+    justify-content: center;
+    z-index: 3000; /* Tüm elemanların en üstünde durmasını sağlar */
+}
+
+.modal-content {
+    background-color: #fff;
+    width: 80%;
+    border-radius: 8px;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    color: #2c3e50;
+    animation: modalFadeIn 0.3s ease-out; /* Açılış animasyonu */
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
