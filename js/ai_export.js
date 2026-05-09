@@ -1,258 +1,333 @@
-// ai_export.js - KINEMAN Analitik Raporlama ve Çıktı Motoru
-
-// --- ORTAK RAPOR CSS VE BAŞLIK ŞABLONU ---
-const reportBaseCSS = `
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
-    body { font-family: 'Inter', sans-serif; color: #0f172a; line-height: 1.5; padding: 15mm; background: #fff; }
-    @page { size: A4; margin: 0; }
-    .report-header { border-bottom: 3px solid #1e293b; padding-bottom: 15px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: flex-end; }
-    .uni-info { font-weight: 800; font-size: 13px; text-transform: uppercase; color: #0f172a; letter-spacing: 0.5px; }
-    .lab-title { font-weight: 600; font-size: 11px; color: #64748b; margin-top: 4px; }
-    .student-info { text-align: right; font-size: 11px; display: flex; flex-direction: column; gap: 3px; }
-    .report-title { text-align: center; font-size: 20px; font-weight: 800; text-transform: uppercase; margin-bottom: 20px; color: #2563eb; }
-    .section-title { font-size: 14px; font-weight: 800; border-bottom: 1px solid #cbd5e1; padding-bottom: 5px; margin-top: 25px; margin-bottom: 15px; color: #0f172a; text-transform: uppercase; }
-    .data-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 12px; }
-    .data-table th, .data-table td { border: 1px solid #cbd5e1; padding: 8px 10px; text-align: center; }
-    .data-table th { background-color: #f8fafc; font-weight: 600; color: #334155; }
-    .causal-box { background-color: #f8fafc; border-left: 4px solid #3b82f6; padding: 15px; margin-top: 20px; font-size: 12px; color: #334155; }
-    .causal-title { font-weight: 800; margin-bottom: 5px; color: #0f172a; font-size: 13px; }
-    .img-container { text-align: center; margin-bottom: 20px; }
-    .img-container img { max-width: 100%; max-height: 250px; border: 1px solid #cbd5e1; border-radius: 4px; }
-    .bar-chart-container { margin-top: 15px; width: 100%; }
-    .bar-row { display: flex; align-items: center; margin-bottom: 8px; }
-    .bar-label { width: 120px; font-size: 11px; font-weight: 600; }
-    .bar-track { flex: 1; background: #e2e8f0; height: 16px; border-radius: 4px; overflow: hidden; }
-    .bar-fill { height: 100%; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; color: white; font-size: 10px; font-weight: bold; }
-`;
+// ai_export.js - Gelişmiş Rapor Çıktı ve JSON Paketleme Motoru
 
 function getStudentHeader() {
-    const no = window.studentData?.no || 'Belirtilmedi';
-    const name = window.studentData?.name || 'Belirtilmedi';
-    const email = window.studentData?.email || 'Belirtilmedi';
+    const no = window.studentData?.no || '......................................';
+    const name = window.studentData?.name || '............................................................';
+    const email = window.studentData?.email || '............................................................';
     return `
-        <div class="report-header">
-            <div>
-                <div class="uni-info">Gazi Üniversitesi Spor Bilimleri Fakültesi</div>
-                <div class="lab-title">Antrenörlük Eğitimi Bölümü - KINEMAN Biyomekanik Laboratuvarı</div>
-            </div>
-            <div class="student-info">
-                <span><strong>Öğrenci No:</strong> ${no}</span>
-                <span><strong>Adı Soyadı:</strong> ${name}</span>
-                <span><strong>E-posta:</strong> ${email}</span>
-            </div>
+        <div style="margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #2c3e50; display: flex; justify-content: space-between; font-size: 0.9em; color: #34495e;">
+            <div><strong>Öğrenci No:</strong> ${no}</div>
+            <div><strong>Adı Soyadı:</strong> ${name}</div>
+            <div><strong>E-posta:</strong> ${email}</div>
         </div>
     `;
 }
 
+// !! ÖNEMLİ !!
+// Dosyanın devamındaki tüm rapor şablonlarında `${studentInfoHeader}` yazan yerleri `${getStudentHeader()}` olarak değiştirin.
+
+// --- YARDIMCI GÖRÜNTÜ İŞLEME FONKSİYONLARI ---
+
+// Belirli bir saniyeye gidip videodan fotoğraf çeken asenkron fonksiyon (VBT ve Jump için)
 async function captureVideoFrameAsync(videoUrl, timeSec) {
     return new Promise((resolve) => {
         if (!videoUrl || isNaN(timeSec)) { resolve(""); return; }
         const vid = document.createElement('video');
-        vid.crossOrigin = "anonymous"; vid.src = videoUrl; vid.currentTime = timeSec;
-        vid.addEventListener('seeked', () => {
-            const canvas = document.createElement('canvas');
-            canvas.width = vid.videoWidth; canvas.height = vid.videoHeight;
-            canvas.getContext('2d').drawImage(vid, 0, 0, canvas.width, canvas.height);
-            resolve(canvas.toDataURL('image/jpeg', 0.8));
-        });
-        vid.addEventListener('error', () => resolve(""));
+        vid.src = videoUrl; vid.crossOrigin = 'anonymous'; vid.currentTime = timeSec;
+        vid.onseeked = () => {
+            const cvs = document.createElement('canvas');
+            cvs.width = vid.videoWidth; cvs.height = vid.videoHeight;
+            cvs.getContext('2d').drawImage(vid, 0, 0);
+            resolve(cvs.toDataURL('image/jpeg', 0.8));
+        };
+        vid.onerror = () => resolve("");
     });
 }
 
-// 1. HALTER HIZI (VBT) RAPORU
-document.getElementById('btnPrintReportVbt')?.addEventListener('click', async function() {
-    const imgData = window.KineFrameBuffer[window.currentVideoContext] || "";
-    const imgHtml = imgData ? `<div class="img-container"><img src="${imgData}" alt="VBT Analiz Karesi"></div>` : "";
-    
-    const html = `<html><head><title>VBT Analiz Raporu</title><style>${reportBaseCSS}</style></head><body>
-        ${getStudentHeader()}
-        <div class="report-title">Hız Temelli Antrenman (VBT) 1TM Kestirim Raporu</div>
-        ${imgHtml}
-        <div class="section-title">Kestirim Verileri</div>
-        <table class="data-table">
-            <tr><th>Parametre</th><th>Değer</th></tr>
-            <tr><td>Set 1 Hızı (%40)</td><td>${document.getElementById('sumS_1').textContent} m/sn</td></tr>
-            <tr><td>Set 2 Hızı (%60)</td><td>${document.getElementById('sumS_2').textContent} m/sn</td></tr>
-            <tr><td>Set 3 Hızı (%80)</td><td>${document.getElementById('sumS_3').textContent} m/sn</td></tr>
-            <tr><td>Regresyon Eğimi</td><td>${document.getElementById('inputSlope').value || '-'}</td></tr>
-            <tr><td>Hesaplanan 1TM</td><td><strong>${document.getElementById('input1RM').value || '-'} kg</strong></td></tr>
-        </table>
-        <div class="causal-box">
-            <div class="causal-title">Analitik Nedensellik ve Periyotlama</div>
-            Mekanik Çıktı: Doğrusal regresyon analizi ile elde edilen yük-hız profili kullanılarak sporcunun 1 Tekrar Maksimum (1TM) kapasitesi tahmin edilmiştir. Geleneksel Periyotlama (Matveyev) modelleri referans alındığında; tespit edilen 1TM değeri üzerinden hipertrofi fazı için %60-75, maksimal kuvvet makrosiklüsü için >%80 yüklenme bantları planlanmalıdır.
-        </div>
-        <script>setTimeout(() => { window.print(); }, 800);</script>
-    </body></html>`;
-    const printWin = window.open('','_blank'); printWin.document.write(html); printWin.document.close();
-});
+// Görseli Canvas'a yükleyen yardımcı fonksiyon
+async function loadImage(src) {
+    return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = () => resolve(null);
+        img.src = src;
+    });
+}
 
-// 2. 20M SPRINT RAPORU
-document.getElementById('btnSprintPrint')?.addEventListener('click', function() {
-    // Dinamik olarak eklenen adımların verilerini topla
-    let stepsHtml = "";
-    let i = 1;
-    while (document.getElementById(`step_len_${i}`)) {
-        const len = document.getElementById(`step_len_${i}`).value || '-';
-        const time = document.getElementById(`step_time_${i}`).value || '-';
-        const phase = document.getElementById(`step_phase_${i}`)?.value || '-';
-        stepsHtml += `<tr><td>Adım ${i} (${phase})</td><td>${len} m</td><td>${time} sn</td></tr>`;
-        i++;
+// İki görseli %50 saydamlıkla birleştirip üzerine çizgi çeken motor
+async function createChronophotography(imgSrc1, imgSrc2, lineCoords = null) {
+    if (!imgSrc1 && !imgSrc2) return "";
+    const img1 = await loadImage(imgSrc1); const img2 = await loadImage(imgSrc2);
+    if (!img1 && !img2) return "";
+    
+    const cvs = document.createElement('canvas');
+    cvs.width = img1 ? img1.width : img2.width; cvs.height = img1 ? img1.height : img2.height;
+    const ctx = cvs.getContext('2d');
+
+    if (img1) ctx.drawImage(img1, 0, 0);
+    if (img2) {
+        ctx.globalAlpha = 0.5; // %50 Saydamlık
+        ctx.drawImage(img2, 0, 0);
+        ctx.globalAlpha = 1.0;
     }
 
-    const html = `<html><head><title>20m Sprint Raporu</title><style>${reportBaseCSS}</style></head><body>
+    if (lineCoords && lineCoords.x1 && lineCoords.x2) {
+        ctx.strokeStyle = '#e74c3c'; ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(lineCoords.x1, lineCoords.y1); ctx.lineTo(lineCoords.x2, lineCoords.y2);
+        ctx.stroke();
+        ctx.fillStyle = '#f1c40f';
+        ctx.beginPath(); ctx.arc(lineCoords.x1, lineCoords.y1, 6, 0, 2*Math.PI); ctx.fill();
+        ctx.beginPath(); ctx.arc(lineCoords.x2, lineCoords.y2, 6, 0, 2*Math.PI); ctx.fill();
+    }
+    return cvs.toDataURL('image/jpeg', 0.8);
+}
+
+// Tek bir görsel üzerine eklem noktalarını ve bağlantı çizgilerini çizen motor
+async function drawJointLines(imgSrc, pointsArray) {
+    if (!imgSrc) return "";
+    const img = await loadImage(imgSrc); if (!img) return "";
+    const cvs = document.createElement('canvas');
+    cvs.width = img.width; cvs.height = img.height;
+    const ctx = cvs.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+
+    ctx.strokeStyle = '#2ecc71'; ctx.lineWidth = 4; ctx.fillStyle = '#e74c3c';
+    ctx.beginPath();
+    for (let i = 0; i < pointsArray.length; i++) {
+        const p = pointsArray[i];
+        if (isNaN(p.x) || isNaN(p.y)) continue;
+        if (i === 0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y);
+    }
+    ctx.stroke();
+    for (let i = 0; i < pointsArray.length; i++) {
+        const p = pointsArray[i];
+        if (isNaN(p.x) || isNaN(p.y)) continue;
+        ctx.beginPath(); ctx.arc(p.x, p.y, 6, 0, 2*Math.PI); ctx.fill();
+    }
+    return cvs.toDataURL('image/jpeg', 0.8);
+}
+
+// HTML'den sayı okuma kısaltması
+function getVal(id) { return parseFloat(document.getElementById(id)?.textContent || document.getElementById(id)?.value) || 0; }
+
+// --- 1. VBT MODÜLÜ ---
+document.getElementById('btnPrintReportVbt')?.addEventListener('click', async function() {
+    const btn = this; btn.textContent = "⏳ Rapor Oluşturuluyor..."; btn.disabled = true;
+    const vidUrl = window.videoMemory['vbt_set1']; // Varsayım: 3 set de aynı videodan
+    
+    // Set 1 Chrono
+    const img1_start = await captureVideoFrameAsync(vidUrl, getVal('t0_display_1'));
+    const img1_end = await captureVideoFrameAsync(vidUrl, getVal('t1_display_1'));
+    const chrono1 = await createChronophotography(img1_start, img1_end, {x1: getVal('x0_display_1'), y1: getVal('y0_display_1'), x2: getVal('x1_display_1'), y2: getVal('y1_display_1')});
+
+    const mvt = (getVal('inputSlope') * getVal('input1RM')) + getVal('inputIntercept');
+    
+    const reportContent = `
+        <html><head><title>VBT Raporu</title>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <style>body{font-family:Arial; padding:20px;} table{width:100%; border-collapse:collapse;} th,td{border:1px solid #ccc; padding:8px; text-align:center;} th{background:#2980b9; color:white;} .img-box{width:100%; max-height:250px; object-fit:contain; border:2px solid #bdc3c7;}</style></head><body>
+            <h1 style="color:#2c3e50; text-align:center;">Halter Hızı (VBT) Analiz Raporu</h1>
+            ${getStudentHeader()}
+            <div style="text-align:center; margin-bottom:20px;">
+                <h3 style="color:#7f8c8d;">Set 1 Chronophotography (Kalkış & Tepe Noktası)</h3>
+                <img src="${chrono1}" class="img-box" alt="Set 1 Chrono">
+            </div>
+            <table>
+                <tr><th>Set</th><th>Ağırlık (W - kg)</th><th>Süre (t - sn)</th><th>Mesafe (y - m)</th><th>Ort. Hız (v - m/sn)</th></tr>
+                <tr><td>1</td><td>${getVal('sumW_1')}</td><td>${getVal('time_diff_1')}</td><td>${getVal('disp_y_1')}</td><td>${getVal('sumS_1')}</td></tr>
+                <tr><td>2</td><td>${getVal('sumW_2')}</td><td>${getVal('time_diff_2')}</td><td>${getVal('disp_y_2')}</td><td>${getVal('sumS_2')}</td></tr>
+                <tr><td>3</td><td>${getVal('sumW_3')}</td><td>${getVal('time_diff_3')}</td><td>${getVal('disp_y_3')}</td><td>${getVal('sumS_3')}</td></tr>
+            </table>
+            <div style="width:100%; max-width: 600px; margin: 30px auto;"><canvas id="vbtChart"></canvas></div>
+            <h2 style="color:#16a085; text-align:center;">Tahmini 1TM: ${getVal('input1RM')} kg</h2>
+            <script>
+                new Chart(document.getElementById('vbtChart').getContext('2d'), {
+                    type: 'scatter', data: {
+                        datasets: [
+                            { label: 'Set Ölçümleri', data: [{x:${getVal('sumW_1')}, y:${getVal('sumS_1')}}, {x:${getVal('sumW_2')}, y:${getVal('sumS_2')}}, {x:${getVal('sumW_3')}, y:${getVal('sumS_3')}}], backgroundColor: '#e74c3c', pointRadius: 5 },
+                            { type: 'line', label: 'Yük-Hız Regresyonu', data: [{x:0, y:${getVal('inputIntercept')}}, {x:${getVal('input1RM')}, y:${mvt}}], borderColor: '#3498db', borderWidth: 2, fill: false },
+                            { label: '1TM Kestirimi', data: [{x:${getVal('input1RM')}, y:${mvt}}], backgroundColor: '#27ae60', pointRadius: 7, pointStyle: 'rectRot' }
+                        ]
+                    }, options: { responsive: true, animation: false, scales: { x: { title: { display: true, text: 'Ağırlık (kg)' } }, y: { title: { display: true, text: 'Hız (m/sn)' }, min: 0 } } }
+                });
+                setTimeout(() => { window.print(); }, 800);
+            </script>
+        </body></html>`;
+    const w = window.open('','_blank'); w.document.write(reportContent); w.document.close();
+    btn.textContent = "🖨️ Raporu Oluştur"; btn.disabled = false;
+});
+
+// --- 2. 20M SPRINT MODÜLÜ ---
+document.getElementById('btnSprintPrint')?.addEventListener('click', async function() {
+    const btn = this; btn.textContent = "⏳ Rapor Oluşturuluyor..."; btn.disabled = true;
+    const vidUrl = window.videoMemory['sprint'];
+    
+    // Sprint Chrono (Adım 1 ve Adım 2) - Örnek Gösterim
+    const img_step1 = await captureVideoFrameAsync(vidUrl, getVal('step_t1_1'));
+    const img_step2 = await captureVideoFrameAsync(vidUrl, getVal('step_t1_2'));
+    const chronoSprint = await createChronophotography(img_step1, img_step2);
+
+    const reportContent = `
+        <html><head><title>Sprint Raporu</title><script src="https://cdn.jsdelivr.net/npm/chart.js"></script><style>body{font-family:Arial; padding:20px;} table{width:100%; border-collapse:collapse;} th,td{border:1px solid #ccc; padding:8px; text-align:center;} th{background:#d35400; color:white;} .img-box{width:100%; max-height:250px; object-fit:contain; border:2px solid #bdc3c7;}</style></head><body>
+            <h1 style="color:#2c3e50; text-align:center;">20m Sprint (İvmelenme) Analiz Raporu</h1>
+            ${getStudentHeader()}
+            <div style="text-align:center; margin-bottom:20px;"><h3 style="color:#7f8c8d;">Kalkış Fazı Chronophotography (Çoklu Pozlama)</h3><img src="${chronoSprint}" class="img-box"></div>
+            <table>
+                <tr><th>Faz (m)</th><th>Ort. Uzunluk (m)</th><th>Ort. Temas (sn)</th><th>Ort. Hız (m/sn)</th><th>Ort. İvme (m/sn²)</th></tr>
+                <tr><td>0 - 5</td><td>${getVal('avg_len_0_5')}</td><td>${getVal('avg_time_0_5')}</td><td>${getVal('avg_spd_0_5')}</td><td>${getVal('avg_acc_0_5')}</td></tr>
+                <tr><td>5 - 10</td><td>${getVal('avg_len_5_10')}</td><td>${getVal('avg_time_5_10')}</td><td>${getVal('avg_spd_5_10')}</td><td>${getVal('avg_acc_5_10')}</td></tr>
+                <tr><td>10 - 15</td><td>${getVal('avg_len_10_15')}</td><td>${getVal('avg_time_10_15')}</td><td>${getVal('avg_spd_10_15')}</td><td>${getVal('avg_acc_10_15')}</td></tr>
+                <tr><td>15 - 20</td><td>${getVal('avg_len_15_20')}</td><td>${getVal('avg_time_15_20')}</td><td>${getVal('avg_spd_15_20')}</td><td>${getVal('avg_acc_15_20')}</td></tr>
+            </table>
+            <div style="width:100%; max-width: 700px; margin: 30px auto;"><canvas id="sprintChart"></canvas></div>
+            <script>
+                new Chart(document.getElementById('sprintChart').getContext('2d'), {
+                    type: 'bar', data: {
+                        labels: ['0-5m', '5-10m', '10-15m', '15-20m'],
+                        datasets: [
+                            { label: 'Hız (m/sn)', data: [${getVal('avg_spd_0_5')}, ${getVal('avg_spd_5_10')}, ${getVal('avg_spd_10_15')}, ${getVal('avg_spd_15_20')}], backgroundColor: '#2980b9' },
+                            { label: 'İvme (m/sn²)', data: [${getVal('avg_acc_0_5')}, ${getVal('avg_acc_5_10')}, ${getVal('avg_acc_10_15')}, ${getVal('avg_acc_15_20')}], backgroundColor: '#e67e22' }
+                        ]
+                    }, options: { animation: false, responsive: true }
+                });
+                setTimeout(() => { window.print(); }, 800);
+            </script>
+        </body></html>`;
+    const w = window.open('','_blank'); w.document.write(reportContent); w.document.close();
+    btn.textContent = "🖨️ Raporu Oluştur"; btn.disabled = false;
+});
+
+// --- 3. FMS OHS MODÜLÜ ---
+document.getElementById('btnOhsPrint')?.addEventListener('click', async function() {
+    const btn = this; btn.textContent = "⏳ Görseller İşleniyor..."; btn.disabled = true;
+    
+    // Canvas Çizimleri
+    const sideImg = window.KineFrameBuffer['fms_ohs-side'];
+    const frontImg = window.KineFrameBuffer['fms_ohs-front'];
+    
+    const sidePts = [
+        {x: getVal('ohs_s_x1'), y: getVal('ohs_s_y1')}, {x: getVal('ohs_s_x2'), y: getVal('ohs_s_y2')},
+        {x: getVal('ohs_s_x3'), y: getVal('ohs_s_y3')}, {x: getVal('ohs_s_x4'), y: getVal('ohs_s_y4')}
+    ];
+    const frontPts = [
+        {x: getVal('ohs_f_x1'), y: getVal('ohs_f_y1')}, {x: getVal('ohs_f_x2'), y: getVal('ohs_f_y2')}, {x: getVal('ohs_f_x3'), y: getVal('ohs_f_y3')}
+    ];
+
+    const drawnSide = await drawJointLines(sideImg, sidePts);
+    const drawnFront = await drawJointLines(frontImg, frontPts);
+
+    const reportContent = `
+        <html><head><title>FMS Raporu</title><style>body{font-family:Arial;} table{width:100%; border-collapse:collapse; margin-top:15px;} th,td{border:1px solid #ccc; padding:8px;} th{background:#34495e; color:white;} .img-box{width:48%; height:250px; object-fit:cover; border:2px solid #bdc3c7;}</style></head><body>
+        <h1 style="color:#2c3e50; text-align:center;">FMS: Overhead Squat Analiz Raporu</h1>
         ${getStudentHeader()}
-        <div class="report-title">20m Sprint İvmelenme ve Kinematik Raporu</div>
-        
-        <div class="section-title">Faz Bölgesi Ortalamaları</div>
-        <table class="data-table">
-            <tr><th>Bölge Fazı</th><th>Ort. Adım Uzunluğu</th><th>Ort. Temas Süresi</th><th>Ort. Hız</th><th>Ort. İvme</th></tr>
-            <tr><td>0 - 5m</td><td>${document.getElementById('avg_len_0_5').value} m</td><td>${document.getElementById('avg_time_0_5').value} sn</td><td>${document.getElementById('avg_spd_0_5').value} m/s</td><td>${document.getElementById('avg_acc_0_5').value} m/s²</td></tr>
-            <tr><td>5 - 10m</td><td>${document.getElementById('avg_len_5_10').value} m</td><td>${document.getElementById('avg_time_5_10').value} sn</td><td>${document.getElementById('avg_spd_5_10').value} m/s</td><td>${document.getElementById('avg_acc_5_10').value} m/s²</td></tr>
-            <tr><td>10 - 15m</td><td>${document.getElementById('avg_len_10_15').value} m</td><td>${document.getElementById('avg_time_10_15').value} sn</td><td>${document.getElementById('avg_spd_10_15').value} m/s</td><td>${document.getElementById('avg_acc_10_15').value} m/s²</td></tr>
-            <tr><td>15 - 20m</td><td>${document.getElementById('avg_len_15_20').value} m</td><td>${document.getElementById('avg_time_15_20').value} sn</td><td>${document.getElementById('avg_spd_15_20').value} m/s</td><td>${document.getElementById('avg_acc_15_20').value} m/s²</td></tr>
-        </table>
-
-        <div class="causal-box" style="margin-bottom: 25px;">
-            <div class="causal-title">Analitik Nedensellik</div>
-            İvmelenme Dinamikleri: 0-10m arasındaki pozitif ivmelenme fazında adım temas sürelerinin uzun, adım uzunluklarının kısa olması beklenir. 10m sonrası geçiş fazında yer tepki kuvveti yatay eksenden dikey eksene kayarak adım uzunluğunun artmasını ve hızın maksimize edilmesini sağlar.
+        <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+            <img src="${drawnSide}" class="img-box" alt="Yandan Görünüm">
+            <img src="${drawnFront}" class="img-box" alt="Önden Görünüm">
         </div>
+        <h3 style="color:#2c3e50;">Fonksiyonel Hareket Taraması Sonuçları</h3>
+        <table>
+            <tr><th>Parametre</th><th>Çömelme Derinliği</th><th>Gövde - Tibia Paralelliği</th><th>Diz Hizalanması</th></tr>
+            <tr><td>Açı</td><td>${document.getElementById('tbl_ohs_derinlik_aci').textContent}</td><td>${document.getElementById('tbl_ohs_paralel_aci').textContent}</td><td>${document.getElementById('tbl_ohs_sapma_aci').textContent}</td></tr>
+            <tr><td>Puan Kararı</td><td>${document.getElementById('tbl_ohs_derinlik_puan').textContent}</td><td>${document.getElementById('tbl_ohs_paralel_puan').textContent}</td><td>${document.getElementById('tbl_ohs_sapma_puan').textContent}</td></tr>
+        </table>
+        <h2 style="color:#c0392b; text-align:center; margin-top:20px;">Nihai FMS Skoru: ${document.getElementById('final_fms_score_display').textContent}</h2>
+        <div style="margin-top:20px; font-size:0.8em; color:#7f8c8d;"><strong>Değerlendirme Kriterleri:</strong><br>• 3 PUAN (Mükemmel): Tüm alt skorlar 100 Puan olmalıdır.<br>• 2 PUAN (Kompansasyonlu): Hiçbir alt skor 0 Puan olmamalıdır. En az bir alt skor 70 Puan ise verilir.<br>• 1 PUAN (Disfonksiyonel): Alt skorlardan herhangi biri 0 Puan ise hareket doğrudan 1 puan değerlendirilir.</div>
+        <script>setTimeout(() => { window.print(); }, 800);</script>
+        </body></html>`;
+    const w = window.open('','_blank'); w.document.write(reportContent); w.document.close();
+    btn.textContent = "🖨️ Raporu Oluştur"; btn.disabled = false;
+});
 
-        <div class="section-title">Bireysel Adım Kinematiği</div>
-        <table class="data-table">
-            <thead>
+// --- 4. STATİK POSTÜR MODÜLÜ ---
+document.getElementById('btnPosPrint')?.addEventListener('click', async function() {
+    const btn = this; btn.textContent = "⏳ Görseller İşleniyor..."; btn.disabled = true;
+    
+    const sideImg = window.KineFrameBuffer['pos_pos-side'];
+    const frontImg = window.KineFrameBuffer['pos_pos-front'];
+    
+    const sidePts1 = [{x: getVal('pos_ear_x'), y: getVal('pos_ear_y')}, {x: getVal('pos_c7_x'), y: getVal('pos_c7_y')}];
+    const sidePts2 = [{x: getVal('pos_shoulder_x'), y: getVal('pos_shoulder_y')}, {x: getVal('pos_ankle_x'), y: getVal('pos_ankle_y')}];
+    const frontPts1 = [{x: getVal('pos_rs_x'), y: getVal('pos_rs_y')}, {x: getVal('pos_ls_x'), y: getVal('pos_ls_y')}];
+    const frontPts2 = [{x: getVal('pos_rp_x'), y: getVal('pos_rp_y')}, {x: getVal('pos_lp_x'), y: getVal('pos_lp_y')}];
+
+    let drawnSide = await drawJointLines(sideImg, sidePts1);
+    drawnSide = await drawJointLines(drawnSide, sidePts2); // İkinci çizgiyi üstüne çiz
+
+    let drawnFront = await drawJointLines(frontImg, frontPts1);
+    drawnFront = await drawJointLines(drawnFront, frontPts2);
+
+    const reportContent = `
+        <html><head><title>Postür Raporu</title><style>body{font-family:Arial;} table{width:100%; border-collapse:collapse;} th,td{border:1px solid #ccc; padding:8px;} th{background:#34495e; color:white;} .img-box{width:48%; height:250px; object-fit:cover; border:2px solid #bdc3c7;}</style></head><body>
+        <h1 style="color:#2c3e50; text-align:center;">Statik Postür Analiz Raporu</h1>
+        ${getStudentHeader()}
+        <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+            <img src="${drawnSide}" class="img-box" alt="Yandan Görünüm">
+            <img src="${drawnFront}" class="img-box" alt="Önden Görünüm">
+        </div>
+        <h3 style="color:#2c3e50;">Statik Postür Sonuçları</h3>
+        <table>
+            <tr><th>Parametre</th><th>Başın Öne Kayması</th><th>Şakül Çizgisi</th><th>Omuz Asimetrisi</th><th>Pelvis Asimetrisi</th></tr>
+            <tr><td>Açı</td><td>${document.getElementById('tbl_pos_cva_aci').textContent}</td><td>${document.getElementById('tbl_pos_dikey_aci').textContent}</td><td>${document.getElementById('tbl_pos_omuz_aci').textContent}</td><td>${document.getElementById('tbl_pos_pelvis_aci').textContent}</td></tr>
+            <tr><td>Puan</td><td>${document.getElementById('tbl_pos_cva_puan').textContent}</td><td>${document.getElementById('tbl_pos_dikey_puan').textContent}</td><td>${document.getElementById('tbl_pos_omuz_puan').textContent}</td><td>${document.getElementById('tbl_pos_pelvis_puan').textContent}</td></tr>
+        </table>
+        <h2 style="color:#c0392b; text-align:center; margin-top:20px;">Nihai Postür Skoru: ${document.getElementById('final_posture_score_display').textContent}</h2>
+        <div style="margin-top:20px; font-size:0.8em; color:#7f8c8d;"><strong>Kriterler:</strong><br>• 3 PUAN: Tüm alt skorlar 100.<br>• 2 PUAN: Hiçbir alt skor 0 olmamalıdır. En az bir skor 70 ise verilir.<br>• 1 PUAN: Herhangi bir alt skor 0 ise doğrudan 1 puan.</div>
+        <script>setTimeout(() => { window.print(); }, 800);</script>
+        </body></html>`;
+    const w = window.open('','_blank'); w.document.write(reportContent); w.document.close();
+    btn.textContent = "🖨️ Raporu Oluştur"; btn.disabled = false;
+});
+
+// --- 5. DİKEY SIÇRAMA MODÜLÜ ---
+document.getElementById('btnJumpPrint')?.addEventListener('click', async function() { 
+    const btn = this; btn.textContent = "⏳ Analiz Çıkarılıyor..."; btn.disabled = true;
+    const vidUrl = window.videoMemory['jump'];
+    const t_takeoff = getVal('jump_t_takeoff');
+    const t_landing = getVal('jump_t_landing');
+    const t_mid = (t_takeoff + t_landing) / 2; // Havada kalma süresinin tam ortası (Tepe Noktası)
+
+    const img_takeoff = await captureVideoFrameAsync(vidUrl, t_takeoff);
+    const img_mid = await captureVideoFrameAsync(vidUrl, t_mid);
+    const chronoJump = await createChronophotography(img_takeoff, img_mid);
+
+    const reportContent = `
+        <html><head><title>Dikey Sıçrama Raporu</title><style>body{font-family:Arial,sans-serif; padding:20px;} table{width:100%; border-collapse:collapse; margin-top:15px;} th,td{border:1px solid #ccc; padding:8px; text-align:center;} th{background:#8e44ad; color:white;} .img-box{width:100%; max-height:300px; object-fit:contain; border:2px solid #bdc3c7;}</style></head><body>
+            <h1 style="color:#2c3e50; text-align:center;">Dikey Sıçrama Yükseklik ve Güç Analiz Raporu</h1>
+            ${getStudentHeader()}
+            <div style="text-align:center; margin-bottom:20px;">
+                <h3 style="color:#7f8c8d;">Chronophotography (Kalkış Anı ve Tepe Noktası)</h3>
+                <img src="${chronoJump}" class="img-box" alt="Sıçrama Çoklu Pozlama">
+            </div>
+            <h3 style="color:#2c3e50;">Kinetik Çıktılar</h3>
+            <table>
+                <tr><th>Uçuş Süresi (sn)</th><th>Sıçrama Yüksekliği (m)</th><th>Zirve Güç / Peak Power (Watt)</th></tr>
                 <tr>
-                    <th>Adım No (Evre)</th>
-                    <th>Adım Uzunluğu (m)</th>
-                    <th>Temas Süresi (sn)</th>
+                    <td style="font-size:1.2em; font-weight:bold;">${getVal('jump_flight_time')}</td>
+                    <td style="font-size:1.2em; font-weight:bold;">${getVal('jump_height_m')}</td>
+                    <td style="font-size:1.2em; font-weight:bold; color:#d35400;">${getVal('jump_peak_power')}</td>
                 </tr>
-            </thead>
-            <tbody>
-                ${stepsHtml || '<tr><td colspan="3">Adım verisi bulunamadı.</td></tr>'}
-            </tbody>
-        </table>
-
-        <script>setTimeout(() => { window.print(); }, 500);</script>
-    </body></html>`;
-    const printWin = window.open('','_blank'); printWin.document.write(html); printWin.document.close();
+            </table>
+            <script>setTimeout(() => { window.print(); }, 800);</script>
+        </body></html>`;
+    const printWin = window.open('','_blank'); printWin.document.write(reportContent); printWin.document.close();
+    btn.textContent = "🖨️ Raporu Oluştur"; btn.disabled = false;
 });
 
-// 3. FMS (OHS) RAPORU
-document.getElementById('btnOhsPrint')?.addEventListener('click', function() {
-    const imgData = window.KineFrameBuffer[window.currentVideoContext] || "";
-    const imgHtml = imgData ? `<div class="img-container"><img src="${imgData}" alt="FMS Analiz Karesi"></div>` : "";
-    
-    const html = `<html><head><title>FMS OHS Raporu</title><style>${reportBaseCSS}</style></head><body>
-        ${getStudentHeader()}
-        <div class="report-title">FMS: Overhead Squat Kinematik Raporu</div>
-        ${imgHtml}
-        <div class="section-title">Eklem Açıları ve Skorlama</div>
-        <table class="data-table">
-            <tr><th>Parametre</th><th>Ölçülen Değer</th><th>Değerlendirme Puanı</th></tr>
-            <tr><td>Çömelme Derinliği</td><td>${document.getElementById('tbl_ohs_derinlik_aci').textContent}°</td><td>${document.getElementById('tbl_ohs_derinlik_puan').textContent}</td></tr>
-            <tr><td>Gövde - Tibia Paralelliği</td><td>Fark: ${document.getElementById('tbl_ohs_paralel_aci').textContent}°</td><td>${document.getElementById('tbl_ohs_paralel_puan').textContent}</td></tr>
-            <tr><td>Diz Hizalanması (Valgus/Varus)</td><td>Sapma: ${document.getElementById('tbl_ohs_sapma_aci').textContent}°</td><td>${document.getElementById('tbl_ohs_sapma_puan').textContent}</td></tr>
-        </table>
-        <div style="font-size:16px; font-weight:800; color:#c0392b; text-align:center;">Nihai FMS Skoru: ${document.getElementById('final_fms_score_display').textContent}</div>
-        <div class="causal-box">
-            <div class="causal-title">Klinik Mekanik ve Nedensellik</div>
-            Sagittal Düzlem: Gövde paralelliğinin bozulması (Açı farkı > 10°), ayak bileği dorsifleksiyon kısıtlılığına veya lumbopelvik bölge stabilite eksikliğine bağlı kompensasyon stratejisini gösterir.<br><br>
-            Frontal Düzlem: Dizde tespit edilen valgus sapması, gluteus medius zayıflığı veya ayak bileği pronasyon disfonksiyonuna işaret eder. Motor kontrol mekanizmasının düzeltilmesi gereklidir.
-        </div>
-        <script>setTimeout(() => { window.print(); }, 800);</script>
-    </body></html>`;
-    const printWin = window.open('','_blank'); printWin.document.write(html); printWin.document.close();
-});
-
-// 4. STATİK POSTÜR RAPORU
-document.getElementById('btnPosPrint')?.addEventListener('click', function() {
-    const imgData = window.KineFrameBuffer[window.currentVideoContext] || "";
-    const imgHtml = imgData ? `<div class="img-container"><img src="${imgData}" alt="Postür Analiz Karesi"></div>` : "";
-    
-    const html = `<html><head><title>Statik Postür Raporu</title><style>${reportBaseCSS}</style></head><body>
-        ${getStudentHeader()}
-        <div class="report-title">Klinik Statik Postür Analiz Raporu</div>
-        ${imgHtml}
-        <div class="section-title">Açısal Asimetri Tespiti</div>
-        <table class="data-table">
-            <tr><th>Parametre</th><th>Ölçülen Değer</th><th>Değerlendirme Puanı</th></tr>
-            <tr><td>Başın Öne Kayması (CVA)</td><td>${document.getElementById('tbl_pos_cva_aci').textContent}°</td><td>${document.getElementById('tbl_pos_cva_puan').textContent}</td></tr>
-            <tr><td>Şakül Çizgisi</td><td>${document.getElementById('tbl_pos_dikey_aci').textContent}°</td><td>${document.getElementById('tbl_pos_dikey_puan').textContent}</td></tr>
-            <tr><td>Omuz Asimetrisi</td><td>Sapma: ${document.getElementById('tbl_pos_omuz_aci').textContent}°</td><td>${document.getElementById('tbl_pos_omuz_puan').textContent}</td></tr>
-            <tr><td>Pelvis Asimetrisi</td><td>Sapma: ${document.getElementById('tbl_pos_pelvis_aci').textContent}°</td><td>${document.getElementById('tbl_pos_pelvis_puan').textContent}</td></tr>
-        </table>
-        <div style="font-size:16px; font-weight:800; color:#c0392b; text-align:center;">Statik Postür Puanı: ${document.getElementById('final_posture_score_display').textContent}</div>
-        <div class="causal-box">
-            <div class="causal-title">Klinik Mekanik ve Nedensellik</div>
-            Sagittal Düzlem: Kraniovertebral açının (CVA) 50°'nin altına düşmesi, derin servikal fleksörlerin inhibisyonunu ve üst trapez/sternokleidomastoid kaslarının aşırı aktivasyonunu kanıtlar. Vektörel kuvvet dağılımı servikal omurga üzerine binen mekanik stresi logaritmik olarak artırır.
-        </div>
-        <script>setTimeout(() => { window.print(); }, 800);</script>
-    </body></html>`;
-    const printWin = window.open('','_blank'); printWin.document.write(html); printWin.document.close();
-});
-
-// 5. DİKEY SIÇRAMA RAPORU
-document.getElementById('btnJumpPrint')?.addEventListener('click', function() {
-    const html = `<html><head><title>Dikey Sıçrama Raporu</title><style>${reportBaseCSS}</style></head><body>
-        ${getStudentHeader()}
-        <div class="report-title">Dikey Sıçrama Zirve Güç Raporu</div>
-        <div class="section-title">Uçuş Mekaniği ve Çıktılar</div>
-        <table class="data-table">
-            <tr><th>Parametre</th><th>Değer</th></tr>
-            <tr><td>Vücut Ağırlığı</td><td>${document.getElementById('jump_body_mass').value || '-'} kg</td></tr>
-            <tr><td>Uçuş Süresi (Δt)</td><td>${document.getElementById('jump_flight_time').value || '-'} sn</td></tr>
-            <tr><td>Sıçrama Yüksekliği</td><td>${document.getElementById('jump_height_cm').value || '-'} cm</td></tr>
-            <tr><td>Zirve Güç (Sayers Denklemi)</td><td><strong>${document.getElementById('jump_peak_power').value || '-'} Watt</strong></td></tr>
-        </table>
-        <div class="causal-box">
-            <div class="causal-title">Analitik Nedensellik ve Periyotlama</div>
-            Mekanik Çıktı: Yerçekimi kanunları ve uçuş süresi üzerinden hesaplanan Zirve Güç (Peak Power), sporcunun Streç-Kısalma Döngüsü (SSC) kapasitesini belirler. Geleneksel Periyotlama (Matveyev) modellerine göre; patlayıcı güç gelişimi, hazırlık döneminin sonu ve müsabaka dönemine geçiş aşamasında spesifik pliometrik uyaranlarla hedeflenmelidir.
-        </div>
-        <script>setTimeout(() => { window.print(); }, 500);</script>
-    </body></html>`;
-    const printWin = window.open('','_blank'); printWin.document.write(html); printWin.document.close();
-});
-
-// 6. 505 ÇEVİKLİK RAPORU (CSS Bar Grafik Entegreli)
-document.getElementById('btnAgilityPrint')?.addEventListener('click', function() {
-    const rTot = parseFloat(document.getElementById('ag_r_total_table').textContent) || 0;
-    const lTot = parseFloat(document.getElementById('ag_l_total_table').textContent) || 0;
-    const rCon = parseFloat(document.getElementById('ag_r_contact_table').textContent) || 0;
-    const lCon = parseFloat(document.getElementById('ag_l_contact_table').textContent) || 0;
-    
-    // Bar Chart yüzdelik hesaplama
-    const maxTot = Math.max(rTot, lTot) || 1;
-    const rTotPct = (rTot / maxTot) * 100;
-    const lTotPct = (lTot / maxTot) * 100;
-
-    const html = `<html><head><title>505 Çeviklik Raporu</title><style>${reportBaseCSS}</style></head><body>
-        ${getStudentHeader()}
-        <div class="report-title">505 Çeviklik ve Yön Değiştirme Asimetri Raporu</div>
-        <div class="section-title">Bilateral Temas ve Tamamlanma Süreleri</div>
-        <table class="data-table">
-            <tr><th>Parametre</th><th>Sağ Bacak (sn)</th><th>Sol Bacak (sn)</th><th>Mutlak Fark (sn)</th></tr>
-            <tr><td>Toplam Süre</td><td>${rTot}</td><td>${lTot}</td><td>${document.getElementById('ag_total_diff').textContent}</td></tr>
-            <tr><td>Dönüş Temas Süresi</td><td>${rCon}</td><td>${lCon}</td><td>${document.getElementById('ag_contact_diff').textContent}</td></tr>
-        </table>
-        
-        <div class="section-title">Görsel Asimetri Profili (Toplam Süre)</div>
-        <div class="bar-chart-container">
-            <div class="bar-row">
-                <div class="bar-label">Sağ Bacak Dönüş</div>
-                <div class="bar-track"><div class="bar-fill right" style="width: ${rTotPct}%; background-color:#3498db;">${rTot}s</div></div>
+// --- 6. 505 ÇEVİKLİK MODÜLÜ ---
+document.getElementById('btnAgilityPrint')?.addEventListener('click', function() { 
+    const reportContent = `
+        <html><head><title>Çeviklik Raporu</title><style>body{font-family:Arial,sans-serif; padding:20px;} table{width:100%; border-collapse:collapse; margin-top:15px;} th,td{border:1px solid #ccc; padding:8px; text-align:center;} th{background:#16a085; color:white;}</style></head><body>
+            <h1 style="color:#2c3e50; text-align:center;">505 Çeviklik ve Yön Değiştirme Analiz Raporu</h1>
+            ${getStudentHeader()}
+            <h3 style="color:#2c3e50;">Asimetri Analizi Sonuçları</h3>
+            <table>
+                <tr><th>Parametre</th><th>Sağ Bacak (sn)</th><th>Sol Bacak (sn)</th><th>Fark (Mutlak sn)</th></tr>
+                <tr><td>505 Toplam Süre</td><td>${document.getElementById('ag_r_total_table').textContent}</td><td>${document.getElementById('ag_l_total_table').textContent}</td><td>${document.getElementById('ag_total_diff').textContent}</td></tr>
+                <tr><td>Dönüş Temas Süresi</td><td>${document.getElementById('ag_r_contact_table').textContent}</td><td>${document.getElementById('ag_l_contact_table').textContent}</td><td>${document.getElementById('ag_contact_diff').textContent}</td></tr>
+            </table>
+            <h2 style="color:#c0392b; text-align:center; margin-top:20px;">Nihai Karar: ${document.getElementById('final_agility_score_display').textContent}</h2>
+            <div style="margin-top:20px; font-size:0.8em; color:#7f8c8d;">
+                <strong>Asimetri Değerlendirme Kriterleri:</strong><br>
+                • Dengeli (Asimetri Yok): İki bacağın Toplam Süresi veya Temas Süresi arasındaki mutlak fark <= %10.<br>
+                • Kuvvetlendirme Gerekli (Dengesiz): İki bacak arasındaki süre farkı > %10. Daha yavaş olan bacağa tek taraflı (unilateral) yüklenilmelidir.
             </div>
-            <div class="bar-row">
-                <div class="bar-label">Sol Bacak Dönüş</div>
-                <div class="bar-track"><div class="bar-fill left" style="width: ${lTotPct}%; background-color:#8e44ad;">${lTot}s</div></div>
-            </div>
-        </div>
+            <script>setTimeout(() => { window.print(); }, 500);</script>
+        </body></html>`;
+    const printWin = window.open('','_blank'); printWin.document.write(reportContent); printWin.document.close();
+});
 
-        <div style="font-size:16px; font-weight:800; color:#c0392b; text-align:center; margin-top:25px;">Asimetri Kararı: ${document.getElementById('final_agility_score_display').textContent}</div>
-        
-        <div class="causal-box">
-            <div class="causal-title">Analitik Nedensellik</div>
-            Frenleme (Braking) Mekaniği: Çeviklik performansında >%10 asimetri saptanması, dönüş bacağındaki eksantrik kuvvet absorpsiyonu zayıflığını kanıtlar. Temas süresi uzun olan bacak tarafında, tek taraflı (unilateral) eksantrik kuvvetlendirme ve reaktif frenleme antrenmanları planlanmalıdır.
-        </div>
-        <script>setTimeout(() => { window.print(); }, 500);</script>
-    </body></html>`;
-    const printWin = window.open('','_blank'); printWin.document.write(html); printWin.document.close();
+// JSON İletim Alertleri
+['btnSubmitFormVbt', 'btnSprintSubmit', 'btnOhsSubmit', 'btnPosSubmit', 'btnJumpSubmit', 'btnAgilitySubmit'].forEach(id => {
+    document.getElementById(id)?.addEventListener('click', () => alert("Değerlendirme bilgi paketi (JSON) sisteme iletilmek üzere kuyruğa alındı."));
 });

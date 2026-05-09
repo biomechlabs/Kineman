@@ -66,43 +66,195 @@ if (themeBtn) {
 
 window.openGuide = function(module) {
     const guides = {
-        'vbt': `<h2>Halter Hızı (VBT) Analizi Laboratuvar Kılavuzu</h2>
-            <p>Hız Temelli Antrenman (Velocity Based Training - VBT) analizi, sporcunun farklı ağırlık (yük) seviyelerindeki konsantrik kaldırış hızını hesaplayarak, doğrusal regresyon mantığıyla maksimal kuvvetini (1TM) tahmin etmeye yarayan kinematik bir ölçüm protokolüdür.</p>
-            <h3>Ön Hazırlık ve Video Çekim Standartları</h3><ul><li><strong>Kamera Açısı:</strong> Kamera yere sabitlenmeli ve harekete tam yandan (sagittal düzlem), 90 derecelik dik bir açıyla bakmalıdır.</li><li><strong>Referans Objesi:</strong> Videonun çekildiği düzlemde, barın hareket hattı ile aynı derinlikte fiziksel uzunluğu bilinen bir obje bulunmalıdır.</li></ul>
-            <h3>Aşama 1: Sistemsel Kalibrasyon</h3><ol><li>Videoyu yükleyin.</li><li><strong>"Kalibrasyon İçin Tıkla"</strong> butonuna basın.</li><li>Referans objenin üst ve alt noktasına tıklayın.</li><li>Gerçek uzunluğu girin.</li><li><code>Gerçek Uzunluk / |Y_üst - Y_alt|</code> formülüyle katsayıyı hesaplayın.</li></ol>
-            <h3>Aşama 2: Kinematik Veri Toplama</h3><ol><li>Kaldırılan ağırlığı girin.</li><li>Konsantrik fazın başladığı anı bulup <strong>"Tıklama Başlat"</strong> diyerek bara tıklayın.</li><li>Bitiş anına ilerleyip tekrar tıklayın.</li><li>Formülleri kullanarak Süre, Mesafe ve Ortalama Hızı hesaplayın.</li></ol>
-            <h3>Aşama 3: 1TM Kestirimi</h3><ol><li>Regresyon Eğimini <code>(Hız3 - Hız1) / (Yük3 - Yük1)</code> ile hesaplayın.</li><li>Kesişimi <code>Hız1 - (Eğim x Yük1)</code> ile hesaplayın.</li><li>MVT'yi seçip 1TM'yi <code>(MVT - Kesişim) / Eğim</code> formülüyle bulun.</li></ol>`,
-        
-        'sprint': `<h2>20m Sprint (İvmelenme) Analizi Laboratuvar Kılavuzu</h2>
-            <p>Sporcunun kalkış, ivmelenme, geçiş ve maksimum hız evrelerindeki kinematik parametrelerini (adım uzunluğu, temas süresi, hız ve ivme) hesaplamak için kullanılır.</p>
-            <h3>Kamera Yerleşimi</h3><p>20 metrelik alanı yandan dik görecek, 20m'nin 0, 5, 10, 15 ve 20. metrelerine huni yerleştirilecek, kalibrasyon 5. ve 10. metrelerdeki hunilerle yapılacaktır.</p>
-            <h3>Aşama 1: Kalibrasyon</h3><ol><li>Videoyu yükleyin ve <strong>"Kalibrasyon İçin Tıkla"</strong>ya basın.</li><li>5. ve 10. metre hunilerine tıklayın.</li><li><code>5 / |X_10m - X_5m|</code> formülüyle katsayıyı hesaplayın.</li></ol>
-            <h3>Aşama 2: Süre Analizi</h3><ol><li>0m kalkış anını işaretleyin.</li><li>Sırasıyla 5, 10, 15 ve 20. metre geçişlerini işaretleyin.</li></ol>
-            <h3>Aşama 3 & 4: Adım Döngüleri ve Hesaplamalar</h3><ol><li><strong>"Yeni Adım Döngüsü Ekle"</strong>ye basarak adımın yerden kesilme ve yere temas anlarını tıklayın.</li><li>Temas ve uzunluğu hesaplayın.</li><li>Evre ortalamalarını bularak matrise girin.</li></ol>`,
-        
-        'fms': `<h2>FMS: Overhead Squat Analizi Laboratuvar Kılavuzu</h2>
-            <p>Sporcunun sagittal ve frontal düzlemlerdeki bilateral simetrisini ve mekaniğini değerlendiren ölçüm protokolüdür.</p>
-            <h3>Aşama 1: Yandan Görünüm</h3><ol><li>En alt noktada Omuz, Kalça, Diz ve Bilek noktalarına tıklayın.</li><li><strong>Derinlik:</strong> Femur eğimi yatay açısını hesaplayıp puan verin (Kalça dizin altındaysa 100 Puan).</li><li><strong>Paralellik:</strong> Gövde ve Tibia açıları farkını bulun (Fark <= 5° ise 100 Puan).</li></ol>
-            <h3>Aşama 2: Önden Görünüm</h3><ol><li>Kalça (ASIS), Diz Kapağı ve Ayak Bileği orta noktasına tıklayın.</li><li><strong>Hizalanma:</strong> Uyluk ve Kaval kemiği dikey açıları sapmasını bulun (Sapma <= 5° ise 100 Puan).</li></ol>`,
-        
-        'posture': `<h2>Statik Postür Analizi Laboratuvar Kılavuzu</h2>
-            <p>Nötral duruştaki omurga eğriliklerini ve vücut asimetrilerini açısal olarak tespit eden klinik protokoldür.</p>
-            <h3>Aşama 1: Yandan Görünüm</h3><ol><li><strong>CVA:</strong> C7 Omuru ve Kulağa (Tragus) tıklayarak açıyı bulun (Açı >= 50° ise 100 Puan).</li><li><strong>Şakül Çizgisi:</strong> Bilek ve Omuza tıklayıp dikey hizalamayı bulun (Açı >= 87° ise 100 Puan).</li></ol>
-            <h3>Aşama 2: Önden Görünüm</h3><ol><li><strong>Omuz Asimetrisi:</strong> Sağ ve Sol omuz noktalarını işaretleyin (Sapma <= 2° ise 100 Puan).</li><li><strong>Pelvis Asimetrisi:</strong> Sağ ve Sol kalça çıkıntılarını işaretleyin.</li></ol>`,
-        
-        'jump': `<h2>Dikey Sıçrama (SJ/CMJ) Analizi Laboratuvar Kılavuzu</h2>
-            <p>Sıçrama yüksekliği ve patlayıcı güç, uçuş süresi üzerinden hesaplanır.</p>
-            <h3>Uygulama</h3><ol><li>Sporcunun kütlesini girin.</li><li>Kalkış anını ve İniş anını işaretleyin.</li><li><code>İniş Zamanı - Kalkış Zamanı</code> ile uçuş süresini bulun.</li><li><code>[9.81 x (Uçuş Süresi²)] / 8</code> formülüyle metre cinsinden yüksekliği bulun.</li><li>Sayers denklemi <code>(60.7 x Yükseklik[cm]) + (45.3 x Ağırlık[kg]) - 2055</code> ile zirve gücü hesaplayın.</li></ol>`,
-        
-        'agility': `<h2>505 Çeviklik ve Yön Değiştirme Analizi Laboratuvar Kılavuzu</h2>
-            <p>Sporcunun hızlanma, sert frenleme ve 180 derece yön değiştirme (COD) mekaniğini ve sağ/sol bacak arası kuvvet asimetrilerini inceler.</p>
-            <h3>Uygulama</h3><ol><li>Sağ ayak dönüş videosunu yükleyin.</li><li>10m giriş ve çıkışını işaretleyip Toplam Süreyi hesaplayın.</li><li>Frenleme (Dönüş) ayağının ilk temas ve yerden kesilme anlarını işaretleyip Dönüş Temas Süresini hesaplayın.</li><li>Sol ayak için tekrarlayın.</li><li>Sistem mutlak farkı hesaplayarak %10 asimetri eşiğine göre "Dengeli" veya "Kuvvetlendirme Gerekli" kararını verecektir.</li></ol>`
+        'vbt': `
+            <div class="academic-guide">
+                <h2>Halter Hızı (VBT) Analizi Laboratuvar Kılavuzu</h2>
+                
+                <section>
+                    <h3>1. Analiz Hakkında</h3>
+                    <p>Hız Temelli Antrenman (VBT), yük ve hız arasındaki doğrusal ilişkiyi kullanarak sporcunun nöromüsküler durumunu takip eder. Bu analizin en kritik yönü <b>Auto-regulation (Otonom Düzenleme)</b> kapasitesidir. Sporcunun her gün aynı ağırlığı aynı hızda kaldıramayacağı gerçeğinden yola çıkarak, günlük hız kaybı takibi yapılır. Eğer hedeflenen hızda %10-20'lik bir düşüş varsa, bu durum merkezi sinir sistemi yorgunluğunu kanıtlar ve antrenman yükünün o an düşürülmesini gerektirir. Bu yöntem, sporcuyu aşırı sürantrenmandan (overtraining) korurken, o günkü hazırbulunuşluk seviyesine göre en verimli yükün seçilmesini sağlar.</p>
+                </section>
+
+                <section>
+                    <h3>2. Video Oluşturma ve Hareket Tanımı</h3>
+                    <p><b>Hareket:</b> Analiz edilecek hareket (Squat, Bench Press vb.) maksimum konsantrik hızda, yani kaldırış fazında ağırlık en hızlı şekilde yukarı itilerek uygulanmalıdır. Hareketin eksantrik (iniş) fazı kontrollü, konsantrik (çıkış) fazı ise patlayıcı olmalıdır.</p>
+                    <p><b>Kamera ve Ortam:</b> Kamera, barın hareket düzlemine tam 90 derece dik (yandan) bakacak şekilde tripod ile sabitlenmelidir. Barın hareket hattı üzerinde, barla aynı derinlikte gerçek uzunluğu bilinen bir referans objesi (örn: 1m'lik bir boru) yerleştirilmelidir. Çekim hızı barın titrememesi (blur olmaması) için minimum 60 FPS, ideal olarak 120+ FPS olmalıdır.</p>
+                </section>
+
+                <section>
+                    <h3>3. Analiz Adımları ve Hesaplamalar</h3>
+                    <ul>
+                        <li><b>Kalibrasyon (Aşama 1):</b> Videodaki referans objenin üst ve alt noktalarına tıklayarak piksel mesafesini ölçün. Ardından objenin gerçek metre değerini girin. <code>K_cal = Gerçek Uzunluk / Piksel Farkı</code> formülü ile yazılım, video üzerindeki her bir pikselin gerçek dünyada kaç metreye denk geldiğini öğrenir.</li>
+                        <li><b>Ağırlık Girişi:</b> Set için kullanılan toplam yükü (plaka + bar) kilogram cinsinden girin. Bu veri, 1TM regresyon eğrisinin yatay eksenini (X) oluşturacaktır.</li>
+                        <li><b>Etiketleme (Aşama 2):</b> Kaldırışın (konsantrik faz) başladığı en alt kareyi bulup "Etiketleme Başlat" diyerek bar ucuna tıklayın (t0). Ardından kaldırışın bittiği en üst kareye ilerleyip tekrar bar ucuna tıklayın (t1). 
+                            <i>Bu işlemle; <code>Δt = t1 - t0</code> (süre) ve <code>Δy = |Y1 - Y0| * K_cal</code> (mesafe) verileri elde edilir.</i></li>
+                        <li><b>Hız Hesabı:</b> <code>Hız = Δy / Δt</code> formülüyle o yükteki ortalama konsantrik hız bulunur.</li>
+                        <li><b>1TM Kestirimi (Aşama 3):</b> Farklı yüklerdeki hızlar toplandıktan sonra regresyon eğimi hesaplanır. <code>1TM = (MVT - Kesişim) / Eğim</code> formülüyle, sporcunun teorik olarak en ağır yükü kaldırabileceği minimum hız eşiğindeki (MVT) gücü tahmin edilir.</li>
+                    </ul>
+                </section>
+            </div>
+        `,
+
+        'sprint': `
+            <div class="academic-guide">
+                <h2>20m Sprint Analizi Laboratuvar Kılavuzu</h2>
+                
+                <section>
+                    <h3>1. Analiz Hakkında</h3>
+                    <p>Sprint analizi, ivmelenme mekaniğini ve sporcunun yer tepki kuvvetlerini nasıl yatay hıza dönüştürdüğünü inceler. İlk 20 metre, sporcunun "pozitif ivmelenme" fazıdır. Bu evrede adım uzunluğu ve temas süresi arasındaki denge, maksimal hıza ulaşma verimliliğini belirler. Analiz sayesinde sporcunun hangi mesafe diliminde (örn: 5-10m arası) hız kaybı yaşadığı veya adım frekansının nerede bozulduğu tespit edilerek spesifik sprint antrenmanları planlanır.</p>
+                </section>
+
+                <section>
+                    <h3>2. Video Oluşturma ve Hareket Tanımı</h3>
+                    <p><b>Hareket:</b> Sporcu, çıkış çizgisinde statik veya dinamik start alarak 20 metrelik koridoru maksimum eforla kat etmelidir. Çizgi üzerine basılması veya erken yavaşlanması veriyi bozar.</p>
+                    <p><b>Kamera ve Ortam:</b> Kamera, 20 metrelik koridorun tam ortasına (10. metre hizasına) ve koşu hattına paralel, yaklaşık 15-20 metre uzağa yerleştirilmelidir (parallax hatasını azaltmak için). Koridorun 0, 5, 10, 15 ve 20. metrelerine net görünen huniler konulmalıdır. Video 120 FPS veya üstü olmalıdır.</p>
+                </section>
+
+                <section>
+                    <h3>3. Analiz Adımları ve Hesaplamalar</h3>
+                    <ul>
+                        <li><b>Kalibrasyon (Aşama 1):</b> 5. ve 10. metre hunilerinin taban merkezlerine tıklayın. Bu 5 metrelik fark, <code>K_cal = 5 / |X10 - X5|</code> formülüyle yatay düzlem katsayısını belirler.</li>
+                        <li><b>Süre Analizi (Aşama 2):</b> Sporcunun elinin veya ayağının yerden ilk kesildiği anı (0m) ve gövdesinin huni hizalarından geçtiği anları (5, 10, 15, 20m) işaretleyin. Bu sayede her bir 5 metrelik dilimin geçiş süresi ve hızı (V = 5 / Δt) hesaplanır.</li>
+                        <li><b>Adım Döngüsü (Aşama 3):</b> "Adım Ekle" diyerek ayağın yerden kesildiği ve yere temas ettiği kareleri işaretleyin.
+                            <i>Neden:</i> <code>Adım Uzunluğu = |X_temas2 - X_temas1| * K_cal</code> ve <code>Temas Süresi = t_kesilme - t_temas</code> verileriyle sprintin kalitesi (frekans ve uzunluk) ölçülür.</li>
+                        <li><b>Kinematik Matris (Aşama 4):</b> Toplanan adım verileri ilgili evrelere (0-5m, 5-10m vb.) dağıtılarak ortalama hız ve ivme (a = ΔV / Δt) değerleri üzerinden rapor oluşturulur.</li>
+                    </ul>
+                </section>
+            </div>
+        `,
+
+        'fms': `
+            <div class="academic-guide">
+                <h2>FMS: Overhead Squat Analizi Laboratuvar Kılavuzu</h2>
+                
+                <section>
+                    <h3>1. Analiz Hakkında</h3>
+                    <p>Overhead Squat, sporcunun tüm kinetik zincirindeki mobilite ve stabilite kısıtlılıklarını ortaya çıkaran bir tarama testidir. Analiz; ayak bileği, diz, kalça ve omuz komplekslerinin eş zamanlı çalışmasını değerlendirir. Bilimsel önemi, sporcunun yaralanma riskini (örn: diz valgus açısı) nicel olarak belirlemek ve nöromüsküler kontrol eksikliklerini sagittal ve frontal düzlemlerde kanıtlamaktır.</p>
+                </section>
+
+                <section>
+                    <h3>2. Video Oluşturma ve Hareket Tanımı</h3>
+                    <p><b>Hareket:</b> Sporcu, ayaklarını omuz genişliğinde açar, kollarını tam yukarı (baş üstü) uzatır ve topuklarını yerden kaldırmadan maksimum derinliğe çömelip tekrar kalkar. Hareket 3 kez tekrarlanmalı ve en derin inilen an analiz edilmelidir.</p>
+                    <p><b>Kamera ve Ortam:</b> Analiz için iki ayrı video çekilmelidir: Birincisi tam yandan (sagittal), ikincisi tam önden (frontal). Kamera eklem merkezlerini net görecek yükseklikte sabitlenmelidir.</p>
+                </section>
+
+                <section>
+                    <h3>3. Analiz Adımları ve Hesaplamalar</h3>
+                    <ul>
+                        <li><b>Yandan Görünüm Etiketleme:</b> En derin çömelme anında Omuz, Kalça, Diz ve Ayak Bileği merkezlerine tıklayın.
+                            <i>Hesap:</i> <code>m_femur = (Y_kalça - Y_diz) / (X_kalça - X_diz)</code> eğimi ile uyluk kemiği açısı bulunur. Eğer açı < 0 ise kalça dizin altına inmiştir (Kusursuz derinlik).</li>
+                        <li><b>Gövde-Tibia Paralelliği:</b> Yazılım gövde ve kaval kemiği arasındaki açı farkını hesaplar. <code>Fark = |Açı_Gövde - Açı_Tibia|</code>. Fark ≤ 5° ise mükemmel uyum kabul edilir; yüksek farklar alt ekstremite stabilite kaybını gösterir.</li>
+                        <li><b>Önden Görünüm Etiketleme:</b> Kalça (ASIS), Diz Kapağı ve Ayak Bileği orta noktalarını işaretleyin. 
+                            <i>Neden:</i> Yazılım <code>Q Açısı</code> benzeri bir sapma (valgus/varus) hesaplar. Sapma > 10° ise sporcuda diz yaralanma riski yüksektir.</li>
+                        <li><b>Puanlama:</b> Nicel açılara göre (Kusursuz, Sınırda, Disfonksiyonel) seçim yapın. Yazılım en düşük puana göre nihai FMS skorunu (3, 2 veya 1) otonom olarak üretir.</li>
+                    </ul>
+                </section>
+            </div>
+        `,
+
+        'posture': `
+            <div class="academic-guide">
+                <h2>Statik Postür Analizi Laboratuvar Kılavuzu</h2>
+                
+                <section>
+                    <h3>1. Analiz Hakkında</h3>
+                    <p>Statik postür analizi, yerçekimi kuvvetine karşı vücut bölümlerinin dizilimini inceler. Kas-iskelet sistemi üzerindeki mekanik yüklerin dengeli dağılıp dağılmadığını belirler. Özellikle Kraniovertebral Açı (CVA) üzerinden başın öne kayması gibi durumların tespiti, servikal omurga sağlığı ve kronik ağrı risklerinin önceden tahmin edilmesi açısından kritik akademik öneme sahiptir.</p>
+                </section>
+
+                <section>
+                    <h3>2. Video Oluşturma ve Hareket Tanımı</h3>
+                    <p><b>Hareket:</b> Sporcu, nötral (rahat) duruşta, kollar yanlarda sarkık ve karşıya bakacak şekilde sabit durmalıdır. Ayak uçları karşıyı göstermelidir.</p>
+                    <p><b>Kamera ve Ortam:</b> Kamera sporcunun tam yanından ve tam önünden çekim yapmalıdır. Arka planda dik çizgiler (şakül çizgisi veya duvar köşesi) olması görsel referans sağlar. Sporcunun anatomik işaretleyicileri (C7, ASIS vb.) görülebilir olmalıdır.</p>
+                </section>
+
+                <section>
+                    <h3>3. Analiz Adımları ve Hesaplamalar</h3>
+                    <ul>
+                        <li><b>CVA (Baş Pozisyonu):</b> C7 omuru ve kulağın tragus noktasına tıklayın. 
+                            <i>Sonuç:</i> Yazılım bu iki nokta arasındaki açıyı yatay düzleme göre hesaplar. 50° altındaki değerler "Forward Head Posture" (ileri baş postürü) kanıtıdır.</li>
+                        <li><b>Şakül Çizgisi:</b> Ayak bileği dış çıkıntısı ve omuz üst noktasına tıklayın. 
+                            <i>Hesap:</i> Dikey referans hattından (90°) sapma miktarı bulunur. Sapma arttıkça vücut ağırlık merkezi güvenli alandan uzaklaşır.</li>
+                        <li><b>Asimetri (Önden):</b> Her iki omuz ve her iki kalça çıkıntısına (ASIS) tıklayın. 
+                            <i>Neden:</i> <code>Eğim = (Y2 - Y1) / (X2 - X1)</code> formülüyle omuz veya pelvisteki sağ-sol yükseklik farkı (asimetri) derece cinsinden bulunur. 2° üzerindeki sapmalar skolyoz veya kas dengesizliği işareti olabilir.</li>
+                    </ul>
+                </section>
+            </div>
+        `,
+
+        'jump': `
+            <div class="academic-guide">
+                <h2>Dikey Sıçrama Analizi Laboratuvar Kılavuzu</h2>
+                
+                <section>
+                    <h3>1. Analiz Hakkında</h3>
+                    <p>Dikey sıçrama, alt ekstremite patlayıcı gücünü ve Streç-Kısalma Döngüsü (SSC) verimliliğini ölçer. Sadece yükseklik değil, hesaplanan <b>Zirve Güç (Peak Power)</b>, sporcunun hıza karşı koyabildiği kuvvet üretim kapasitesini gösterir. Bu veri, Matveyev periyotlama modelinde hazırlık döneminden müsabaka dönemine geçişteki "güç-hız" dönüşümünü takip etmek için kullanılır.</p>
+                </section>
+
+                <section>
+                    <h3>2. Video Oluşturma ve Hareket Tanımı</h3>
+                    <p><b>Hareket:</b> Sporcu SJ (aktif iniş olmadan) veya CMJ (hızlı çökerek) sıçramayı kollar yanda veya serbest şekilde maksimum yükseklikte gerçekleştirir. İniş anında dizlerin kırılmasına (süre çalmak için) izin verilmemelidir.</p>
+                    <p><b>Kamera ve Ortam:</b> Kamera tam yandan veya tam önden, ayakların yerden kesildiği anı milisaniye hassasiyetinde görecek şekilde, zemine yakın yerleştirilmelidir. 120-240 FPS çekim zorunludur.</p>
+                </section>
+
+                <section>
+                    <h3>3. Analiz Adımları ve Hesaplamalar</h3>
+                    <ul>
+                        <li><b>Sporcu Verisi:</b> Sporcunun kütlesini (kg) girin. Bu veri Sayers denklemi ile güç (Watt) hesabı için temeldir.</li>
+                        <li><b>Uçuş Süresi (Δt):</b> Ayağın yerden tamamen kesildiği ilk kareyi (t_kalkış) ve yere ilk temas ettiği kareyi (t_iniş) işaretleyin.
+                            <i>Hesap:</i> <code>Δt = t_iniş - t_kalkış</code>.</li>
+                        <li><b>Yükseklik Hesabı:</b> Yerçekimi ivmesi (g=9.81) kullanılarak; <code>Yükseklik (m) = (g * Δt²) / 8</code> formülü uygulanır. Bu, parabolik uçuş mekaniğinin matematiksel karşılığıdır.</li>
+                        <li><b>Güç Hesabı (Watt):</b> Sayers Denklemi <code>[60.7 * Yükseklik(cm)] + [45.3 * Kütle(kg)] - 2055</code> kullanılarak anlık üretilen zirve güç bulunur. Bu değer sporcunun patlayıcılık seviyesini akademik normlarla kıyaslamayı sağlar.</li>
+                    </ul>
+                </section>
+            </div>
+        `,
+
+        'agility': `
+            <div class="academic-guide">
+                <h2>505 Çeviklik Analizi Laboratuvar Kılavuzu</h2>
+                
+                <section>
+                    <h3>1. Analiz Hakkında</h3>
+                    <p>505 Testi, sporcunun 180 derece yön değiştirme (COD) hızını ve frenleme kapasitesini ölçer. Analizin en büyük önemi <b>Bilateral Asimetri</b> tespitidir. Sağ ve sol bacak üzerindeki dönüş performansları arasındaki %10'dan fazla fark, sporcunun bir yöne dönerken eksantrik kuvvet absorpsiyonu yapamadığını ve o tarafta yaralanma (örn: ACL kopması) riskinin çok daha yüksek olduğunu gösterir.</p>
+                </section>
+
+                <section>
+                    <h3>2. Video Oluşturma ve Hareket Tanımı</h3>
+                    <p><b>Hareket:</b> Sporcu 10. metredeki hayali çizgiden hızla geçer, 15. metredeki hunide tam 180 derece dönüp tekrar 10. metre çizgisine döner. Her iki bacak (dönüş bacağı olarak) ayrı ayrı test edilmeli ve kaydedilmelidir.</p>
+                    <p><b>Kamera ve Ortam:</b> Kamera, 10-15m arasındaki alanı tam yandan görecek şekilde 12.5 metre hizasına yerleştirilmelidir. Hunilerin ve yer çizgilerinin netliği etiketleme doğruluğu için esastır.</p>
+                </section>
+
+                <section>
+                    <h3>3. Analiz Adımları ve Hesaplamalar</h3>
+                    <ul>
+                        <li><b>Toplam Süre (A):</b> Sporcunun 10m çizgisinden girişi ve dönüşten sonra aynı çizgiden çıkışı arasındaki kareleri işaretleyin. 
+                            <i>Neden:</i> <code>Δt_toplam = t_çıkış - t_giriş</code>. Bu, yön değiştirme hızını temsil eder.</li>
+                        <li><b>Dönüş Temas Süresi (B):</b> Dönüş anında (15m hunisinde) ayağın yere değdiği ilk kareyi ve yerden kesildiği son kareyi işaretleyin. 
+                            <i>Hesap:</i> <code>Δt_temas = t_kesilme - t_temas</code>. Bu veri, sporcunun frenleme ve tekrar ivmelenme verimliliğini gösterir.</li>
+                        <li><b>Asimetri Değerlendirmesi (Aşama 3):</b> Sağ ve sol bacak verilerini girin. Yazılım <code>Fark = |Sağ - Sol| / Maksimum * 100</code> formülüyle asimetriyi hesaplar. %10 üzeri fark "Kuvvetlendirme Gerekli" kararıyla sonuçlanır.</li>
+                    </ul>
+                </section>
+            </div>
+        `
     };
 
+    // Rehber içeriğini yeni pencerede açan mevcut mekanizma
     const guideContent = `
-        <html><head><title>Laboratuvar Kılavuzu</title>
-        <style>body{font-family:Arial,sans-serif; padding:30px; line-height:1.6; color:#2c3e50; max-width:800px; margin:auto;} h2{color:#2980b9; border-bottom:2px solid #ecf0f1; padding-bottom:10px;} h3{color:#16a085; margin-top:25px;}</style>
-        </head><body>${guides[module]}</body></html>
+        <html><head><title>KINEMAN Laboratuvar Kılavuzu</title>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+            body{font-family:'Inter', sans-serif; padding:40px; line-height:1.7; color:#1e293b; max-width:850px; margin:auto; background:#f1f5f9;}
+            h2{color:#2563eb; border-bottom:3px solid #3b82f6; padding-bottom:12px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px;}
+            h3{color:#0f172a; margin-top:35px; font-weight:800; border-left:5px solid #2563eb; padding-left:15px; font-size:1.2em;}
+            p{margin-bottom:15px; text-align:justify;}
+            ul, ol{margin-bottom:25px; padding-left:20px;}
+            li{margin-bottom:12px;}
+            code{background:#e2e8f0; padding:3px 8px; border-radius:4px; font-family:monospace; font-weight:bold; color:#1e40af;}
+            b{color:#2563eb; font-weight:700;}
+            section{background:#ffffff; padding:25px; border-radius:12px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.1); margin-bottom:25px; border:1px solid #e2e8f0;}
+            i{color:#64748b; font-style:italic;}
+        </style>
+        </head><body>${guides[module] || '<section><h2>Hata</h2><p>Kılavuz içeriği bulunamadı.</p></section>'}</body></html>
     `;
     
     const win = window.open('', '_blank');
@@ -402,3 +554,46 @@ mainVideo.addEventListener('mousedown', function(event) {
             newBtn.style.backgroundColor = '#95a5a6'; // Eski griye dön
         });
     });
+    // --- HIZLI HESAP MAKİNESİ İŞLEMLERİ ---
+    const btnCalcToggle = document.getElementById('btnCalcToggle');
+    const floatingCalc = document.getElementById('floatingCalc');
+    const btnCloseCalc = document.getElementById('btnCloseCalc');
+    const calcInput = document.getElementById('calcInput');
+
+    if (btnCalcToggle && floatingCalc) {
+        // İkona tıklayınca aç/kapat
+        btnCalcToggle.addEventListener('click', () => {
+            if (floatingCalc.style.display === 'none') {
+                floatingCalc.style.display = 'block';
+                calcInput.focus(); // Açılınca doğrudan yazmaya hazır olur
+            } else {
+                floatingCalc.style.display = 'none';
+            }
+        });
+
+        // X butonuna basınca kapat
+        btnCloseCalc.addEventListener('click', () => {
+            floatingCalc.style.display = 'none';
+        });
+
+        // Enter tuşuna basıldığında işlemi çöz
+        calcInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                try {
+                    // Güvenlik: Sadece rakamlar, parantezler ve matematiksel operatörlere izin ver
+                    const sanitized = this.value.replace(/[^0-9+\-*/(). ]/g, '');
+                    if (sanitized) {
+                        // Matematiksel işlemi yap
+                        const result = new Function('return ' + sanitized)();
+                        // Sonuç tam sayı değilse virgülden sonra 3 haneye yuvarla
+                        this.value = Number.isInteger(result) ? result : parseFloat(result.toFixed(3));
+                    }
+                } catch (err) {
+                    // Hatalı işlem yazılırsa (Örn: 5+*3) uyar
+                    const oldVal = this.value;
+                    this.value = "Hatalı İşlem!";
+                    setTimeout(() => this.value = oldVal, 1200);
+                }
+            }
+        });
+    }

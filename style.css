@@ -214,3 +214,44 @@ body { background-color: var(--bg-main); color: var(--text-main); display: flex;
     color: #f8fafc !important;
     border: 1px solid #3b82f6 !important;
 }
+/* --- YÜZEN HIZLI HESAP MAKİNESİ STİLLERİ --- */
+#btnCalcToggle:hover { transform: scale(1.1); }
+
+.floating-calc {
+    position: fixed;
+    top: 80px; /* Header'ın hemen altında */
+    right: 20px;
+    width: 280px;
+    background: var(--panel-bg);
+    border: 2px solid #3498db;
+    border-radius: 8px;
+    padding: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    z-index: 9999; /* Her şeyin üstünde görünmesini sağlar */
+}
+
+.calc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 5px;
+}
+
+.calc-input {
+    width: 100%;
+    padding: 12px;
+    font-size: 1.2em;
+    font-family: monospace;
+    font-weight: bold;
+    border: 1px solid var(--input-border);
+    border-radius: 6px;
+    background: var(--input-bg);
+    color: var(--text-main);
+    outline: none;
+    transition: 0.2s;
+    box-sizing: border-box;
+}
+
+.calc-input:focus { border-color: #3498db; box-shadow: 0 0 5px rgba(52, 152, 219, 0.5); }
