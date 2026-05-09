@@ -4,701 +4,744 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KINEMAN eğitim (beta)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <header class="navbar" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px;">
-        <div style="display: flex; align-items: center; gap: 30px;">
-            <h1 style="margin: 0;">KINEMAN eğitim (beta)</h1>
-            <div id="studentInfoDisplay" style="font-size: 0.85em; color: #ecf0f1; display: flex; flex-direction: column; gap: 3px; border-left: 2px solid #34495e; padding-left: 20px;">
-                <button id="btnOpenStudentModal" style="background: #27ae60; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold;">Öğrenci Bilgileri Gir</button>
+    <div id="landingPage" class="landing-overlay">
+        <div class="landing-container">
+            <div class="landing-header">
+                <h1 class="brand-title" style="font-size: 3.5em; color: var(--text-main);">KINEMAN <span>eğitim</span> <small>(beta)</small></h1>
+                <p style="color: var(--text-muted); margin-top: 5px;">Spor Biyomekaniği ve Kinematik Analiz Platformu</p>
             </div>
-        </div>
-        <div class="menu-buttons" id="mainMenu">
-            <button class="active" data-target="module-vbt">Halter Hızı (VBT)</button>
-            <button data-target="module-sprint">20m Sprint</button>
-            <button data-target="module-fms">Fonksiyonel Hareket Taraması</button>
-            <button data-target="module-posture">Statik Postür Analizi</button>
-            <button data-target="module-jump">Dikey Sıçrama</button>
-            <button data-target="module-agility">505 Çeviklik Testi</button>
-        </div>
-    </header>
+            
+            <div class="landing-body">
+                <div class="landing-videos">
+                    <div class="video-card">
+                        <h3>▶ Bu Uygulama Nedir?</h3>
+                        <div class="vid-placeholder">
+                            <span>(Platform Tanıtım Videosu Eklenecek)</span>
+                        </div>
+                    </div>
+                    <div class="video-card">
+                        <h3>▶ Ödev Nedir & Kriterler</h3>
+                        <div class="vid-placeholder">
+                            <span>(Final Ödevi Yönerge Videosu Eklenecek)</span>
+                        </div>
+                    </div>
+                </div>
 
-    <div id="studentModal" class="modal-overlay">
-        <div class="modal-content" style="max-width: 400px; padding: 20px;">
-            <h3 style="margin-top:0; color:#2c3e50; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px;">Öğrenci Bilgileri</h3>
-            <label style="font-size: 0.9em; font-weight: bold;">Öğrenci No:</label>
-            <input type="text" id="stdNo" style="width:100%; margin-bottom:10px; padding:8px; border: 1px solid #bdc3c7; border-radius: 4px;">
-            <label style="font-size: 0.9em; font-weight: bold;">Adı Soyadı:</label>
-            <input type="text" id="stdName" style="width:100%; margin-bottom:10px; padding:8px; border: 1px solid #bdc3c7; border-radius: 4px;">
-            <label style="font-size: 0.9em; font-weight: bold;">E-posta Adresi:</label>
-            <input type="email" id="stdEmail" style="width:100%; margin-bottom:20px; padding:8px; border: 1px solid #bdc3c7; border-radius: 4px;">
-            <button id="btnSaveStudentInfo" style="background:#2980b9; color:white; border:none; padding:10px 15px; width:100%; cursor:pointer; font-weight:bold; border-radius:4px;">Bilgileri Gir</button>
+                <div class="landing-login">
+                    <h2>Öğrenci Girişi</h2>
+                    <p style="font-size:0.85em; color:#7f8c8d; margin-bottom:15px;">Analize başlamak için bilgilerinizi eksiksiz girin.</p>
+                    
+                    <label>Öğrenci No</label>
+                    <input type="text" id="lpNo" placeholder="Örn: 2026123456">
+                    
+                    <label>Ad Soyad</label>
+                    <input type="text" id="lpName" placeholder="Örn: Ali Yılmaz">
+                    
+                    <label>E-posta Adresi</label>
+                    <input type="email" id="lpEmail" placeholder="Örn: ali@ogrenci.edu.tr">
+                    
+                    <button id="btnEnterSystem" class="primary-btn">Sisteme Giriş Yap</button>
+                    <p id="lpError" style="color:#e74c3c; display:none; font-size:0.85em; font-weight:bold; margin-top:10px;">Lütfen tüm bilgileri eksiksiz doldurunuz!</p>
+                </div>
+            </div>
         </div>
     </div>
 
-    <main class="container">
-        
-        <section class="left-panel">
-            <div class="video-container" id="videoWrapper" style="position: relative; display: flex; align-items: center; justify-content: center; background-color: #000;">
-                <p id="uploadText" style="position: absolute; color: white; font-weight: bold; z-index: 10; pointer-events: none;">Analiz edilecek videoyu seçin</p>
-                <input type="file" id="videoUploader" accept="video/mp4,video/x-m4v,video/*" style="opacity: 0; position: absolute; width: 100%; height: 100%; cursor: pointer; z-index: 20;">
-                <video id="mainVideo" style="display: none; width: 100%; z-index: 1;"></video>
-            </div>
-            
-            <div class="custom-controls" id="customControls" style="display: none;">
-                <button id="btnPlayPause">Oynat</button>
-                <button id="btnSlowMotion" style="background-color: #8e44ad;">Yavaş Oynat (0.25x)</button>
-                <input type="range" id="videoTimeline" min="0" value="0" step="0.001">
-            </div>
-
-            <div class="video-controls" style="flex-direction: column; align-items: stretch;">
-                <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 5px;">
-                    <button id="btnPrevFrame">◀ Önceki Kare</button>
-                    <button id="btnNextFrame">Sonraki Kare ▶</button>
-                    <span id="coordinateDisplay">Zaman: 0.000 sn | X: 0, Y: 0</span>
-                </div>
-                <div style="text-align: left; font-size: 0.8em; color: #e67e22; margin-bottom: 5px;">
-                    * Daha hassas seçim yapmak için <b>SHIFT</b> tuşuna basılı tutarak büyüteci açabilirsiniz.
-                </div>
-                <div id="videoMetadata" style="text-align: right; font-size: 0.85em; color: #7f8c8d; font-family: monospace;">
-                    Çözünürlük: Yüklenmedi 
-                </div>
-            </div>
-        </section>
-
-        <section class="right-panel">
-            
-            <div id="module-vbt" class="module-content active">
-                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-bottom: 15px;">
-                    <h2 style="margin: 0; border: none; padding: 0;">Halter Hızı Analizi</h2>
-                    <button class="guide-btn" onclick="openGuide('vbt')">📖 Kılavuz</button>
-                </div>
-                <div class="data-group">
-                    <h3 class="step-title">Aşama 1: Kalibrasyon <span class="tooltip-container">?<span class="tooltip-content">Piksel/metre dönüşümü yapabilmek için videodaki referans objesinin gerçek ölçüsünün sisteme tanıtıldığı mekansal kalibrasyon aşamasıdır.</span></span></h3>
-                    <button id="btnCalibrate" class="action-btn">🎯 Kalibrasyon İçin Tıkla</button>
-                    <table class="coord-table">
-                        <tr><th>Nokta</th><th>X Koordinatı</th><th>Y Koordinatı</th></tr>
-                        <tr><td>Referans Obje Üst Noktası</td><td id="cal_x1">-</td><td id="cal_y1">-</td></tr>
-                        <tr><td>Referans Obje Alt Noktası</td><td id="cal_x2">-</td><td id="cal_y2">-</td></tr>
-                    </table>
-                    <label>Referans Objenin Gerçek Uzunluğu (m):</label>
-                    <input type="number" id="inputRealLength" placeholder="Referans objesinin metre cinsinden gerçek ölçüsü">
-                    <label>Öğrenci Hesabı: Kalibrasyon Katsayısı (m/piksel):</label>
-                    <input type="number" id="inputKcal" placeholder="Formül: Gerçek Uzunluk / |Y_üst - Y_alt|">
-                </div>
+    <div id="mainAppContainer" style="display: none; flex-direction: column; min-height: 100vh;">
+        <header class="navbar" style="display: flex; padding: 10px 20px; gap: 20px; align-items: center;">
+            <div style="flex: 0 0 65%; display: flex; justify-content: space-between; align-items: center;">
+                <h1 class="brand-title" style="color: #ffffff;">KINEMAN <span>eğitim</span> <small>(beta)</small></h1>
                 
-                <div class="tabs">
-                    <button class="tab-btn active" data-target="set1">Set 1 (%40)</button>
-                    <button class="tab-btn" data-target="set2">Set 2 (%60)</button>
-                    <button class="tab-btn" data-target="set3">Set 3 (%80)</button>
-                </div>
-                
-                <div id="set1" class="tab-content active">
-                    <div class="data-group">
-                        <h3 class="step-title">Aşama 2: Kinematik Veri Toplama <span class="tooltip-container">?<span class="tooltip-content">Halter kaldırışının konsantrik fazını analiz etmek için hareketin başlama ve bitiş anlarının işaretlendiği aşamadır.</span></span></h3>
-                        <label>Kaldırılan Ağırlık (kg):</label>
-                        <input type="number" class="sync-weight" data-set="1" id="weight_1" placeholder="Bu sette kaldırılan toplam ağırlık (kg)">
-                        <button id="btnVbtMark1" class="action-btn" style="background-color: #2980b9; margin-top: 10px;">⏱️ Tıklama (İşaretleme) Başlat</button>
-                        <table class="coord-table">
-                            <tr><th>Evre</th><th>Zaman (sn)</th><th>X Koor.</th><th>Y Koor.</th></tr>
-                            <tr><td>Kaldırış Başlangıcı</td><td id="t0_display_1">-</td><td id="x0_display_1">-</td><td id="y0_display_1">-</td></tr>
-                            <tr><td>Kaldırış Bitişi</td><td id="t1_display_1">-</td><td id="x1_display_1">-</td><td id="y1_display_1">-</td></tr>
-                        </table>
-                        <button class="reset-btn" onclick="resetSet(1)">🔄 Set 1 Sıfırla</button>
-                        <hr style="border: 1px solid #ecf0f1; margin: 15px 0;">
-                        <label>Öğrenci Hesabı: Geçen Süre (Δt - sn):</label>
-                        <input type="number" id="time_diff_1" placeholder="Formül: t1 - t0">
-                        <label>Öğrenci Hesabı: Dikey Yer Değiştirme (Δy - m):</label>
-                        <input type="number" id="disp_y_1" placeholder="Formül: |Y_Bitiş - Y_Başlangıç| x Kal.Kat">
-                        <label>Öğrenci Hesabı: Ortalama Hız (m/sn):</label>
-                        <input type="number" class="sync-speed" data-set="1" id="speed_1" placeholder="Formül: Δy / Δt">
+                <div style="display: flex; align-items: center; gap: 15px; padding-right: 15px; border-right: 2px solid rgba(255,255,255,0.1);">
+                    <div id="studentInfoDisplay" style="text-align: right; display: flex; flex-direction: column; gap: 2px;">
                     </div>
-                </div>
-
-                <div id="set2" class="tab-content">
-                    <div class="data-group">
-                        <h3 class="step-title">Aşama 2: Kinematik Veri Toplama</h3>
-                        <label>Kaldırılan Ağırlık (kg):</label>
-                        <input type="number" class="sync-weight" data-set="2" id="weight_2" placeholder="Bu sette kaldırılan toplam ağırlık (kg)">
-                        <button id="btnVbtMark2" class="action-btn" style="background-color: #2980b9; margin-top: 10px;">⏱️ Tıklama (İşaretleme) Başlat</button>
-                        <table class="coord-table">
-                            <tr><th>Evre</th><th>Zaman (sn)</th><th>X Koor.</th><th>Y Koor.</th></tr>
-                            <tr><td>Kaldırış Başlangıcı</td><td id="t0_display_2">-</td><td id="x0_display_2">-</td><td id="y0_display_2">-</td></tr>
-                            <tr><td>Kaldırış Bitişi</td><td id="t1_display_2">-</td><td id="x1_display_2">-</td><td id="y1_display_2">-</td></tr>
-                        </table>
-                        <button class="reset-btn" onclick="resetSet(2)">🔄 Set 2 Sıfırla</button>
-                        <hr style="border: 1px solid #ecf0f1; margin: 15px 0;">
-                        <label>Öğrenci Hesabı: Geçen Süre (Δt - sn):</label>
-                        <input type="number" id="time_diff_2" placeholder="Formül: t1 - t0">
-                        <label>Öğrenci Hesabı: Dikey Yer Değiştirme (Δy - m):</label>
-                        <input type="number" id="disp_y_2" placeholder="Formül: |Y_Bitiş - Y_Başlangıç| x Kal.Kat">
-                        <label>Öğrenci Hesabı: Ortalama Hız (m/sn):</label>
-                        <input type="number" class="sync-speed" data-set="2" id="speed_2" placeholder="Formül: Δy / Δt">
-                    </div>
-                </div>
-
-                <div id="set3" class="tab-content">
-                    <div class="data-group">
-                        <h3 class="step-title">Aşama 2: Kinematik Veri Toplama</h3>
-                        <label>Kaldırılan Ağırlık (kg):</label>
-                        <input type="number" class="sync-weight" data-set="3" id="weight_3" placeholder="Bu sette kaldırılan toplam ağırlık (kg)">
-                        <button id="btnVbtMark3" class="action-btn" style="background-color: #2980b9; margin-top: 10px;">⏱️ Tıklama (İşaretleme) Başlat</button>
-                        <table class="coord-table">
-                            <tr><th>Evre</th><th>Zaman (sn)</th><th>X Koor.</th><th>Y Koor.</th></tr>
-                            <tr><td>Kaldırış Başlangıcı</td><td id="t0_display_3">-</td><td id="x0_display_3">-</td><td id="y0_display_3">-</td></tr>
-                            <tr><td>Kaldırış Bitişi</td><td id="t1_display_3">-</td><td id="x1_display_3">-</td><td id="y1_display_3">-</td></tr>
-                        </table>
-                        <button class="reset-btn" onclick="resetSet(3)">🔄 Set 3 Sıfırla</button>
-                        <hr style="border: 1px solid #ecf0f1; margin: 15px 0;">
-                        <label>Öğrenci Hesabı: Geçen Süre (Δt - sn):</label>
-                        <input type="number" id="time_diff_3" placeholder="Formül: t1 - t0">
-                        <label>Öğrenci Hesabı: Dikey Yer Değiştirme (Δy - m):</label>
-                        <input type="number" id="disp_y_3" placeholder="Formül: |Y_Bitiş - Y_Başlangıç| x Kal.Kat">
-                        <label>Öğrenci Hesabı: Ortalama Hız (m/sn):</label>
-                        <input type="number" class="sync-speed" data-set="3" id="speed_3" placeholder="Formül: Δy / Δt">
-                    </div>
-                </div>
-
-                <div class="summary-section">
-                    <h3 class="step-title">Aşama 3: 1TM Kestirimi <span class="tooltip-container">?<span class="tooltip-content">Doğrusal regresyon denklemi oluşturarak sporcunun 1 Tekrar Maksimum (1TM) kapasitesinin tahmin edilmesi işlemidir.</span></span></h3>
-                    <table class="summary-table">
-                        <tr><th>Set</th><th>Ağırlık (kg)</th><th>Hız (m/sn)</th></tr>
-                        <tr><td>1 (%40)</td><td id="sumW_1">-</td><td id="sumS_1">-</td></tr>
-                        <tr><td>2 (%60)</td><td id="sumW_2">-</td><td id="sumS_2">-</td></tr>
-                        <tr><td>3 (%80)</td><td id="sumW_3">-</td><td id="sumS_3">-</td></tr>
-                    </table>
-                    <div class="instruction-box">
-                        <div style="font-size: 0.85em; color: #2c3e50; background: #e8f8f5; padding: 10px; border-left: 4px solid #1abc9c; margin-bottom: 15px;">
-                            <strong>💡 MVT (Minimum Hız Eşiği) Değerleri:</strong><br>
-                            • Bench Press: 0.15 m/sn &nbsp;|&nbsp; • Squat: 0.30 m/sn<br>
-                            • Deadlift: 0.30 m/sn &nbsp;|&nbsp; • Overhead Press: 0.20 m/sn
-                        </div>
-                        <label style="font-weight:bold;">Öğrenci Hesabı: Eğimi girin</label>
-                        <input type="number" id="inputSlope" placeholder="Formül: (Hız3 - Hız1) / (Yük3 - Yük1)">
-                        
-                        <label style="font-weight:bold; margin-top:10px; display:block;">Öğrenci Hesabı: Kesişim değerini girin</label>
-                        <input type="number" id="inputIntercept" placeholder="Formül: Hız1 - (Eğim x Yük1)">
-                        
-                        <label style="font-weight:bold; margin-top:10px; display:block;">Öğrenci Hesabı: 1TM değerini girin</label>
-                        <input type="number" id="input1RM" placeholder="Formül: (MVT - Kesişim) / Eğim">
-                    </div>
-                    <div style="display: flex; gap: 10px; margin-top: 15px;">
-                        <button class="print-btn" id="btnPrintReportVbt">🖨️ Raporu Oluştur</button>
-                        <button class="submit-btn" id="btnSubmitFormVbt">📤 Değerlendirme Dosyasını Gönder</button>
-                    </div>
-                </div>
-            </div>
-
-            <div id="module-sprint" class="module-content">
-                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-bottom: 15px;">
-                    <h2 style="margin: 0; border: none; padding: 0;">20m Sprint (İvmelenme) Analizi</h2>
-                    <button class="guide-btn" onclick="openGuide('sprint')">📖 Kılavuz</button>
-                </div>
-                <div class="data-group">
-                    <h3 class="step-title">Aşama 1: Kalibrasyon <span class="tooltip-container">?<span class="tooltip-content">Sprint koridorundaki 5. ve 10. metre hunileri referans alınarak piksel boyutlarının metreye dönüştürüldüğü aşamadır.</span></span></h3>
-                    <button id="btnSprintCalibrate" class="action-btn">🎯 Kalibrasyon İçin Tıkla (5m ve 10m Hunisi)</button>
-                    <table class="coord-table" style="margin-top: 10px;">
-                        <tr><th>Huni</th><th>X Koordinatı (Yatay)</th></tr>
-                        <tr><td>5. Metre Hunisi</td><td id="spr_cal_x1">-</td></tr>
-                        <tr><td>10. Metre Hunisi</td><td id="spr_cal_x2">-</td></tr>
-                    </table>
-                    <label>Öğrenci Hesabı: Kalibrasyon Katsayısı (k_cal):</label>
-                    <input type="number" id="inputSprintKcal" placeholder="Formül: 5 / |X_10 - X_5|">
-                </div>
-
-                <div class="data-group">
-                    <h3 class="step-title">Aşama 2: Süre Analizi <span class="tooltip-container">?<span class="tooltip-content">Sporcunun hareket başlangıcı ve belirli mesafe dilimlerindeki geçiş anlarının zamansal olarak kaydedilmesidir.</span></span></h3>
-                    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                        <button id="btnSprintStart" class="action-btn" style="background-color: #c0392b; flex: 1;">🏃 Başlangıç (0m) İşaretle</button>
-                        <button id="btnSprintSplits" class="action-btn" style="background-color: #d35400; flex: 1;">⏱️ Geçiş Anlarını İşaretle</button>
-                    </div>
-                    <table class="coord-table">
-                        <tr><th>Evre / Mesafe</th><th>Zaman (sn)</th><th>X Koor.</th></tr>
-                        <tr><td>Başlangıç Anı (0m)</td><td id="spr_t_0">-</td><td id="spr_x_0">-</td></tr>
-                        <tr><td>5. Metre Geçiş</td><td id="spr_t_5">-</td><td>-</td></tr>
-                        <tr><td>10. Metre Geçiş</td><td id="spr_t_10">-</td><td>-</td></tr>
-                        <tr><td>15. Metre Geçiş</td><td id="spr_t_15">-</td><td>-</td></tr>
-                        <tr><td>20. Metre Geçiş (Bitiş)</td><td id="spr_t_20">-</td><td>-</td></tr>
-                    </table>
-                </div>
-
-                <div class="data-group">
-                    <h3 class="step-title">Aşama 3: Kinematik Veri Toplama <span class="tooltip-container">?<span class="tooltip-content">Her bir adım döngüsü için ayağın yerden kesilme ve yere temas etme anlarındaki verilerin toplanmasıdır. İlk satır otomatik kopyalanır.</span></span></h3>
-                    <div id="sprintStepsContainer"></div>
-                    <button id="btnAddSprintStep" class="print-btn" style="width: 100%; margin-top: 10px; background-color: #2980b9;">➕ Yeni Adım Döngüsü Ekle</button>
-                </div>
-
-                <div class="summary-section">
-                    <h3 class="step-title">Aşama 4: Kinematik Hesaplamalar <span class="tooltip-container">?<span class="tooltip-content">Girilen adım verileri üzerinden fazlara ait ortalama adım uzunluğu, temas süresi, hız ve ivme hesaplamalarının yapıldığı matristir.</span></span></h3>
                     
-                    <h4 style="color:#2980b9; font-size:0.9em; margin-bottom:5px;">Aşama 3 Verileri Otomatik Özet Tablosu</h4>
-                    <div id="sprintAutoSummaryContainer" style="max-height: 150px; overflow-y: auto; margin-bottom: 20px; border: 1px solid #bdc3c7;">
-                        <table class="summary-table" style="margin-top:0;">
-                            <thead>
-                                <tr><th>Adım</th><th>Evre Seçimi</th><th>Uzunluk (m)</th><th>Temas (sn)</th></tr>
-                            </thead>
-                            <tbody id="sprintAutoSummaryBody"></tbody>
-                        </table>
-                    </div>
-
-                    <table class="summary-table">
-                        <tr><th>Bölge Fazı</th><th>Ort. Adım<br>Uzunluğu (m)</th><th>Ort. Temas<br>Süresi (sn)</th><th>Ort. Hız<br>(m/sn)</th><th>Ort. İvme<br>(m/sn²)</th></tr>
-                        <tr><td>0 - 5m</td>
-                            <td><input type="number" id="avg_len_0_5" class="clean-input" placeholder="Ortalama Uzunluk"></td>
-                            <td><input type="number" id="avg_time_0_5" class="clean-input" placeholder="Ortalama Temas"></td>
-                            <td><input type="number" id="avg_spd_0_5" class="clean-input" placeholder="Formül: Uzunluk / Temas"></td>
-                            <td><input type="number" id="avg_acc_0_5" class="clean-input" placeholder="Formül: Hız / Zaman"></td>
-                        </tr>
-                        <tr><td>5 - 10m</td>
-                            <td><input type="number" id="avg_len_5_10" class="clean-input"></td>
-                            <td><input type="number" id="avg_time_5_10" class="clean-input"></td>
-                            <td><input type="number" id="avg_spd_5_10" class="clean-input"></td>
-                            <td><input type="number" id="avg_acc_5_10" class="clean-input"></td>
-                        </tr>
-                        <tr><td>10 - 15m</td>
-                            <td><input type="number" id="avg_len_10_15" class="clean-input"></td>
-                            <td><input type="number" id="avg_time_10_15" class="clean-input"></td>
-                            <td><input type="number" id="avg_spd_10_15" class="clean-input"></td>
-                            <td><input type="number" id="avg_acc_10_15" class="clean-input"></td>
-                        </tr>
-                        <tr><td>15 - 20m</td>
-                            <td><input type="number" id="avg_len_15_20" class="clean-input"></td>
-                            <td><input type="number" id="avg_time_15_20" class="clean-input"></td>
-                            <td><input type="number" id="avg_spd_15_20" class="clean-input"></td>
-                            <td><input type="number" id="avg_acc_15_20" class="clean-input"></td>
-                        </tr>
-                    </table>
-                    <div style="display: flex; gap: 10px; margin-top: 15px;">
-                        <button class="print-btn" id="btnSprintPrint">🖨️ Raporu Oluştur</button>
-                        <button class="submit-btn" id="btnSprintSubmit">📤 Değerlendirme Dosyasını Gönder</button>
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
+                        <button id="btnThemeToggle" class="control-btn">🌙 Koyu Mod</button>
+                        <button id="btnLogout" class="control-btn">🚪 Çıkış</button>
                     </div>
                 </div>
             </div>
             
-            <div id="module-fms" class="module-content">
-                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-bottom: 15px;">
-                    <h2 style="margin: 0; border: none; padding: 0;">FMS: Overhead Squat Analizi</h2>
-                    <button class="guide-btn" onclick="openGuide('fms')">📖 Kılavuz</button>
+            <div class="header-menu-grid" id="mainMenu" style="flex: 0 0 calc(35% - 20px);">
+                <div class="menu-col grp-1">
+                    <button class="active" data-target="module-vbt">Halter Hızı (VBT)</button>
+                    <button data-target="module-sprint">20m Sprint</button>
                 </div>
-                <div class="tabs">
-                    <button class="mod-tab-btn ohs-tab-btn active" data-target="ohs-side">Yandan Görünüm Analizi</button>
-                    <button class="mod-tab-btn ohs-tab-btn" data-target="ohs-front">Önden Görünüm Analizi</button>
+                <div class="menu-col grp-2">
+                    <button data-target="module-fms">FMS</button>
+                    <button data-target="module-posture">Statik Postür</button>
                 </div>
-                
-                <div id="ohs-side" class="ohs-tab-content active" style="margin-top: 15px;">
-                    <div class="data-group">
-                        <h3 class="step-title">Derinlik ve Paralellik İçin Eklem Tespiti <span class="tooltip-container">?<span class="tooltip-content">Çömelme derinliğini ve gövde paralelliğini ölçmek için sagittal düzlemdeki ana eklem merkezlerinin piksellerinin işaretlendiği aşamadır.</span></span></h3>
-                        <button id="btnOhsSide" class="action-btn">🎯 Eklemleri İşaretle (Sırayla 4 Tıklama)</button>
-                        <table class="coord-table">
-                            <tr><th>Anatomik Nokta</th><th>X Koordinatı</th><th>Y Koordinatı</th></tr>
-                            <tr><td>Omuz <span class="tooltip-container">?<span class="tooltip-content">Akromion süreci. Kolun gövdeyle birleştiği en üst kemiksi çıkıntı.</span></span></td><td id="ohs_s_x1">-</td><td id="ohs_s_y1">-</td></tr>
-                            <tr><td>Kalça (B. Trokanter) <span class="tooltip-container">?<span class="tooltip-content">Büyük trokanter. Uyluk kemiğinin üst dış tarafındaki geniş çıkıntı.</span></span></td><td id="ohs_s_x2">-</td><td id="ohs_s_y2">-</td></tr>
-                            <tr><td>Diz (L. Epikondil) <span class="tooltip-container">?<span class="tooltip-content">Lateral epikondil. Diz ekleminin dış tarafındaki kemiksi yapı.</span></span></td><td id="ohs_s_x3">-</td><td id="ohs_s_y3">-</td></tr>
-                            <tr><td>Ayak Bileği <span class="tooltip-container">?<span class="tooltip-content">Lateral malleol. Kaval kemiğinin (fibula) alt ucundaki dış ayak bileği çıkıntısı.</span></span></td><td id="ohs_s_x4">-</td><td id="ohs_s_y4">-</td></tr>
-                        </table>
-                        <button class="reset-btn" id="btnResetOhsSide">🔄 Temizle</button>
-                        <hr style="border: 1px solid #ecf0f1; margin: 15px 0;">
-                        
-                        <h4 style="color: #2c3e50; margin-bottom: 10px;">A. Çömelme Derinliği</h4>
-                        <label>Öğrenci Hesabı: Femur Eğimi (m_femur):</label>
-                        <input type="number" id="ohs_femur_m" placeholder="Formül: (Y_kalça - Y_diz) / (X_kalça - X_diz)">
-                        <label>Öğrenci Hesabı: Femur Yatay Açısı (Derece):</label>
-                        <input type="number" id="ohs_femur_deg" placeholder="Formül: =DERECE(MUTLAK(ATAN(m_femur)))">
-                        <label>Çömelme Derinliği Değerlendirmesi:</label>
-                        <select id="ohs_depth_eval" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; margin-top: 5px;">
-                            <option value="">Seçiniz...</option>
-                            <option value="100">Kusursuz (100 Puan)</option>
-                            <option value="70">Sınırda/Kabul Edilebilir (70 Puan)</option>
-                            <option value="0">Disfonksiyonel (0 Puan)</option>
-                        </select>
-                        
-                        <hr style="border: 1px solid #ecf0f1; margin: 15px 0;">
-                        
-                        <h4 style="color: #2c3e50; margin-bottom: 10px;">B. Gövde ve Kaval Kemiği (Tibia) Paralelliği</h4>
-                        <label>Öğrenci Hesabı: Gövde Eğimi (m_gövde):</label>
-                        <input type="number" id="ohs_torso_m" placeholder="Formül: (Y_omuz - Y_kalça) / (X_omuz - X_kalça)">
-                        <label>Öğrenci Hesabı: Gövde Açısı (Derece):</label>
-                        <input type="number" id="ohs_torso_deg" placeholder="Formül: =DERECE(MUTLAK(ATAN(m_gövde)))">
-                        <br>
-                        <label>Öğrenci Hesabı: Tibia Eğimi (m_tibia):</label>
-                        <input type="number" id="ohs_tibia_m" placeholder="Formül: (Y_diz - Y_bilek) / (X_diz - X_bilek)">
-                        <label>Öğrenci Hesabı: Tibia Açısı (Derece):</label>
-                        <input type="number" id="ohs_tibia_deg" placeholder="Formül: =DERECE(MUTLAK(ATAN(m_tibia)))">
-                        <label>Öğrenci Hesabı: Tibia-Gövde Açıları Farkı (Derece):</label>
-                        <input type="number" id="ohs_diff_deg" placeholder="Formül: |Gövde Açısı - Tibia Açısı|">
-                        <label>Gövde - Tibia Paralelliği Değerlendirmesi:</label>
-                        <select id="ohs_paralel_eval" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; margin-top: 5px;">
-                            <option value="">Seçiniz...</option>
-                            <option value="100">Kusursuz (100 Puan)</option>
-                            <option value="70">Sınırda/Kabul Edilebilir (70 Puan)</option>
-                            <option value="0">Disfonksiyonel (0 Puan)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div id="ohs-front" class="ohs-tab-content" style="display: none; margin-top: 15px;">
-                    <div class="data-group">
-                        <h3 class="step-title">Diz Hizalanması (Valgus/Varus) Tespiti <span class="tooltip-container">?<span class="tooltip-content">Çömelme sırasında frontal düzlemdeki dizin içe veya dışa sapmasını hesaplamak için eklem merkezlerinin işaretlendiği aşamadır.</span></span></h3>
-                        <button id="btnOhsFront" class="action-btn" style="background-color: #d35400;">🎯 Eklemleri İşaretle (Sırayla 3 Tıklama)</button>
-                        <table class="coord-table">
-                            <tr><th>Anatomik Nokta</th><th>X Koordinatı</th><th>Y Koordinatı</th></tr>
-                            <tr><td>Kalça (ASIS) <span class="tooltip-container">?<span class="tooltip-content">Anterior Superior Iliac Spine. Leğen kemiğinin öndeki belirgin üst çıkıntısı.</span></span></td><td id="ohs_f_x1">-</td><td id="ohs_f_y1">-</td></tr>
-                            <tr><td>Diz Kapağı (Patella) <span class="tooltip-container">?<span class="tooltip-content">Diz kapağı kemiğinin tam orta noktası.</span></span></td><td id="ohs_f_x2">-</td><td id="ohs_f_y2">-</td></tr>
-                            <tr><td>Ayak Bileği Orta <span class="tooltip-container">?<span class="tooltip-content">İki malleol (ayak bileği kemikleri) arasındaki eklem çizgisinin tam ortası.</span></span></td><td id="ohs_f_x3">-</td><td id="ohs_f_y3">-</td></tr>
-                        </table>
-                        <button class="reset-btn" id="btnResetOhsFront">🔄 Temizle</button>
-                        <hr style="border: 1px solid #ecf0f1; margin: 15px 0;">
-                        <label>Öğrenci Hesabı: Uyluk Kemik Eğimi (m_uyluk):</label>
-                        <input type="number" id="ohs_thigh_m" placeholder="Formül: (Y_kalça - Y_patella) / (X_kalça - X_patella)">
-                        <label>Öğrenci Hesabı: Uyluk Kemik Eğimi Açısal Değeri (Derece):</label>
-                        <input type="number" id="ohs_thigh_deg" placeholder="Formül: =DERECE(MUTLAK(ATAN(m_uyluk)))">
-                        <br>
-                        <label>Öğrenci Hesabı: Kaval Kemiği Eğimi (m_kaval):</label>
-                        <input type="number" id="ohs_shin_m" placeholder="Formül: (Y_patella - Y_bilek) / (X_patella - X_bilek)">
-                        <label>Öğrenci Hesabı: Kaval Kemiği Eğimi Açısal Değeri (Derece):</label>
-                        <input type="number" id="ohs_shin_deg" placeholder="Formül: =DERECE(MUTLAK(ATAN(m_kaval)))">
-                        <label>Öğrenci Hesabı: Uyluk-Kalça Sapma Açısı (Derece):</label>
-                        <input type="number" id="ohs_valgus_deg" placeholder="Formül: |Uyluk Açısı - Kaval Açısı|">
-                        <label>Diz Hizalanması Değerlendirmesi:</label>
-                        <select id="ohs_valgus_eval" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; margin-top: 5px;">
-                            <option value="">Seçiniz...</option>
-                            <option value="100">Kusursuz (100 Puan)</option>
-                            <option value="70">Sınırda/Kabul Edilebilir (70 Puan)</option>
-                            <option value="0">Disfonksiyonel (0 Puan)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="summary-section">
-                    <h3 class="step-title">Aşama 3: Fonksiyonel Hareket Taraması Sonuçları <span class="tooltip-container">?<span class="tooltip-content">Kullanıcının girdiği mekanik veri ve kararlar doğrultusunda nihai FMS skorunun otonom olarak üretildiği sonuç tablosudur.</span></span></h3>
-                    <table class="summary-table">
-                        <tr>
-                            <th>Parametre</th>
-                            <th>Çömelme Derinliği</th>
-                            <th>Gövde - Tibia Paralelliği</th>
-                            <th>Diz Hizalanması</th>
-                        </tr>
-                        <tr>
-                            <td>Açı</td>
-                            <td id="tbl_ohs_derinlik_aci">-</td>
-                            <td id="tbl_ohs_paralel_aci">-</td>
-                            <td id="tbl_ohs_sapma_aci">-</td>
-                        </tr>
-                        <tr>
-                            <td>Puan</td>
-                            <td id="tbl_ohs_derinlik_puan">-</td>
-                            <td id="tbl_ohs_paralel_puan">-</td>
-                            <td id="tbl_ohs_sapma_puan">-</td>
-                        </tr>
-                    </table>
-                    
-                    <div style="margin-top: 20px; text-align: center; font-size: 1.2em; font-weight: bold; background: #e8f8f5; padding: 15px; border-radius: 5px; border: 2px solid #1abc9c;">
-                        FMS Skoru: <span id="final_fms_score_display" style="color: #c0392b; font-size: 1.5em;">-</span>
-                    </div>
-                    
-                    <div style="display: flex; gap: 10px; margin-top: 20px;">
-                        <button class="print-btn" id="btnOhsPrint">🖨️ Raporu Oluştur</button>
-                        <button class="submit-btn" id="btnOhsSubmit">📤 Değerlendirme Dosyasını Gönder</button>
-                    </div>
+                <div class="menu-col grp-3">
+                    <button data-target="module-jump">Dikey Sıçrama</button>
+                    <button data-target="module-agility">505 Çeviklik</button>
                 </div>
             </div>
+        </header>
 
-            <div id="module-posture" class="module-content">
-                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-bottom: 15px;">
-                    <h2 style="margin: 0; border: none; padding: 0;">Statik Postür Analizi</h2>
-                    <button class="guide-btn" onclick="openGuide('posture')">📖 Kılavuz</button>
-                </div>
-                <div class="tabs">
-                    <button class="mod-tab-btn pos-tab-btn active" data-target="pos-side">Yandan Görünüm Analizi</button>
-                    <button class="mod-tab-btn pos-tab-btn" data-target="pos-front">Önden Görünüm Analizi</button>
+        <main class="container">
+            <section class="left-panel">
+                <div class="video-container" id="videoWrapper" style="position: relative; display: flex; align-items: center; justify-content: center; background-color: #000;">
+                    <p id="uploadText" style="position: absolute; color: white; font-weight: bold; z-index: 10; pointer-events: none;">Analiz edilecek videoyu seçin</p>
+                    <input type="file" id="videoUploader" accept="video/mp4,video/x-m4v,video/*" style="opacity: 0; position: absolute; width: 100%; height: 100%; cursor: pointer; z-index: 20;">
+                    <video id="mainVideo" style="display: none; width: 100%; z-index: 1;"></video>
                 </div>
                 
-                <div id="pos-side" class="pos-tab-content active" style="margin-top: 15px;">
-                    <div class="data-group">
-                        <h3 class="step-title">A. Başın Öne Kayması (Kraniovertebral Açı) <span class="tooltip-container">?<span class="tooltip-content">Boyun düzleşmesi veya ileri baş postürünü tespit etmek için boyun kökü ve kulak arasındaki açının ölçüldüğü aşamadır.</span></span></h3>
-                        <button id="btnPosHead" class="action-btn">🎯 Eklemleri İşaretle (C7 Omuru ve Kulak)</button>
-                        <table class="coord-table">
-                            <tr><th>Anatomik Nokta</th><th>X Koordinatı</th><th>Y Koordinatı</th></tr>
-                            <tr><td>C7 Omuru (Boyun Kökü) <span class="tooltip-container">?<span class="tooltip-content">Boynu büktüğünüzde ensenin alt kısmında en çok çıkıntı yapan omur.</span></span></td><td id="pos_c7_x">-</td><td id="pos_c7_y">-</td></tr>
-                            <tr><td>Tragus (Kulak Deliği) <span class="tooltip-container">?<span class="tooltip-content">Dış kulak yolunun hemen önündeki küçük kıkırdak çıkıntısı.</span></span></td><td id="pos_ear_x">-</td><td id="pos_ear_y">-</td></tr>
-                        </table>
-                        <label>Öğrenci Hesabı: Kraniovertebral Eğim (m):</label>
-                        <input type="number" id="pos_cva_m" placeholder="Formül: (Y_Kulak - Y_Boyun) / (X_Kulak - X_Boyun)">
-                        <label>Öğrenci Hesabı: Kraniovertebral Açı (CVA Derecesi):</label>
-                        <input type="number" id="pos_cva_deg" placeholder="Formül: =DERECE(MUTLAK(ATAN(m)))">
-                        <label>Başın Öne Kayması Değerlendirmesi:</label>
-                        <select id="pos_cva_eval" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; margin-top: 5px;">
-                            <option value="">Seçiniz...</option>
-                            <option value="100">Kusursuz (100 Puan)</option>
-                            <option value="70">Sınırda/Kabul Edilebilir (70 Puan)</option>
-                            <option value="0">Disfonksiyonel (0 Puan)</option>
-                        </select>
+                <div class="video-tools-container" id="customControls" style="display: none;">
+                    <div class="tools-row-1">
+                        <button id="btnPlayPause" class="vid-btn">Oynat</button>
+                        <button id="btnSlowMotion" class="vid-btn" style="background-color: #8e44ad;">Yavaş (0.25x)</button>
+                        <button id="btnPrevFrame" class="vid-btn">◀ Kare</button>
+                        <button id="btnNextFrame" class="vid-btn">Kare ▶</button>
+                        <span id="videoTimeDisplay" class="time-disp">0.000 sn</span>
+                        <input type="range" id="videoTimeline" min="0" value="0" step="0.001">
                     </div>
-                    <div class="data-group">
-                        <h3 class="step-title">B. Şakül Çizgisi (Vücut Dikey Hizalanması) <span class="tooltip-container">?<span class="tooltip-content">Vücudun genel ağırlık merkezinin öne veya arkaya ne kadar kaydığını belirlemek için tam dikey referans hattının ölçümüdür.</span></span></h3>
-                        <button id="btnPosPlumb" class="action-btn" style="background-color: #34495e;">🎯 Eklemleri İşaretle (Ayak Bileği ve Omuz)</button>
-                        <table class="coord-table">
-                            <tr><th>Anatomik Nokta</th><th>X Koordinatı</th><th>Y Koordinatı</th></tr>
-                            <tr><td>Ayak Bileği Dış Kemik <span class="tooltip-container">?<span class="tooltip-content">Lateral malleol. Dış ayak bileği çıkıntısı.</span></span></td><td id="pos_ankle_x">-</td><td id="pos_ankle_y">-</td></tr>
-                            <tr><td>Omuz Üst Noktası <span class="tooltip-container">?<span class="tooltip-content">Akromion süreci. Omzun tam üst merkezi.</span></span></td><td id="pos_shoulder_x">-</td><td id="pos_shoulder_y">-</td></tr>
-                        </table>
-                        <label>Öğrenci Hesabı: Vücut Dikey Eğimi (m):</label>
-                        <input type="number" id="pos_plumb_m" placeholder="Formül: (Y_Omuz - Y_Bilek) / (X_Omuz - X_Bilek)">
-                        <label>Öğrenci Hesabı: Dikey Açı (Derece):</label>
-                        <input type="number" id="pos_plumb_deg" placeholder="Formül: =DERECE(MUTLAK(ATAN(m)))">
-                        <label>Şakül Çizgisi Değerlendirmesi:</label>
-                        <select id="pos_plumb_eval" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; margin-top: 5px;">
-                            <option value="">Seçiniz...</option>
-                            <option value="100">Kusursuz (100 Puan)</option>
-                            <option value="70">Sınırda/Kabul Edilebilir (70 Puan)</option>
-                            <option value="0">Disfonksiyonel (0 Puan)</option>
-                        </select>
+                    <div class="tools-row-2">
+                        <button id="btnNewVideo" class="vid-btn new-vid-btn">Yeni Video Seç</button>
+                        <span id="coordinateDisplay" class="coord-disp">X: 0, Y: 0</span>
+                        <span id="videoMetadata" class="meta-disp">Çözünürlük: Yüklenmedi</span>
+                        <span class="shift-info">* Hassas seçim için <b>SHIFT</b> tuşuna basılı tutarak büyüteci açın.</span>
                     </div>
                 </div>
+            </section>
 
-                <div id="pos-front" class="pos-tab-content" style="display: none; margin-top: 15px;">
-                    <div class="data-group">
-                        <h3 class="step-title">C. Omuz ve Pelvis (Leğen Kemiği) Asimetrisi <span class="tooltip-container">?<span class="tooltip-content">Vücudun sağ ve sol yarıları arasındaki yatay eşitsizlikleri ve omurga eğrilik şüphelerini ölçen aşamadır.</span></span></h3>
-                        <button id="btnPosShoulderAsym" class="action-btn" style="background-color: #d35400;">🎯 Omuzları İşaretle (Sağ ve Sol Akromion)</button>
-                        <table class="coord-table">
-                            <tr><th>Anatomik Nokta</th><th>X Koordinatı</th><th>Y Koordinatı</th></tr>
-                            <tr><td>Sağ Omuz <span class="tooltip-container">?<span class="tooltip-content">Sağ akromion. Sağ omzun tam üst noktası.</span></span></td><td id="pos_rs_x">-</td><td id="pos_rs_y">-</td></tr>
-                            <tr><td>Sol Omuz <span class="tooltip-container">?<span class="tooltip-content">Sol akromion. Sol omzun tam üst noktası.</span></span></td><td id="pos_ls_x">-</td><td id="pos_ls_y">-</td></tr>
-                        </table>
-                        <label>Öğrenci Hesabı: Omuz Asimetrisi Eğimi (m):</label>
-                        <input type="number" id="pos_sa_m" placeholder="Formül: (Y_SolOmuz - Y_SagOmuz) / (X_SolOmuz - X_SagOmuz)">
-                        <label>Öğrenci Hesabı: Omuz Asimetrisi (Derece):</label>
-                        <input type="number" id="pos_sa_deg" placeholder="Formül: =DERECE(MUTLAK(ATAN(m)))">
-                        <label>Omuz Asimetrisi Değerlendirmesi:</label>
-                        <select id="pos_shoulder_eval" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; margin-top: 5px;">
-                            <option value="">Seçiniz...</option>
-                            <option value="100">Kusursuz (100 Puan)</option>
-                            <option value="70">Sınırda/Kabul Edilebilir (70 Puan)</option>
-                            <option value="0">Disfonksiyonel (0 Puan)</option>
-                        </select>
-                        
-                        <hr style="border: 1px solid #ecf0f1; margin: 15px 0;">
-                        
-                        <button id="btnPosPelvisAsym" class="action-btn" style="background-color: #27ae60;">🎯 Pelvisi İşaretle (Sağ ve Sol ASIS)</button>
-                        <table class="coord-table">
-                            <tr><th>Anatomik Nokta</th><th>X Koordinatı</th><th>Y Koordinatı</th></tr>
-                            <tr><td>Sağ Kalça Çıkıntısı <span class="tooltip-container">?<span class="tooltip-content">Sağ ASIS. Leğen kemiğinin sağ öndeki sivri çıkıntısı.</span></span></td><td id="pos_rp_x">-</td><td id="pos_rp_y">-</td></tr>
-                            <tr><td>Sol Kalça Çıkıntısı <span class="tooltip-container">?<span class="tooltip-content">Sol ASIS. Leğen kemiğinin sol öndeki sivri çıkıntısı.</span></span></td><td id="pos_lp_x">-</td><td id="pos_lp_y">-</td></tr>
-                        </table>
-                        <label>Öğrenci Hesabı: Pelvis Asimetrisi Eğimi (m):</label>
-                        <input type="number" id="pos_pa_m" placeholder="Formül: (Y_SolKalca - Y_SagKalca) / (X_SolKalca - X_SagKalca)">
-                        <label>Öğrenci Hesabı: Pelvis Asimetrisi (Derece):</label>
-                        <input type="number" id="pos_pa_deg" placeholder="Formül: =DERECE(MUTLAK(ATAN(m)))">
-                        <label>Pelvis Asimetrisi Değerlendirmesi:</label>
-                        <select id="pos_pelvis_eval" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; margin-top: 5px;">
-                            <option value="">Seçiniz...</option>
-                            <option value="100">Kusursuz (100 Puan)</option>
-                            <option value="70">Sınırda/Kabul Edilebilir (70 Puan)</option>
-                            <option value="0">Disfonksiyonel (0 Puan)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="summary-section">
-                    <h3 class="step-title">Aşama 3: Statik Postür Puanlaması <span class="tooltip-container">?<span class="tooltip-content">Kullanıcının girdiği mekanik veri ve kararlar doğrultusunda nihai Statik Postür Skorunun otonom olarak üretildiği sonuç tablosudur.</span></span></h3>
-                    <table class="summary-table">
-                        <tr>
-                            <th>Parametre</th>
-                            <th>Başın Öne Kayması</th>
-                            <th>Şakül Çizgisi</th>
-                            <th>Omuz Asimetrisi</th>
-                            <th>Pelvis Asimetrisi</th>
-                        </tr>
-                        <tr>
-                            <td>Açı</td>
-                            <td id="tbl_pos_cva_aci">-</td>
-                            <td id="tbl_pos_dikey_aci">-</td>
-                            <td id="tbl_pos_omuz_aci">-</td>
-                            <td id="tbl_pos_pelvis_aci">-</td>
-                        </tr>
-                        <tr>
-                            <td>Puan</td>
-                            <td id="tbl_pos_cva_puan">-</td>
-                            <td id="tbl_pos_dikey_puan">-</td>
-                            <td id="tbl_pos_omuz_puan">-</td>
-                            <td id="tbl_pos_pelvis_puan">-</td>
-                        </tr>
-                    </table>
-                    
-                    <div style="margin-top: 20px; text-align: center; font-size: 1.2em; font-weight: bold; background: #e8f8f5; padding: 15px; border-radius: 5px; border: 2px solid #1abc9c;">
-                        Statik Postür Puanı: <span id="final_posture_score_display" style="color: #c0392b; font-size: 1.5em;">-</span>
-                    </div>
-
-                    <div style="display: flex; gap: 10px; margin-top: 20px;">
-                        <button class="print-btn" id="btnPosPrint">🖨️ Raporu Oluştur</button>
-                        <button class="submit-btn" id="btnPosSubmit">📤 Değerlendirme Dosyasını Gönder</button>
-                    </div>
-                </div>
-            </div>
-
-            <div id="module-jump" class="module-content">
-                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-bottom: 15px;">
-                    <h2 style="margin: 0; border: none; padding: 0;">Dikey Sıçrama (SJ / CMJ) Yükseklik ve Güç Analizi</h2>
-                    <button class="guide-btn" onclick="openGuide('jump')">📖 Kılavuz</button>
-                </div>
+            <section class="right-panel">
                 
-                <div class="data-group">
-                    <h3 class="step-title">Aşama 1: Sporcu Verisi <span class="tooltip-container">?<span class="tooltip-content">Zirve güç hesabında kullanılmak üzere sporcunun kütlesinin sisteme girildiği aşamadır.</span></span></h3>
-                    <label>Vücut Ağırlığı (kg):</label>
-                    <input type="number" id="jump_body_mass" placeholder="Sporcunun kilogram cinsinden ağırlığı">
-                </div>
-
-                <div class="data-group">
-                    <h3 class="step-title">Aşama 2: Uçuş Süresinin Hesaplanması <span class="tooltip-container">?<span class="tooltip-content">Yerçekimi kanunları kullanılarak yüksekliği bulmak için sporcunun yerden kesilme ve tekrar yere inme anlarının zamansal tespitidir.</span></span></h3>
-                    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                        <button id="btnJumpTakeoff" class="action-btn" style="background-color: #c0392b; flex: 1;">🚀 Kalkış Anını İşaretle</button>
-                        <button id="btnJumpLanding" class="action-btn" style="background-color: #d35400; flex: 1;">🛬 İniş Anını İşaretle</button>
+                <div id="module-vbt" class="module-content active">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-bottom: 15px;">
+                        <h2 style="margin: 0; border: none; padding: 0;">Halter Hızı Analizi</h2>
+                        <button class="guide-btn" onclick="openGuide('vbt')">📖 Kılavuz</button>
                     </div>
-                    <table class="coord-table">
-                        <tr><th>Evre</th><th>Zaman (sn)</th></tr>
-                        <tr><td>Ayakların Yerden Kesildiği An (t_kalkış)</td><td id="jump_t_takeoff">-</td></tr>
-                        <tr><td>Ayakların Yere Değdiği An (t_iniş)</td><td id="jump_t_landing">-</td></tr>
-                    </table>
-                    <button class="reset-btn" id="btnResetJump">🔄 Temizle</button>
-                    <hr style="border: 1px solid #ecf0f1; margin: 15px 0;">
-                    <label>Öğrenci Hesabı: Uçuş Süresi (Δt - sn):</label>
-                    <input type="number" id="jump_flight_time" placeholder="Formül: t_iniş - t_kalkış">
-                </div>
-
-                <div class="summary-section">
-                    <h3 class="step-title">Aşama 3: Yükseklik ve Güç Çıktıları <span class="tooltip-container">?<span class="tooltip-content">Uçuş süresinden yola çıkarak kinematik yükselme miktarının ve Sayers denklemi ile zirve gücün hesaplandığı matris.</span></span></h3>
-                    <label>Öğrenci Hesabı: Sıçrama Yüksekliği (Metre):</label>
-                    <input type="number" id="jump_height_m" placeholder="Formül: [9.81 x (Uçuş Süresi²)] / 8">
-                    
-                    <label>Öğrenci Hesabı: Sıçrama Yüksekliği (Santimetre):</label>
-                    <input type="number" id="jump_height_cm" placeholder="Formül: Metre Yükseklik x 100">
-                    
-                    <hr style="border: 1px dashed #bdc3c7; margin: 15px 0;">
-                    
-                    <label>Öğrenci Hesabı: Zirve Güç / Peak Power (Watt):</label>
-                    <input type="number" id="jump_peak_power" placeholder="Formül: (60.7 x Yükseklik[cm]) + (45.3 x Ağırlık[kg]) - 2055">
-                    
-                    <div style="display: flex; gap: 10px; margin-top: 20px;">
-                        <button class="print-btn" id="btnJumpPrint">🖨️ Raporu Oluştur</button>
-                        <button class="submit-btn" id="btnJumpSubmit">📤 Değerlendirme Dosyasını Gönder</button>
-                    </div>
-                </div>
-            </div>
-
-            <div id="module-agility" class="module-content">
-                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-bottom: 15px;">
-                    <h2 style="margin: 0; border: none; padding: 0;">505 Çeviklik ve Yön Değiştirme Analizi</h2>
-                    <button class="guide-btn" onclick="openGuide('agility')">📖 Kılavuz</button>
-                </div>
-                
-                <div class="tabs">
-                    <button class="mod-tab-btn agility-tab-btn active" data-target="agility-right">Sağ Bacak Dönüşü (Video 1)</button>
-                    <button class="mod-tab-btn agility-tab-btn" data-target="agility-left">Sol Bacak Dönüşü (Video 2)</button>
-                </div>
-
-                <div id="agility-right" class="agility-tab-content active" style="margin-top: 15px;">
                     <div class="data-group">
-                        <h3 class="step-title">A. Toplam Çeviklik Süresi (10m -> 15m -> 10m) <span class="tooltip-container">?<span class="tooltip-content">Sağ bacak performansında 505 testinin toplam tamamlanma süresinin hesaplanmasıdır.</span></span></h3>
+                        <h3 class="step-title">Aşama 1: Kalibrasyon <span class="tooltip-container">?<span class="tooltip-content">Piksel/metre dönüşümü yapabilmek için videodaki referans objesinin gerçek ölçüsünün sisteme tanıtıldığı mekansal kalibrasyon aşamasıdır.</span></span></h3>
+                        <button id="btnCalibrate" class="action-btn">🎯 Kalibrasyon İçin Tıkla</button>
+                        <table class="coord-table">
+                            <tr><th>Nokta</th><th>X Koordinatı</th><th>Y Koordinatı</th></tr>
+                            <tr><td>Referans Obje Üst Noktası</td><td id="cal_x1">-</td><td id="cal_y1">-</td></tr>
+                            <tr><td>Referans Obje Alt Noktası</td><td id="cal_x2">-</td><td id="cal_y2">-</td></tr>
+                        </table>
+                        <label>Referans Objenin Gerçek Uzunluğu (m):</label>
+                        <input type="number" id="inputRealLength" placeholder="Referans objesinin metre cinsinden gerçek ölçüsü">
+                        <label>Öğrenci Hesabı: Kalibrasyon Katsayısı (m/piksel):</label>
+                        <input type="number" id="inputKcal" placeholder="Formül: Gerçek Uzunluk / |Y_üst - Y_alt|">
+                    </div>
+                    
+                    <div class="tabs">
+                        <button class="tab-btn active" data-target="set1">Set 1 (%40)</button>
+                        <button class="tab-btn" data-target="set2">Set 2 (%60)</button>
+                        <button class="tab-btn" data-target="set3">Set 3 (%80)</button>
+                    </div>
+                    
+                    <div id="set1" class="tab-content active">
+                        <div class="data-group">
+                            <h3 class="step-title">Aşama 2: Kinematik Veri Toplama <span class="tooltip-container">?<span class="tooltip-content">Halter kaldırışının konsantrik fazını analiz etmek için hareketin başlama ve bitiş anlarının işaretlendiği aşamadır.</span></span></h3>
+                            <label>Kaldırılan Ağırlık (kg):</label>
+                            <input type="number" class="sync-weight" data-set="1" id="weight_1" placeholder="Bu sette kaldırılan toplam ağırlık (kg)">
+                            <button id="btnVbtMark1" class="action-btn" style="background-color: #2980b9; margin-top: 10px;">⏱️ Etiketleme Başlat</button>
+                            <table class="coord-table">
+                                <tr><th>Evre</th><th>Zaman (sn)</th><th>X Koor.</th><th>Y Koor.</th></tr>
+                                <tr><td>Kaldırış Başlangıcı</td><td id="t0_display_1">-</td><td id="x0_display_1">-</td><td id="y0_display_1">-</td></tr>
+                                <tr><td>Kaldırış Bitişi</td><td id="t1_display_1">-</td><td id="x1_display_1">-</td><td id="y1_display_1">-</td></tr>
+                            </table>
+                            <button class="reset-btn" onclick="resetSet(1)">🔄 Set 1 Sıfırla</button>
+                            <hr style="border: 1px solid #ecf0f1; margin: 15px 0;">
+                            <label>Öğrenci Hesabı: Geçen Süre (Δt - sn):</label>
+                            <input type="number" id="time_diff_1" placeholder="Formül: t1 - t0">
+                            <label>Öğrenci Hesabı: Dikey Yer Değiştirme (Δy - m):</label>
+                            <input type="number" id="disp_y_1" placeholder="Formül: |Y_Bitiş - Y_Başlangıç| x Kal.Kat">
+                            <label>Öğrenci Hesabı: Ortalama Hız (m/sn):</label>
+                            <input type="number" class="sync-speed" data-set="1" id="speed_1" placeholder="Formül: Δy / Δt">
+                        </div>
+                    </div>
+
+                    <div id="set2" class="tab-content">
+                        <div class="data-group">
+                            <h3 class="step-title">Aşama 2: Kinematik Veri Toplama</h3>
+                            <label>Kaldırılan Ağırlık (kg):</label>
+                            <input type="number" class="sync-weight" data-set="2" id="weight_2" placeholder="Bu sette kaldırılan toplam ağırlık (kg)">
+                            <button id="btnVbtMark2" class="action-btn" style="background-color: #2980b9; margin-top: 10px;">⏱️ Tıklama (İşaretleme) Başlat</button>
+                            <table class="coord-table">
+                                <tr><th>Evre</th><th>Zaman (sn)</th><th>X Koor.</th><th>Y Koor.</th></tr>
+                                <tr><td>Kaldırış Başlangıcı</td><td id="t0_display_2">-</td><td id="x0_display_2">-</td><td id="y0_display_2">-</td></tr>
+                                <tr><td>Kaldırış Bitişi</td><td id="t1_display_2">-</td><td id="x1_display_2">-</td><td id="y1_display_2">-</td></tr>
+                            </table>
+                            <button class="reset-btn" onclick="resetSet(2)">🔄 Set 2 Sıfırla</button>
+                            <hr style="border: 1px solid #ecf0f1; margin: 15px 0;">
+                            <label>Öğrenci Hesabı: Geçen Süre (Δt - sn):</label>
+                            <input type="number" id="time_diff_2" placeholder="Formül: t1 - t0">
+                            <label>Öğrenci Hesabı: Dikey Yer Değiştirme (Δy - m):</label>
+                            <input type="number" id="disp_y_2" placeholder="Formül: |Y_Bitiş - Y_Başlangıç| x Kal.Kat">
+                            <label>Öğrenci Hesabı: Ortalama Hız (m/sn):</label>
+                            <input type="number" class="sync-speed" data-set="2" id="speed_2" placeholder="Formül: Δy / Δt">
+                        </div>
+                    </div>
+
+                    <div id="set3" class="tab-content">
+                        <div class="data-group">
+                            <h3 class="step-title">Aşama 2: Kinematik Veri Toplama</h3>
+                            <label>Kaldırılan Ağırlık (kg):</label>
+                            <input type="number" class="sync-weight" data-set="3" id="weight_3" placeholder="Bu sette kaldırılan toplam ağırlık (kg)">
+                            <button id="btnVbtMark3" class="action-btn" style="background-color: #2980b9; margin-top: 10px;">⏱️ Tıklama (İşaretleme) Başlat</button>
+                            <table class="coord-table">
+                                <tr><th>Evre</th><th>Zaman (sn)</th><th>X Koor.</th><th>Y Koor.</th></tr>
+                                <tr><td>Kaldırış Başlangıcı</td><td id="t0_display_3">-</td><td id="x0_display_3">-</td><td id="y0_display_3">-</td></tr>
+                                <tr><td>Kaldırış Bitişi</td><td id="t1_display_3">-</td><td id="x1_display_3">-</td><td id="y1_display_3">-</td></tr>
+                            </table>
+                            <button class="reset-btn" onclick="resetSet(3)">🔄 Set 3 Sıfırla</button>
+                            <hr style="border: 1px solid #ecf0f1; margin: 15px 0;">
+                            <label>Öğrenci Hesabı: Geçen Süre (Δt - sn):</label>
+                            <input type="number" id="time_diff_3" placeholder="Formül: t1 - t0">
+                            <label>Öğrenci Hesabı: Dikey Yer Değiştirme (Δy - m):</label>
+                            <input type="number" id="disp_y_3" placeholder="Formül: |Y_Bitiş - Y_Başlangıç| x Kal.Kat">
+                            <label>Öğrenci Hesabı: Ortalama Hız (m/sn):</label>
+                            <input type="number" class="sync-speed" data-set="3" id="speed_3" placeholder="Formül: Δy / Δt">
+                        </div>
+                    </div>
+
+                    <div class="summary-section">
+                        <h3 class="step-title">Aşama 3: 1TM Kestirimi <span class="tooltip-container">?<span class="tooltip-content">Doğrusal regresyon denklemi oluşturarak sporcunun 1 Tekrar Maksimum (1TM) kapasitesinin tahmin edilmesi işlemidir.</span></span></h3>
+                        <table class="summary-table">
+                            <tr><th>Set</th><th>Ağırlık (kg)</th><th>Hız (m/sn)</th></tr>
+                            <tr><td>1 (%40)</td><td id="sumW_1">-</td><td id="sumS_1">-</td></tr>
+                            <tr><td>2 (%60)</td><td id="sumW_2">-</td><td id="sumS_2">-</td></tr>
+                            <tr><td>3 (%80)</td><td id="sumW_3">-</td><td id="sumS_3">-</td></tr>
+                        </table>
+                        <div class="instruction-box">
+                            <div style="font-size: 0.85em; color: #2c3e50; background: #e8f8f5; padding: 10px; border-left: 4px solid #1abc9c; margin-bottom: 15px;">
+                                <strong>💡 MVT (Minimum Hız Eşiği) Değerleri:</strong><br>
+                                • Bench Press: 0.15 m/sn &nbsp;|&nbsp; • Squat: 0.30 m/sn<br>
+                                • Deadlift: 0.30 m/sn &nbsp;|&nbsp; • Overhead Press: 0.20 m/sn
+                            </div>
+                            <label style="font-weight:bold;">Öğrenci Hesabı: Eğimi girin</label>
+                            <input type="number" id="inputSlope" placeholder="Formül: (Hız3 - Hız1) / (Yük3 - Yük1)">
+                            
+                            <label style="font-weight:bold; margin-top:10px; display:block;">Öğrenci Hesabı: Kesişim değerini girin</label>
+                            <input type="number" id="inputIntercept" placeholder="Formül: Hız1 - (Eğim x Yük1)">
+                            
+                            <label style="font-weight:bold; margin-top:10px; display:block;">Öğrenci Hesabı: 1TM değerini girin</label>
+                            <input type="number" id="input1RM" placeholder="Formül: (MVT - Kesişim) / Eğim">
+                        </div>
+                        <div style="display: flex; gap: 10px; margin-top: 15px;">
+                            <button class="print-btn" id="btnPrintReportVbt">🖨️ Raporu Oluştur</button>
+                            <button class="submit-btn" id="btnSubmitFormVbt">📤 Değerlendirme Dosyasını Gönder</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="module-sprint" class="module-content">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-bottom: 15px;">
+                        <h2 style="margin: 0; border: none; padding: 0;">20m Sprint (İvmelenme) Analizi</h2>
+                        <button class="guide-btn" onclick="openGuide('sprint')">📖 Kılavuz</button>
+                    </div>
+                    <div class="data-group">
+                        <h3 class="step-title">Aşama 1: Kalibrasyon <span class="tooltip-container">?<span class="tooltip-content">Sprint koridorundaki 5. ve 10. metre hunileri referans alınarak piksel boyutlarının metreye dönüştürüldüğü aşamadır.</span></span></h3>
+                        <button id="btnSprintCalibrate" class="action-btn">🎯 Kalibrasyon İçin Tıkla (5m ve 10m Hunisi)</button>
+                        <table class="coord-table" style="margin-top: 10px;">
+                            <tr><th>Huni</th><th>X Koordinatı (Yatay)</th></tr>
+                            <tr><td>5. Metre Hunisi</td><td id="spr_cal_x1">-</td></tr>
+                            <tr><td>10. Metre Hunisi</td><td id="spr_cal_x2">-</td></tr>
+                        </table>
+                        <label>Öğrenci Hesabı: Kalibrasyon Katsayısı (k_cal):</label>
+                        <input type="number" id="inputSprintKcal" placeholder="Formül: 5 / |X_10 - X_5|">
+                    </div>
+
+                    <div class="data-group">
+                        <h3 class="step-title">Aşama 2: Süre Analizi <span class="tooltip-container">?<span class="tooltip-content">Sporcunun hareket başlangıcı ve belirli mesafe dilimlerindeki geçiş anlarının zamansal olarak kaydedilmesidir.</span></span></h3>
                         <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                            <button id="btnAgilityRightIn" class="action-btn" style="background-color: #2980b9; flex: 1;">⏱️ 10m Hunisinden GİRİŞ</button>
-                            <button id="btnAgilityRightOut" class="action-btn" style="background-color: #8e44ad; flex: 1;">🏁 10m Hunisinden ÇIKIŞ</button>
+                            <button id="btnSprintStart" class="action-btn" style="background-color: #c0392b; flex: 1;">🏃 Başlangıç (0m) İşaretle</button>
+                            <button id="btnSprintSplits" class="action-btn" style="background-color: #d35400; flex: 1;">⏱️ Geçiş Anlarını İşaretle</button>
+                        </div>
+                        <table class="coord-table">
+                            <tr><th>Evre / Mesafe</th><th>Zaman (sn)</th><th>X Koor.</th></tr>
+                            <tr><td>Başlangıç Anı (0m)</td><td id="spr_t_0">-</td><td id="spr_x_0">-</td></tr>
+                            <tr><td>5. Metre Geçiş</td><td id="spr_t_5">-</td><td>-</td></tr>
+                            <tr><td>10. Metre Geçiş</td><td id="spr_t_10">-</td><td>-</td></tr>
+                            <tr><td>15. Metre Geçiş</td><td id="spr_t_15">-</td><td>-</td></tr>
+                            <tr><td>20. Metre Geçiş (Bitiş)</td><td id="spr_t_20">-</td><td>-</td></tr>
+                        </table>
+                    </div>
+
+                    <div class="data-group">
+                        <h3 class="step-title">Aşama 3: Kinematik Veri Toplama <span class="tooltip-container">?<span class="tooltip-content">Her bir adım döngüsü için ayağın yerden kesilme ve yere temas etme anlarındaki verilerin toplanmasıdır. İlk satır otomatik kopyalanır.</span></span></h3>
+                        <div id="sprintStepsContainer"></div>
+                        <button id="btnAddSprintStep" class="print-btn" style="width: 100%; margin-top: 10px; background-color: #2980b9;">➕ Yeni Adım Döngüsü Ekle</button>
+                    </div>
+
+                    <div class="summary-section">
+                        <h3 class="step-title">Aşama 4: Kinematik Hesaplamalar <span class="tooltip-container">?<span class="tooltip-content">Girilen adım verileri üzerinden fazlara ait ortalama adım uzunluğu, temas süresi, hız ve ivme hesaplamalarının yapıldığı matristir.</span></span></h3>
+                        
+                        <h4 style="color:#2980b9; font-size:0.9em; margin-bottom:5px;">Aşama 3 Verileri Otomatik Özet Tablosu</h4>
+                        <div id="sprintAutoSummaryContainer" style="max-height: 150px; overflow-y: auto; margin-bottom: 20px; border: 1px solid #bdc3c7;">
+                            <table class="summary-table" style="margin-top:0;">
+                                <thead>
+                                    <tr><th>Adım</th><th>Evre Seçimi</th><th>Uzunluk (m)</th><th>Temas (sn)</th></tr>
+                                </thead>
+                                <tbody id="sprintAutoSummaryBody"></tbody>
+                            </table>
+                        </div>
+
+                        <table class="summary-table">
+                            <tr><th>Bölge Fazı</th><th>Ort. Adım<br>Uzunluğu (m)</th><th>Ort. Temas<br>Süresi (sn)</th><th>Ort. Hız<br>(m/sn)</th><th>Ort. İvme<br>(m/sn²)</th></tr>
+                            <tr><td>0 - 5m</td>
+                                <td><input type="number" id="avg_len_0_5" class="clean-input" placeholder="Ortalama Uzunluk"></td>
+                                <td><input type="number" id="avg_time_0_5" class="clean-input" placeholder="Ortalama Temas"></td>
+                                <td><input type="number" id="avg_spd_0_5" class="clean-input" placeholder="Formül: Uzunluk / Temas"></td>
+                                <td><input type="number" id="avg_acc_0_5" class="clean-input" placeholder="Formül: Hız / Zaman"></td>
+                            </tr>
+                            <tr><td>5 - 10m</td>
+                                <td><input type="number" id="avg_len_5_10" class="clean-input"></td>
+                                <td><input type="number" id="avg_time_5_10" class="clean-input"></td>
+                                <td><input type="number" id="avg_spd_5_10" class="clean-input"></td>
+                                <td><input type="number" id="avg_acc_5_10" class="clean-input"></td>
+                            </tr>
+                            <tr><td>10 - 15m</td>
+                                <td><input type="number" id="avg_len_10_15" class="clean-input"></td>
+                                <td><input type="number" id="avg_time_10_15" class="clean-input"></td>
+                                <td><input type="number" id="avg_spd_10_15" class="clean-input"></td>
+                                <td><input type="number" id="avg_acc_10_15" class="clean-input"></td>
+                            </tr>
+                            <tr><td>15 - 20m</td>
+                                <td><input type="number" id="avg_len_15_20" class="clean-input"></td>
+                                <td><input type="number" id="avg_time_15_20" class="clean-input"></td>
+                                <td><input type="number" id="avg_spd_15_20" class="clean-input"></td>
+                                <td><input type="number" id="avg_acc_15_20" class="clean-input"></td>
+                            </tr>
+                        </table>
+                        <div style="display: flex; gap: 10px; margin-top: 15px;">
+                            <button class="print-btn" id="btnSprintPrint">🖨️ Raporu Oluştur</button>
+                            <button class="submit-btn" id="btnSprintSubmit">📤 Değerlendirme Dosyasını Gönder</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="module-fms" class="module-content">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-bottom: 15px;">
+                        <h2 style="margin: 0; border: none; padding: 0;">FMS: Overhead Squat Analizi</h2>
+                        <button class="guide-btn" onclick="openGuide('fms')">📖 Kılavuz</button>
+                    </div>
+                    <div class="tabs">
+                        <button class="mod-tab-btn ohs-tab-btn active" data-target="ohs-side">Yandan Görünüm Analizi</button>
+                        <button class="mod-tab-btn ohs-tab-btn" data-target="ohs-front">Önden Görünüm Analizi</button>
+                    </div>
+                    
+                    <div id="ohs-side" class="ohs-tab-content active" style="margin-top: 15px;">
+                        <div class="data-group">
+                            <h3 class="step-title">Derinlik ve Paralellik İçin Eklem Tespiti <span class="tooltip-container">?<span class="tooltip-content">Çömelme derinliğini ve gövde paralelliğini ölçmek için sagittal düzlemdeki ana eklem merkezlerinin piksellerinin işaretlendiği aşamadır.</span></span></h3>
+                            <button id="btnOhsSide" class="action-btn">🎯 Eklemleri İşaretle (Sırayla 4 Tıklama)</button>
+                            <table class="coord-table">
+                                <tr><th>Anatomik Nokta</th><th>X Koordinatı</th><th>Y Koordinatı</th></tr>
+                                <tr><td>Omuz <span class="tooltip-container">?<span class="tooltip-content">Akromion süreci. Kolun gövdeyle birleştiği en üst kemiksi çıkıntı.</span></span></td><td id="ohs_s_x1">-</td><td id="ohs_s_y1">-</td></tr>
+                                <tr><td>Kalça (B. Trokanter) <span class="tooltip-container">?<span class="tooltip-content">Büyük trokanter. Uyluk kemiğinin üst dış tarafındaki geniş çıkıntı.</span></span></td><td id="ohs_s_x2">-</td><td id="ohs_s_y2">-</td></tr>
+                                <tr><td>Diz (L. Epikondil) <span class="tooltip-container">?<span class="tooltip-content">Lateral epikondil. Diz ekleminin dış tarafındaki kemiksi yapı.</span></span></td><td id="ohs_s_x3">-</td><td id="ohs_s_y3">-</td></tr>
+                                <tr><td>Ayak Bileği <span class="tooltip-container">?<span class="tooltip-content">Lateral malleol. Kaval kemiğinin (fibula) alt ucundaki dış ayak bileği çıkıntısı.</span></span></td><td id="ohs_s_x4">-</td><td id="ohs_s_y4">-</td></tr>
+                            </table>
+                            <button class="reset-btn" id="btnResetOhsSide">🔄 Temizle</button>
+                            <hr style="border: 1px solid #ecf0f1; margin: 15px 0;">
+                            
+                            <h4 style="color: #2c3e50; margin-bottom: 10px;">A. Çömelme Derinliği</h4>
+                            <label>Öğrenci Hesabı: Femur Eğimi (m_femur):</label>
+                            <input type="number" id="ohs_femur_m" placeholder="Formül: (Y_kalça - Y_diz) / (X_kalça - X_diz)">
+                            <label>Öğrenci Hesabı: Femur Yatay Açısı (Derece):</label>
+                            <input type="number" id="ohs_femur_deg" placeholder="Formül: =DERECE(MUTLAK(ATAN(m_femur)))">
+                            <label>Çömelme Derinliği Değerlendirmesi:</label>
+                            <select id="ohs_depth_eval" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; margin-top: 5px;">
+                                <option value="">Seçiniz...</option>
+    <option value="100">Kusursuz (Uyluklar Paralel Altı / Açı < 0°)</option>
+    <option value="70">Sınırda (Uyluklar Paralel / Açı ≈ 0°)</option>
+    <option value="0">Disfonksiyonel (Paralel Üstü / Açı > 0°)</option>
+                            </select>
+                            
+                            <hr style="border: 1px solid #ecf0f1; margin: 15px 0;">
+                            
+                            <h4 style="color: #2c3e50; margin-bottom: 10px;">B. Gövde ve Kaval Kemiği (Tibia) Paralelliği</h4>
+                            <label>Öğrenci Hesabı: Gövde Eğimi (m_gövde):</label>
+                            <input type="number" id="ohs_torso_m" placeholder="Formül: (Y_omuz - Y_kalça) / (X_omuz - X_kalça)">
+                            <label>Öğrenci Hesabı: Gövde Açısı (Derece):</label>
+                            <input type="number" id="ohs_torso_deg" placeholder="Formül: =DERECE(MUTLAK(ATAN(m_gövde)))">
+                            <br>
+                            <label>Öğrenci Hesabı: Tibia Eğimi (m_tibia):</label>
+                            <input type="number" id="ohs_tibia_m" placeholder="Formül: (Y_diz - Y_bilek) / (X_diz - X_bilek)">
+                            <label>Öğrenci Hesabı: Tibia Açısı (Derece):</label>
+                            <input type="number" id="ohs_tibia_deg" placeholder="Formül: =DERECE(MUTLAK(ATAN(m_tibia)))">
+                            <label>Öğrenci Hesabı: Tibia-Gövde Açıları Farkı (Derece):</label>
+                            <input type="number" id="ohs_diff_deg" placeholder="Formül: |Gövde Açısı - Tibia Açısı|">
+                            <label>Gövde - Tibia Paralelliği Değerlendirmesi:</label>
+                            <select id="ohs_paralel_eval" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; margin-top: 5px;">
+                                <option value="">Seçiniz...</option>
+    <option value="100">Kusursuz (Açı Farkı ≤ 5°)</option>
+    <option value="70">Kabul Edilebilir (Açı Farkı 6° - 10°)</option>
+    <option value="0">Disfonksiyonel (Açı Farkı > 10°)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="ohs-front" class="ohs-tab-content" style="display: none; margin-top: 15px;">
+                        <div class="data-group">
+                            <h3 class="step-title">Diz Hizalanması (Valgus/Varus) Tespiti <span class="tooltip-container">?<span class="tooltip-content">Çömelme sırasında frontal düzlemdeki dizin içe veya dışa sapmasını hesaplamak için eklem merkezlerinin işaretlendiği aşamadır.</span></span></h3>
+                            <button id="btnOhsFront" class="action-btn" style="background-color: #d35400;">🎯 Eklemleri İşaretle (Sırayla 3 Tıklama)</button>
+                            <table class="coord-table">
+                                <tr><th>Anatomik Nokta</th><th>X Koordinatı</th><th>Y Koordinatı</th></tr>
+                                <tr><td>Kalça (ASIS) <span class="tooltip-container">?<span class="tooltip-content">Anterior Superior Iliac Spine. Leğen kemiğinin öndeki belirgin üst çıkıntısı.</span></span></td><td id="ohs_f_x1">-</td><td id="ohs_f_y1">-</td></tr>
+                                <tr><td>Diz Kapağı (Patella) <span class="tooltip-container">?<span class="tooltip-content">Diz kapağı kemiğinin tam orta noktası.</span></span></td><td id="ohs_f_x2">-</td><td id="ohs_f_y2">-</td></tr>
+                                <tr><td>Ayak Bileği Orta <span class="tooltip-container">?<span class="tooltip-content">İki malleol (ayak bileği kemikleri) arasındaki eklem çizgisinin tam ortası.</span></span></td><td id="ohs_f_x3">-</td><td id="ohs_f_y3">-</td></tr>
+                            </table>
+                            <button class="reset-btn" id="btnResetOhsFront">🔄 Temizle</button>
+                            <hr style="border: 1px solid #ecf0f1; margin: 15px 0;">
+                            <label>Öğrenci Hesabı: Uyluk Kemik Eğimi (m_uyluk):</label>
+                            <input type="number" id="ohs_thigh_m" placeholder="Formül: (Y_kalça - Y_patella) / (X_kalça - X_patella)">
+                            <label>Öğrenci Hesabı: Uyluk Kemik Eğimi Açısal Değeri (Derece):</label>
+                            <input type="number" id="ohs_thigh_deg" placeholder="Formül: =DERECE(MUTLAK(ATAN(m_uyluk)))">
+                            <br>
+                            <label>Öğrenci Hesabı: Kaval Kemiği Eğimi (m_kaval):</label>
+                            <input type="number" id="ohs_shin_m" placeholder="Formül: (Y_patella - Y_bilek) / (X_patella - X_bilek)">
+                            <label>Öğrenci Hesabı: Kaval Kemiği Eğimi Açısal Değeri (Derece):</label>
+                            <input type="number" id="ohs_shin_deg" placeholder="Formül: =DERECE(MUTLAK(ATAN(m_kaval)))">
+                            <label>Öğrenci Hesabı: Uyluk-Kalça Sapma Açısı (Derece):</label>
+                            <input type="number" id="ohs_valgus_deg" placeholder="Formül: |Uyluk Açısı - Kaval Açısı|">
+                            <label>Diz Hizalanması Değerlendirmesi:</label>
+                            <select id="ohs_valgus_eval" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; margin-top: 5px;">
+                                <option value="">Seçiniz...</option>
+    <option value="100">Kusursuz (Sapma ≤ 5°)</option>
+    <option value="70">Kabul Edilebilir (Sapma 6° - 10°)</option>
+    <option value="0">Disfonksiyonel (Sapma > 10°)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="summary-section">
+                        <h3 class="step-title">Aşama 3: Fonksiyonel Hareket Taraması Sonuçları <span class="tooltip-container">?<span class="tooltip-content">Kullanıcının girdiği mekanik veri ve kararlar doğrultusunda nihai FMS skorunun otonom olarak üretildiği sonuç tablosudur.</span></span></h3>
+                        <table class="summary-table">
+                            <tr>
+                                <th>Parametre</th>
+                                <th>Çömelme Derinliği</th>
+                                <th>Gövde - Tibia Paralelliği</th>
+                                <th>Diz Hizalanması</th>
+                            </tr>
+                            <tr>
+                                <td>Açı</td>
+                                <td id="tbl_ohs_derinlik_aci">-</td>
+                                <td id="tbl_ohs_paralel_aci">-</td>
+                                <td id="tbl_ohs_sapma_aci">-</td>
+                            </tr>
+                            <tr>
+                                <td>Puan</td>
+                                <td id="tbl_ohs_derinlik_puan">-</td>
+                                <td id="tbl_ohs_paralel_puan">-</td>
+                                <td id="tbl_ohs_sapma_puan">-</td>
+                            </tr>
+                        </table>
+                        
+                        <div style="margin-top: 20px; text-align: center; font-size: 1.2em; font-weight: bold; background: #e8f8f5; padding: 15px; border-radius: 5px; border: 2px solid #1abc9c;">
+                            FMS Skoru: <span id="final_fms_score_display" style="color: #c0392b; font-size: 1.5em;">-</span>
+                        </div>
+                        
+                        <div style="display: flex; gap: 10px; margin-top: 20px;">
+                            <button class="print-btn" id="btnOhsPrint">🖨️ Raporu Oluştur</button>
+                            <button class="submit-btn" id="btnOhsSubmit">📤 Değerlendirme Dosyasını Gönder</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="module-posture" class="module-content">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-bottom: 15px;">
+                        <h2 style="margin: 0; border: none; padding: 0;">Statik Postür Analizi</h2>
+                        <button class="guide-btn" onclick="openGuide('posture')">📖 Kılavuz</button>
+                    </div>
+                    <div class="tabs">
+                        <button class="mod-tab-btn pos-tab-btn active" data-target="pos-side">Yandan Görünüm Analizi</button>
+                        <button class="mod-tab-btn pos-tab-btn" data-target="pos-front">Önden Görünüm Analizi</button>
+                    </div>
+                    
+                    <div id="pos-side" class="pos-tab-content active" style="margin-top: 15px;">
+                        <div class="data-group">
+                            <h3 class="step-title">A. Başın Öne Kayması (Kraniovertebral Açı) <span class="tooltip-container">?<span class="tooltip-content">Boyun düzleşmesi veya ileri baş postürünü tespit etmek için boyun kökü ve kulak arasındaki açının ölçüldüğü aşamadır.</span></span></h3>
+                            <button id="btnPosHead" class="action-btn">🎯 Eklemleri İşaretle (C7 Omuru ve Kulak)</button>
+                            <table class="coord-table">
+                                <tr><th>Anatomik Nokta</th><th>X Koordinatı</th><th>Y Koordinatı</th></tr>
+                                <tr><td>C7 Omuru (Boyun Kökü) <span class="tooltip-container">?<span class="tooltip-content">Boynu büktüğünüzde ensenin alt kısmında en çok çıkıntı yapan omur.</span></span></td><td id="pos_c7_x">-</td><td id="pos_c7_y">-</td></tr>
+                                <tr><td>Tragus (Kulak Deliği) <span class="tooltip-container">?<span class="tooltip-content">Dış kulak yolunun hemen önündeki küçük kıkırdak çıkıntısı.</span></span></td><td id="pos_ear_x">-</td><td id="pos_ear_y">-</td></tr>
+                            </table>
+                            <label>Öğrenci Hesabı: Kraniovertebral Eğim (m):</label>
+                            <input type="number" id="pos_cva_m" placeholder="Formül: (Y_Kulak - Y_Boyun) / (X_Kulak - X_Boyun)">
+                            <label>Öğrenci Hesabı: Kraniovertebral Açı (CVA Derecesi):</label>
+                            <input type="number" id="pos_cva_deg" placeholder="Formül: =DERECE(MUTLAK(ATAN(m)))">
+                            <label>Başın Öne Kayması Değerlendirmesi:</label>
+                            <select id="pos_cva_eval" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; margin-top: 5px;">
+                                <option value="">Seçiniz...</option>
+    <option value="100">Kusursuz (CVA ≥ 50°)</option>
+    <option value="70">Hafif Kayma (CVA 45° - 49°)</option>
+    <option value="0">İleri Derece (CVA < 45°)</option>
+                            </select>
+                        </div>
+                        <div class="data-group">
+                            <h3 class="step-title">B. Şakül Çizgisi (Vücut Dikey Hizalanması) <span class="tooltip-container">?<span class="tooltip-content">Vücudun genel ağırlık merkezinin öne veya arkaya ne kadar kaydığını belirlemek için tam dikey referans hattının ölçümüdür.</span></span></h3>
+                            <button id="btnPosPlumb" class="action-btn" style="background-color: #34495e;">🎯 Eklemleri İşaretle (Ayak Bileği ve Omuz)</button>
+                            <table class="coord-table">
+                                <tr><th>Anatomik Nokta</th><th>X Koordinatı</th><th>Y Koordinatı</th></tr>
+                                <tr><td>Ayak Bileği Dış Kemik <span class="tooltip-container">?<span class="tooltip-content">Lateral malleol. Dış ayak bileği çıkıntısı.</span></span></td><td id="pos_ankle_x">-</td><td id="pos_ankle_y">-</td></tr>
+                                <tr><td>Omuz Üst Noktası <span class="tooltip-container">?<span class="tooltip-content">Akromion süreci. Omzun tam üst merkezi.</span></span></td><td id="pos_shoulder_x">-</td><td id="pos_shoulder_y">-</td></tr>
+                            </table>
+                            <label>Öğrenci Hesabı: Vücut Dikey Eğimi (m):</label>
+                            <input type="number" id="pos_plumb_m" placeholder="Formül: (Y_Omuz - Y_Bilek) / (X_Omuz - X_Bilek)">
+                            <label>Öğrenci Hesabı: Dikey Açı (Derece):</label>
+                            <input type="number" id="pos_plumb_deg" placeholder="Formül: =DERECE(MUTLAK(ATAN(m)))">
+                            <label>Şakül Çizgisi Değerlendirmesi:</label>
+                            <select id="pos_plumb_eval" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; margin-top: 5px;">
+                                <option value="">Seçiniz...</option>
+    <option value="100">Kusursuz (Dikey Açı ≥ 87°)</option>
+    <option value="70">Sınırda (Dikey Açı 83° - 86°)</option>
+    <option value="0">Disfonksiyonel (Dikey Açı < 83°)</option
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="pos-front" class="pos-tab-content" style="display: none; margin-top: 15px;">
+                        <div class="data-group">
+                            <h3 class="step-title">C. Omuz ve Pelvis (Leğen Kemiği) Asimetrisi <span class="tooltip-container">?<span class="tooltip-content">Vücudun sağ ve sol yarıları arasındaki yatay eşitsizlikleri ve omurga eğrilik şüphelerini ölçen aşamadır.</span></span></h3>
+                            <button id="btnPosShoulderAsym" class="action-btn" style="background-color: #d35400;">🎯 Omuzları İşaretle (Sağ ve Sol Akromion)</button>
+                            <table class="coord-table">
+                                <tr><th>Anatomik Nokta</th><th>X Koordinatı</th><th>Y Koordinatı</th></tr>
+                                <tr><td>Sağ Omuz <span class="tooltip-container">?<span class="tooltip-content">Sağ akromion. Sağ omzun tam üst noktası.</span></span></td><td id="pos_rs_x">-</td><td id="pos_rs_y">-</td></tr>
+                                <tr><td>Sol Omuz <span class="tooltip-container">?<span class="tooltip-content">Sol akromion. Sol omzun tam üst noktası.</span></span></td><td id="pos_ls_x">-</td><td id="pos_ls_y">-</td></tr>
+                            </table>
+                            <label>Öğrenci Hesabı: Omuz Asimetrisi Eğimi (m):</label>
+                            <input type="number" id="pos_sa_m" placeholder="Formül: (Y_SolOmuz - Y_SagOmuz) / (X_SolOmuz - X_SagOmuz)">
+                            <label>Öğrenci Hesabı: Omuz Asimetrisi (Derece):</label>
+                            <input type="number" id="pos_sa_deg" placeholder="Formül: =DERECE(MUTLAK(ATAN(m)))">
+                            <label>Omuz Asimetrisi Değerlendirmesi:</label>
+                            <select id="pos_shoulder_eval" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; margin-top: 5px;">
+                                <option value="">Seçiniz...</option>
+    <option value="100">Kusursuz (Sapma ≤ 2°)</option>
+    <option value="70">Hafif Asimetri (Sapma 3° - 5°)</option>
+    <option value="0">Belirgin Asimetri (Sapma > 5°)</option>
+                            </select>
+                            
+                            <hr style="border: 1px solid #ecf0f1; margin: 15px 0;">
+                            
+                            <button id="btnPosPelvisAsym" class="action-btn" style="background-color: #27ae60;">🎯 Pelvisi İşaretle (Sağ ve Sol ASIS)</button>
+                            <table class="coord-table">
+                                <tr><th>Anatomik Nokta</th><th>X Koordinatı</th><th>Y Koordinatı</th></tr>
+                                <tr><td>Sağ Kalça Çıkıntısı <span class="tooltip-container">?<span class="tooltip-content">Sağ ASIS. Leğen kemiğinin sağ öndeki sivri çıkıntısı.</span></span></td><td id="pos_rp_x">-</td><td id="pos_rp_y">-</td></tr>
+                                <tr><td>Sol Kalça Çıkıntısı <span class="tooltip-container">?<span class="tooltip-content">Sol ASIS. Leğen kemiğinin sol öndeki sivri çıkıntısı.</span></span></td><td id="pos_lp_x">-</td><td id="pos_lp_y">-</td></tr>
+                            </table>
+                            <label>Öğrenci Hesabı: Pelvis Asimetrisi Eğimi (m):</label>
+                            <input type="number" id="pos_pa_m" placeholder="Formül: (Y_SolKalca - Y_SagKalca) / (X_SolKalca - X_SagKalca)">
+                            <label>Öğrenci Hesabı: Pelvis Asimetrisi (Derece):</label>
+                            <input type="number" id="pos_pa_deg" placeholder="Formül: =DERECE(MUTLAK(ATAN(m)))">
+                            <label>Pelvis Asimetrisi Değerlendirmesi:</label>
+                            <select id="pos_pelvis_eval" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; margin-top: 5px;">
+                                <option value="">Seçiniz...</option>
+    <option value="100">Kusursuz (Sapma ≤ 2°)</option>
+    <option value="70">Hafif Asimetri (Sapma 3° - 5°)</option>
+    <option value="0">Belirgin Asimetri (Sapma > 5°)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="summary-section">
+                        <h3 class="step-title">Aşama 3: Statik Postür Puanlaması <span class="tooltip-container">?<span class="tooltip-content">Kullanıcının girdiği mekanik veri ve kararlar doğrultusunda nihai Statik Postür Skorunun otonom olarak üretildiği sonuç tablosudur.</span></span></h3>
+                        <table class="summary-table">
+                            <tr>
+                                <th>Parametre</th>
+                                <th>Başın Öne Kayması</th>
+                                <th>Şakül Çizgisi</th>
+                                <th>Omuz Asimetrisi</th>
+                                <th>Pelvis Asimetrisi</th>
+                            </tr>
+                            <tr>
+                                <td>Açı</td>
+                                <td id="tbl_pos_cva_aci">-</td>
+                                <td id="tbl_pos_dikey_aci">-</td>
+                                <td id="tbl_pos_omuz_aci">-</td>
+                                <td id="tbl_pos_pelvis_aci">-</td>
+                            </tr>
+                            <tr>
+                                <td>Puan</td>
+                                <td id="tbl_pos_cva_puan">-</td>
+                                <td id="tbl_pos_dikey_puan">-</td>
+                                <td id="tbl_pos_omuz_puan">-</td>
+                                <td id="tbl_pos_pelvis_puan">-</td>
+                            </tr>
+                        </table>
+                        
+                        <div style="margin-top: 20px; text-align: center; font-size: 1.2em; font-weight: bold; background: #e8f8f5; padding: 15px; border-radius: 5px; border: 2px solid #1abc9c;">
+                            Statik Postür Puanı: <span id="final_posture_score_display" style="color: #c0392b; font-size: 1.5em;">-</span>
+                        </div>
+
+                        <div style="display: flex; gap: 10px; margin-top: 20px;">
+                            <button class="print-btn" id="btnPosPrint">🖨️ Raporu Oluştur</button>
+                            <button class="submit-btn" id="btnPosSubmit">📤 Değerlendirme Dosyasını Gönder</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="module-jump" class="module-content">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-bottom: 15px;">
+                        <h2 style="margin: 0; border: none; padding: 0;">Dikey Sıçrama (SJ / CMJ) Yükseklik ve Güç Analizi</h2>
+                        <button class="guide-btn" onclick="openGuide('jump')">📖 Kılavuz</button>
+                    </div>
+                    
+                    <div class="data-group">
+                        <h3 class="step-title">Aşama 1: Sporcu Verisi <span class="tooltip-container">?<span class="tooltip-content">Zirve güç hesabında kullanılmak üzere sporcunun kütlesinin sisteme girildiği aşamadır.</span></span></h3>
+                        <label>Vücut Ağırlığı (kg):</label>
+                        <input type="number" id="jump_body_mass" placeholder="Sporcunun kilogram cinsinden ağırlığı">
+                    </div>
+
+                    <div class="data-group">
+                        <h3 class="step-title">Aşama 2: Uçuş Süresinin Hesaplanması <span class="tooltip-container">?<span class="tooltip-content">Yerçekimi kanunları kullanılarak yüksekliği bulmak için sporcunun yerden kesilme ve tekrar yere inme anlarının zamansal tespitidir.</span></span></h3>
+                        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                            <button id="btnJumpTakeoff" class="action-btn" style="background-color: #c0392b; flex: 1;">🚀 Kalkış Anını İşaretle</button>
+                            <button id="btnJumpLanding" class="action-btn" style="background-color: #d35400; flex: 1;">🛬 İniş Anını İşaretle</button>
                         </div>
                         <table class="coord-table">
                             <tr><th>Evre</th><th>Zaman (sn)</th></tr>
-                            <tr><td>10m Hunisinden Giriş (t_giris)</td><td id="ag_r_in">-</td></tr>
-                            <tr><td>10m Hunisinden Çıkış (t_cikis)</td><td id="ag_r_out">-</td></tr>
+                            <tr><td>Ayakların Yerden Kesildiği An (t_kalkış)</td><td id="jump_t_takeoff">-</td></tr>
+                            <tr><td>Ayakların Yere Değdiği An (t_iniş)</td><td id="jump_t_landing">-</td></tr>
                         </table>
-                        <label>Öğrenci Hesabı: 505 Test Süresi (sn):</label>
-                        <input type="number" id="ag_r_total_time" class="ag-sync-r" placeholder="Formül: t_cikis - t_giris">
+                        <button class="reset-btn" id="btnResetJump">🔄 Temizle</button>
+                        <hr style="border: 1px solid #ecf0f1; margin: 15px 0;">
+                        <label>Öğrenci Hesabı: Uçuş Süresi (Δt - sn):</label>
+                        <input type="number" id="jump_flight_time" placeholder="Formül: t_iniş - t_kalkış">
                     </div>
 
-                    <div class="data-group">
-                        <h3 class="step-title">B. Dönüş (Frenleme) Yere Temas Süresi <span class="tooltip-container">?<span class="tooltip-content">Yön değiştirme sırasında sağ bacağın yerde kaldığı toplam sürenin hesaplanmasıdır.</span></span></h3>
-                        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                            <button id="btnAgilityRightBrakeStart" class="action-btn" style="background-color: #c0392b; flex: 1;">👟 Dönüş Bacağı İLK TEMAS</button>
-                            <button id="btnAgilityRightBrakeEnd" class="action-btn" style="background-color: #d35400; flex: 1;">🚀 Dönüş Bacağı YERDEN KESİLME</button>
+                    <div class="summary-section">
+                        <h3 class="step-title">Aşama 3: Yükseklik ve Güç Çıktıları <span class="tooltip-container">?<span class="tooltip-content">Uçuş süresinden yola çıkarak kinematik yükselme miktarının ve Sayers denklemi ile zirve gücün hesaplandığı matris.</span></span></h3>
+                        <label>Öğrenci Hesabı: Sıçrama Yüksekliği (Metre):</label>
+                        <input type="number" id="jump_height_m" placeholder="Formül: [9.81 x (Uçuş Süresi²)] / 8">
+                        
+                        <label>Öğrenci Hesabı: Sıçrama Yüksekliği (Santimetre):</label>
+                        <input type="number" id="jump_height_cm" placeholder="Formül: Metre Yükseklik x 100">
+                        
+                        <hr style="border: 1px dashed #bdc3c7; margin: 15px 0;">
+                        
+                        <label>Öğrenci Hesabı: Zirve Güç / Peak Power (Watt):</label>
+                        <input type="number" id="jump_peak_power" placeholder="Formül: (60.7 x Yükseklik[cm]) + (45.3 x Ağırlık[kg]) - 2055">
+                        
+                        <div style="display: flex; gap: 10px; margin-top: 20px;">
+                            <button class="print-btn" id="btnJumpPrint">🖨️ Raporu Oluştur</button>
+                            <button class="submit-btn" id="btnJumpSubmit">📤 Değerlendirme Dosyasını Gönder</button>
                         </div>
-                        <table class="coord-table">
-                            <tr><th>Evre</th><th>Zaman (sn)</th></tr>
-                            <tr><td>Ayağın Yere Değdiği An (t_fren_baslar)</td><td id="ag_r_brake_in">-</td></tr>
-                            <tr><td>Ayağın Yerden Kesildiği An (t_fren_biter)</td><td id="ag_r_brake_out">-</td></tr>
-                        </table>
-                        <label>Öğrenci Hesabı: Dönüş Temas Süresi (sn):</label>
-                        <input type="number" id="ag_r_contact_time" class="ag-sync-r" placeholder="Formül: t_fren_biter - t_fren_baslar">
                     </div>
                 </div>
 
-                <div id="agility-left" class="agility-tab-content" style="display: none; margin-top: 15px;">
-                    <div class="data-group">
-                        <h3 class="step-title">A. Toplam Çeviklik Süresi (10m -> 15m -> 10m) <span class="tooltip-container">?<span class="tooltip-content">Sol bacak performansında 505 testinin toplam tamamlanma süresinin hesaplanmasıdır.</span></span></h3>
-                        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                            <button id="btnAgilityLeftIn" class="action-btn" style="background-color: #2980b9; flex: 1;">⏱️ 10m Hunisinden GİRİŞ</button>
-                            <button id="btnAgilityLeftOut" class="action-btn" style="background-color: #8e44ad; flex: 1;">🏁 10m Hunisinden ÇIKIŞ</button>
-                        </div>
-                        <table class="coord-table">
-                            <tr><th>Evre</th><th>Zaman (sn)</th></tr>
-                            <tr><td>10m Hunisinden Giriş (t_giris)</td><td id="ag_l_in">-</td></tr>
-                            <tr><td>10m Hunisinden Çıkış (t_cikis)</td><td id="ag_l_out">-</td></tr>
-                        </table>
-                        <label>Öğrenci Hesabı: 505 Test Süresi (sn):</label>
-                        <input type="number" id="ag_l_total_time" class="ag-sync-l" placeholder="Formül: t_cikis - t_giris">
-                    </div>
-
-                    <div class="data-group">
-                        <h3 class="step-title">B. Dönüş (Frenleme) Yere Temas Süresi <span class="tooltip-container">?<span class="tooltip-content">Yön değiştirme sırasında sol bacağın yerde kaldığı toplam sürenin hesaplanmasıdır.</span></span></h3>
-                        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                            <button id="btnAgilityLeftBrakeStart" class="action-btn" style="background-color: #c0392b; flex: 1;">👟 Dönüş Bacağı İLK TEMAS</button>
-                            <button id="btnAgilityLeftBrakeEnd" class="action-btn" style="background-color: #d35400; flex: 1;">🚀 Dönüş Bacağı YERDEN KESİLME</button>
-                        </div>
-                        <table class="coord-table">
-                            <tr><th>Evre</th><th>Zaman (sn)</th></tr>
-                            <tr><td>Ayağın Yere Değdiği An (t_fren_baslar)</td><td id="ag_l_brake_in">-</td></tr>
-                            <tr><td>Ayağın Yerden Kesildiği An (t_fren_biter)</td><td id="ag_l_brake_out">-</td></tr>
-                        </table>
-                        <label>Öğrenci Hesabı: Dönüş Temas Süresi (sn):</label>
-                        <input type="number" id="ag_l_contact_time" class="ag-sync-l" placeholder="Formül: t_fren_biter - t_fren_baslar">
-                    </div>
-                </div>
-
-                <div class="summary-section">
-                    <h3 class="step-title">Aşama 3: Sonuçların Değerlendirilmesi ve Asimetri Analizi <span class="tooltip-container">?<span class="tooltip-content">Sağ ve sol bacak arasındaki performans farkının ölçülerek zayıf halkanın tespit edildiği asimetri kararıdır.</span></span></h3>
-                    
-                    <table class="summary-table">
-                        <tr>
-                            <th>Parametre</th>
-                            <th>Sağ Bacak (sn)</th>
-                            <th>Sol Bacak (sn)</th>
-                            <th>Fark (Mutlak sn)</th>
-                        </tr>
-                        <tr>
-                            <td>505 Toplam Süre</td>
-                            <td id="ag_r_total_table">-</td>
-                            <td id="ag_l_total_table">-</td>
-                            <td id="ag_total_diff">-</td>
-                        </tr>
-                        <tr>
-                            <td>Dönüş Temas Süresi</td>
-                            <td id="ag_r_contact_table">-</td>
-                            <td id="ag_l_contact_table">-</td>
-                            <td id="ag_contact_diff">-</td>
-                        </tr>
-                    </table>
-
-                    <div style="margin-top: 20px; text-align: center; font-size: 1.2em; font-weight: bold; background: #e8f8f5; padding: 15px; border-radius: 5px; border: 2px solid #1abc9c;">
-                        Asimetri Değerlendirmesi: <span id="final_agility_score_display" style="color: #c0392b; font-size: 1.1em;">-</span>
+                <div id="module-agility" class="module-content">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-bottom: 15px;">
+                        <h2 style="margin: 0; border: none; padding: 0;">505 Çeviklik ve Yön Değiştirme Analizi</h2>
+                        <button class="guide-btn" onclick="openGuide('agility')">📖 Kılavuz</button>
                     </div>
                     
-                    <div style="display: flex; gap: 10px; margin-top: 20px;">
-                        <button class="print-btn" id="btnAgilityPrint">🖨️ Raporu Oluştur</button>
-                        <button class="submit-btn" id="btnAgilitySubmit">📤 Değerlendirme Dosyasını Gönder</button>
+                    <div class="tabs">
+                        <button class="mod-tab-btn agility-tab-btn active" data-target="agility-right">Sağ Bacak Dönüşü (Video 1)</button>
+                        <button class="mod-tab-btn agility-tab-btn" data-target="agility-left">Sol Bacak Dönüşü (Video 2)</button>
+                    </div>
+
+                    <div id="agility-right" class="agility-tab-content active" style="margin-top: 15px;">
+                        <div class="data-group">
+                            <h3 class="step-title">A. Toplam Çeviklik Süresi (10m -> 15m -> 10m) <span class="tooltip-container">?<span class="tooltip-content">Sağ bacak performansında 505 testinin toplam tamamlanma süresinin hesaplanmasıdır.</span></span></h3>
+                            <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                                <button id="btnAgilityRightIn" class="action-btn" style="background-color: #2980b9; flex: 1;">⏱️ 10m Hunisinden GİRİŞ</button>
+                                <button id="btnAgilityRightOut" class="action-btn" style="background-color: #8e44ad; flex: 1;">🏁 10m Hunisinden ÇIKIŞ</button>
+                            </div>
+                            <table class="coord-table">
+                                <tr><th>Evre</th><th>Zaman (sn)</th></tr>
+                                <tr><td>10m Hunisinden Giriş (t_giris)</td><td id="ag_r_in">-</td></tr>
+                                <tr><td>10m Hunisinden Çıkış (t_cikis)</td><td id="ag_r_out">-</td></tr>
+                            </table>
+                            <label>Öğrenci Hesabı: 505 Test Süresi (sn):</label>
+                            <input type="number" id="ag_r_total_time" class="ag-sync-r" placeholder="Formül: t_cikis - t_giris">
+                        </div>
+
+                        <div class="data-group">
+                            <h3 class="step-title">B. Dönüş (Frenleme) Yere Temas Süresi <span class="tooltip-container">?<span class="tooltip-content">Yön değiştirme sırasında sağ bacağın yerde kaldığı toplam sürenin hesaplanmasıdır.</span></span></h3>
+                            <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                                <button id="btnAgilityRightBrakeStart" class="action-btn" style="background-color: #c0392b; flex: 1;">👟 Dönüş Bacağı İLK TEMAS</button>
+                                <button id="btnAgilityRightBrakeEnd" class="action-btn" style="background-color: #d35400; flex: 1;">🚀 Dönüş Bacağı YERDEN KESİLME</button>
+                            </div>
+                            <table class="coord-table">
+                                <tr><th>Evre</th><th>Zaman (sn)</th></tr>
+                                <tr><td>Ayağın Yere Değdiği An (t_fren_baslar)</td><td id="ag_r_brake_in">-</td></tr>
+                                <tr><td>Ayağın Yerden Kesildiği An (t_fren_biter)</td><td id="ag_r_brake_out">-</td></tr>
+                            </table>
+                            <label>Öğrenci Hesabı: Dönüş Temas Süresi (sn):</label>
+                            <input type="number" id="ag_r_contact_time" class="ag-sync-r" placeholder="Formül: t_fren_biter - t_fren_baslar">
+                        </div>
+                    </div>
+
+                    <div id="agility-left" class="agility-tab-content" style="display: none; margin-top: 15px;">
+                        <div class="data-group">
+                            <h3 class="step-title">A. Toplam Çeviklik Süresi (10m -> 15m -> 10m) <span class="tooltip-container">?<span class="tooltip-content">Sol bacak performansında 505 testinin toplam tamamlanma süresinin hesaplanmasıdır.</span></span></h3>
+                            <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                                <button id="btnAgilityLeftIn" class="action-btn" style="background-color: #2980b9; flex: 1;">⏱️ 10m Hunisinden GİRİŞ</button>
+                                <button id="btnAgilityLeftOut" class="action-btn" style="background-color: #8e44ad; flex: 1;">🏁 10m Hunisinden ÇIKIŞ</button>
+                            </div>
+                            <table class="coord-table">
+                                <tr><th>Evre</th><th>Zaman (sn)</th></tr>
+                                <tr><td>10m Hunisinden Giriş (t_giris)</td><td id="ag_l_in">-</td></tr>
+                                <tr><td>10m Hunisinden Çıkış (t_cikis)</td><td id="ag_l_out">-</td></tr>
+                            </table>
+                            <label>Öğrenci Hesabı: 505 Test Süresi (sn):</label>
+                            <input type="number" id="ag_l_total_time" class="ag-sync-l" placeholder="Formül: t_cikis - t_giris">
+                        </div>
+
+                        <div class="data-group">
+                            <h3 class="step-title">B. Dönüş (Frenleme) Yere Temas Süresi <span class="tooltip-container">?<span class="tooltip-content">Yön değiştirme sırasında sol bacağın yerde kaldığı toplam sürenin hesaplanmasıdır.</span></span></h3>
+                            <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                                <button id="btnAgilityLeftBrakeStart" class="action-btn" style="background-color: #c0392b; flex: 1;">👟 Dönüş Bacağı İLK TEMAS</button>
+                                <button id="btnAgilityLeftBrakeEnd" class="action-btn" style="background-color: #d35400; flex: 1;">🚀 Dönüş Bacağı YERDEN KESİLME</button>
+                            </div>
+                            <table class="coord-table">
+                                <tr><th>Evre</th><th>Zaman (sn)</th></tr>
+                                <tr><td>Ayağın Yere Değdiği An (t_fren_baslar)</td><td id="ag_l_brake_in">-</td></tr>
+                                <tr><td>Ayağın Yerden Kesildiği An (t_fren_biter)</td><td id="ag_l_brake_out">-</td></tr>
+                            </table>
+                            <label>Öğrenci Hesabı: Dönüş Temas Süresi (sn):</label>
+                            <input type="number" id="ag_l_contact_time" class="ag-sync-l" placeholder="Formül: t_fren_biter - t_fren_baslar">
+                        </div>
+                    </div>
+
+                    <div class="summary-section">
+                        <h3 class="step-title">Aşama 3: Sonuçların Değerlendirilmesi ve Asimetri Analizi <span class="tooltip-container">?<span class="tooltip-content">Sağ ve sol bacak arasındaki performans farkının ölçülerek zayıf halkanın tespit edildiği asimetri kararıdır.</span></span></h3>
+                        
+                        <table class="summary-table">
+                            <tr>
+                                <th>Parametre</th>
+                                <th>Sağ Bacak (sn)</th>
+                                <th>Sol Bacak (sn)</th>
+                                <th>Fark (Mutlak sn)</th>
+                            </tr>
+                            <tr>
+                                <td>505 Toplam Süre</td>
+                                <td id="ag_r_total_table">-</td>
+                                <td id="ag_l_total_table">-</td>
+                                <td id="ag_total_diff">-</td>
+                            </tr>
+                            <tr>
+                                <td>Dönüş Temas Süresi</td>
+                                <td id="ag_r_contact_table">-</td>
+                                <td id="ag_l_contact_table">-</td>
+                                <td id="ag_contact_diff">-</td>
+                            </tr>
+                        </table>
+
+                        <div style="margin-top: 20px; text-align: center; font-size: 1.2em; font-weight: bold; background: #e8f8f5; padding: 15px; border-radius: 5px; border: 2px solid #1abc9c;">
+                            Asimetri Değerlendirmesi: <span id="final_agility_score_display" style="color: #c0392b; font-size: 1.1em;">-</span>
+                        </div>
+                        
+                        <div style="display: flex; gap: 10px; margin-top: 20px;">
+                            <button class="print-btn" id="btnAgilityPrint">🖨️ Raporu Oluştur</button>
+                            <button class="submit-btn" id="btnAgilitySubmit">📤 Değerlendirme Dosyasını Gönder</button>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-        </section>
-    </main>
+            </section>
+        </main>
+    </div>
 
     <script src="js/app.js"></script>
     <script src="js/vbt_hesapla.js"></script>

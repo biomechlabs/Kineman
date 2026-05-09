@@ -92,7 +92,8 @@ window.resetSet = function(setNum) {
     document.getElementById(`x1_display_${setNum}`).textContent = '-';
     document.getElementById(`y1_display_${setNum}`).textContent = '-';
     
-    document.getElementById(`btnVbtMark${setNum}`).textContent = "⏱️ Tıklama (İşaretleme) Başlat";
+    // vbt_hesapla.js dosyası içinde bulun ve şu satırı değiştirin:
+document.getElementById(`btnVbtMark${setNum}`).textContent = "⏱️ Etiketleme Başlat";
     document.getElementById(`btnVbtMark${setNum}`).style.backgroundColor = "#2980b9";
     
     document.getElementById(`time_diff_${setNum}`).value = '';

@@ -1,28 +1,68 @@
-// --- ÖĞRENCİ BİLGİLERİ VE KILAVUZ KONTROLLERİ ---
+// --- ÖĞRENCİ BİLGİLERİ VE GİRİŞ KONTROLLERİ ---
 window.studentData = { no: '', name: '', email: '' };
 
-document.getElementById('btnOpenStudentModal').addEventListener('click', () => {
-    document.getElementById('studentModal').style.display = 'flex';
-});
+const btnEnter = document.getElementById('btnEnterSystem');
+if (btnEnter) {
+    btnEnter.addEventListener('click', () => {
+        const no = document.getElementById('lpNo').value.trim();
+        const name = document.getElementById('lpName').value.trim();
+        const email = document.getElementById('lpEmail').value.trim();
+        const err = document.getElementById('lpError');
 
-document.getElementById('btnSaveStudentInfo').addEventListener('click', () => {
-    window.studentData.no = document.getElementById('stdNo').value || '-';
-    window.studentData.name = document.getElementById('stdName').value || '-';
-    window.studentData.email = document.getElementById('stdEmail').value || '-';
-    
-    document.getElementById('studentModal').style.display = 'none';
-    
-    document.getElementById('studentInfoDisplay').innerHTML = `
-        <strong style="color:#2ecc71; font-size: 1.1em;">${window.studentData.name}</strong>
-        <span>No: ${window.studentData.no}</span>
-        <span>E-posta: ${window.studentData.email}</span>
-        <button id="btnEditStudentModal" style="background: #95a5a6; color: white; border: none; padding: 2px 5px; border-radius: 4px; cursor: pointer; font-size: 0.8em; margin-top: 3px; width: fit-content;">Bilgileri Düzenle</button>
-    `;
-    
-    document.getElementById('btnEditStudentModal').addEventListener('click', () => {
-        document.getElementById('studentModal').style.display = 'flex';
+        if (!no || !name || !email) { err.style.display = 'block'; return; }
+        err.style.display = 'none';
+
+        window.studentData = { no, name, email };
+        
+        document.getElementById('landingPage').style.display = 'none';
+        document.getElementById('mainAppContainer').style.display = 'flex';
+        
+        // ÖNEMLİ: Bilgileri Header'a basan kısım
+        const displayBox = document.getElementById('studentInfoDisplay');
+        if (displayBox) {
+            displayBox.innerHTML = `
+                <div style="color: #ffffff; font-weight: 800; font-size: 1.05em; line-height: 1.1;">${name}</div>
+                <div style="color: #bdc3c7; font-size: 0.85em;">No: ${no}</div>
+                <div style="color: #bdc3c7; font-size: 0.85em;">${email}</div>
+            `;
+        }
     });
-});
+}
+
+// Çıkış Yap Butonu
+const btnLogout = document.getElementById('btnLogout');
+if (btnLogout) {
+    btnLogout.addEventListener('click', () => {
+        // Sistemi gizle, açılış sayfasını göster
+        document.getElementById('mainAppContainer').style.display = 'none';
+        document.getElementById('landingPage').style.display = 'flex';
+        
+        // Form alanlarını temizle
+        document.getElementById('lpNo').value = '';
+        document.getElementById('lpName').value = '';
+        document.getElementById('lpEmail').value = '';
+        window.studentData = { no: '', name: '', email: '' };
+        
+        // Eğer yüklü video varsa durdur
+        const mainVideo = document.getElementById('mainVideo');
+        if (mainVideo) mainVideo.pause();
+    });
+}
+
+// Açık / Koyu Mod Teması Butonu
+const themeBtn = document.getElementById('btnThemeToggle');
+if (themeBtn) {
+    themeBtn.addEventListener('click', () => {
+        const isDark = document.body.getAttribute('data-theme') === 'dark';
+        if (isDark) {
+            document.body.setAttribute('data-theme', 'light');
+            themeBtn.textContent = '🌙 Koyu Mod';
+        } else {
+            document.body.setAttribute('data-theme', 'dark');
+            themeBtn.textContent = '☀️ Açık Mod';
+        }
+    });
+}
 
 window.openGuide = function(module) {
     const guides = {
@@ -128,6 +168,7 @@ menuButtons.forEach(btn => {
 const videoUploader = document.getElementById('videoUploader');
 const mainVideo = document.getElementById('mainVideo');
 const coordinateDisplay = document.getElementById('coordinateDisplay');
+const videoTimeDisplay = document.getElementById('videoTimeDisplay');
 const videoMetadata = document.getElementById('videoMetadata');
 const customControls = document.getElementById('customControls');
 const btnPlayPause = document.getElementById('btnPlayPause');
@@ -136,6 +177,7 @@ const videoTimeline = document.getElementById('videoTimeline');
 const uploadText = document.getElementById('uploadText');
 const btnPrevFrame = document.getElementById('btnPrevFrame');
 const btnNextFrame = document.getElementById('btnNextFrame');
+const btnNewVideo = document.getElementById('btnNewVideo');
 const videoWrapper = document.getElementById('videoWrapper');
 
 const frameTime = 1 / 30; 
@@ -161,6 +203,14 @@ document.addEventListener('keyup', e => {
     if (e.key === 'Shift') { isShiftPressed = false; magCanvas.style.display = 'none'; } 
 });
 
+if (btnNewVideo) {
+    btnNewVideo.addEventListener('click', () => {
+        videoUploader.style.display = 'block';
+        videoUploader.style.pointerEvents = 'auto'; // Tıklanabilir yap
+        videoUploader.click();
+    });
+}
+
 videoUploader.addEventListener('change', function(event) {
     const file = event.target.files[0];
     if (file) {
@@ -172,13 +222,17 @@ videoUploader.addEventListener('change', function(event) {
 });
 
 function showVideoUI() {
-    videoUploader.style.display = 'none'; uploadText.style.display = 'none';
-    mainVideo.style.display = 'block'; customControls.style.display = 'flex';
+    videoUploader.style.display = 'none'; 
+    videoUploader.style.pointerEvents = 'none'; // Videoya tıklamayı engellememesi için
+    uploadText.style.display = 'none';
+    mainVideo.style.display = 'block'; 
+    customControls.style.display = 'flex'; // Video yüklenince panel görünür
     btnPlayPause.textContent = 'Oynat'; btnPlayPause.style.backgroundColor = '#3498db';
 }
 
 function showUploaderUI() {
     videoUploader.value = ""; videoUploader.style.display = 'block';
+    videoUploader.style.pointerEvents = 'auto';
     uploadText.style.display = 'block'; mainVideo.style.display = 'none';
     customControls.style.display = 'none';
     videoMetadata.innerHTML = 'Çözünürlük: Yüklenmedi';
@@ -209,7 +263,8 @@ let lastX = 0; let lastY = 0;
 
 function updateCoordinateDisplay() {
     const timeStr = mainVideo.currentTime.toFixed(3);
-    coordinateDisplay.textContent = `Zaman: ${timeStr} sn | X: ${lastX}, Y: ${lastY}`;
+    if(videoTimeDisplay) videoTimeDisplay.textContent = `${timeStr} sn`;
+    coordinateDisplay.textContent = `X: ${lastX}, Y: ${lastY}`;
 }
 
 function getTrueVideoCoordinates(event) {
@@ -317,3 +372,33 @@ mainVideo.addEventListener('mousedown', function(event) {
 
     document.dispatchEvent(new CustomEvent('videoTiklandi', { detail: { x: lastX, y: lastY, zaman: timeStr } }));
 });
+
+// --- GÖNDER BUTONLARINI İNAKTİF ETME (YAKINDA AKTİF) ---
+    const submitBtns = document.querySelectorAll('.submit-btn');
+    submitBtns.forEach(btn => {
+        // 1. Butonu klonlayarak üzerindeki eski "tıklama / dosya gönderme" özelliklerini tamamen siliyoruz (Güvenlik)
+        const newBtn = btn.cloneNode(true);
+        btn.parentNode.replaceChild(newBtn, btn);
+        
+        // 2. Butonu görsel olarak pasif (gri) ve yasaklı imleç hale getiriyoruz
+        newBtn.style.backgroundColor = '#95a5a6';
+        newBtn.style.color = '#ffffff';
+        newBtn.style.opacity = '0.8';
+        newBtn.style.cursor = 'not-allowed';
+        newBtn.style.transition = '0.3s';
+        
+        // 3. Orijinal metni ("📤 Değerlendirme Dosyasını Gönder") hafızaya alıyoruz
+        const originalText = newBtn.innerHTML;
+        
+        // 4. İmleç butonun üzerine geldiğinde (Hover)
+        newBtn.addEventListener('mouseenter', () => {
+            newBtn.innerHTML = '⏳ YAKINDA AKTİF';
+            newBtn.style.backgroundColor = '#7f8c8d'; // Biraz daha koyu gri
+        });
+        
+        // 5. İmleç butonun üzerinden çekildiğinde
+        newBtn.addEventListener('mouseleave', () => {
+            newBtn.innerHTML = originalText;
+            newBtn.style.backgroundColor = '#95a5a6'; // Eski griye dön
+        });
+    });
