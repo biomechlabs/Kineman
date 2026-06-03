@@ -5,16 +5,16 @@ let sprClickMode = 0;
 let sprintStepCount = 0;
 let activeStepMode = { id: 0, phase: 0 }; 
 
-document.getElementById('btnSprintCalibrate').addEventListener('click', function() {
+document.getElementById('btnSprintCalibrate')?.addEventListener('click', function() {
     sprCalibMode = 1; this.textContent = "👉 5m hunisine tıklayın...";
 });
 
-document.getElementById('btnSprintStart').addEventListener('click', function() {
+document.getElementById('btnSprintStart')?.addEventListener('click', function() {
     sprClickMode = 1; this.textContent = "👉 Harekete başlama anına tıklayın...";
 });
 
 let splitIndex = 5;
-document.getElementById('btnSprintSplits').addEventListener('click', function() {
+document.getElementById('btnSprintSplits')?.addEventListener('click', function() {
     sprClickMode = 2; splitIndex = 5; this.textContent = `👉 ${splitIndex}m geçişine tıklayın...`;
 });
 
@@ -85,6 +85,7 @@ document.addEventListener('videoTiklandi', function(event) {
 // Dinamik Tablo Güncelleyici
 function updateSprintAutoSummary() {
     const tbody = document.getElementById('sprintAutoSummaryBody');
+    if (!tbody) return;
     tbody.innerHTML = ''; // Temizle ve yeniden oluştur
     
     for(let i = 1; i <= sprintStepCount; i++) {
@@ -99,7 +100,7 @@ function updateSprintAutoSummary() {
 }
 
 // Yeni Adım Kartı Üretimi
-document.getElementById('btnAddSprintStep').addEventListener('click', function() {
+document.getElementById('btnAddSprintStep')?.addEventListener('click', function() {
     sprintStepCount++;
     const id = sprintStepCount;
     const nextId = id + 1;
@@ -109,6 +110,8 @@ document.getElementById('btnAddSprintStep').addEventListener('click', function()
     div.style.backgroundColor = '#f9f9f9';
     div.style.border = '1px solid #ddd';
     div.style.marginBottom = '15px';
+    div.style.padding = '10px';
+    div.style.borderRadius = '5px';
     
     // Bir önceki adımın "Sonraki Adım Yerden Kesilme" değerini otomatik çekme
     let autoFilledT1 = '-';
@@ -118,27 +121,30 @@ document.getElementById('btnAddSprintStep').addEventListener('click', function()
         autoFilledX1 = document.getElementById(`step_x3_${id-1}`)?.textContent || '-';
     }
     
+    // UI/UX İYİLEŞTİRMELERİ BURADA YAPILDI: Buton genişledi, formüller alt alta tam görünür oldu
     div.innerHTML = `
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-            <h4 style="margin: 0; color: #2c3e50;">Adım ${id}</h4>
-            <select id="step_phase_${id}" style="padding: 5px; font-size:0.85em; border-radius:4px; border: 1px solid #ccc;">
-                <option value="">Evre Seçiniz...</option>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; gap: 8px;">
+            <h4 style="margin: 0; color: #2c3e50; white-space: nowrap;">Adım ${id}</h4>
+            <select id="step_phase_${id}" style="width: 120px; flex-shrink: 0; padding: 6px 4px; font-size:0.85em; border-radius:4px; border: 1px solid #ccc; cursor:pointer;">
+                <option value="">Evre Seç...</option>
                 <option value="0-5m">0 - 5m</option>
                 <option value="5-10m">5 - 10m</option>
                 <option value="10-15m">10 - 15m</option>
                 <option value="15-20m">15 - 20m</option>
             </select>
-            <button class="action-btn" id="btnStep_${id}" style="width: auto; padding: 5px 15px; margin: 0; background-color: #8e44ad; font-size: 0.9em;">⏱️ Veri Girişini Başlat</button>
+            <button class="action-btn" id="btnStep_${id}" style="flex-grow: 1; padding: 6px 10px; margin: 0; background-color: #8e44ad; font-size: 0.85em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">⏱️ İşaretlemeyi Başlat</button>
         </div>
-        <table class="coord-table" style="font-size: 0.9em;">
-            <tr><th>Evre</th><th>Zaman (sn)</th><th>X Koor.</th></tr>
-            <tr><td>Adım ${id} Yerden Kesilme</td><td id="step_t1_${id}">${autoFilledT1}</td><td id="step_x1_${id}">${autoFilledX1}</td></tr>
-            <tr><td>Adım ${id} Yere Temas</td><td id="step_t2_${id}">-</td><td id="step_x2_${id}">-</td></tr>
-            <tr><td>Adım ${nextId} Yerden Kesilme</td><td id="step_t3_${id}">-</td><td id="step_x3_${id}">-</td></tr>
+        
+        <table class="coord-table" style="font-size: 0.85em; margin-bottom: 10px;">
+            <tr><th>Anlık Evre</th><th>Zaman [t]</th><th>X Koor. [X]</th></tr>
+            <tr><td>Adım ${id} Yerden Kesilme <b>(1)</b></td><td id="step_t1_${id}">${autoFilledT1}</td><td id="step_x1_${id}">${autoFilledX1}</td></tr>
+            <tr><td>Adım ${id} Yere Temas <b>(2)</b></td><td id="step_t2_${id}">-</td><td id="step_x2_${id}">-</td></tr>
+            <tr><td>Adım ${nextId} Yerden Kesilme <b>(3)</b></td><td id="step_t3_${id}">-</td><td id="step_x3_${id}">-</td></tr>
         </table>
-        <div style="display: flex; gap: 10px; margin-top: 10px;">
-            <input type="number" id="step_len_${id}" placeholder="Öğrenci Hesabı: Adım ${id} Uzunluk (m)" style="flex: 1; font-size: 0.85em; padding: 8px; border: 1px solid #ccc; border-radius:4px;">
-            <input type="number" id="step_time_${id}" placeholder="Öğrenci Hesabı: Adım ${id} Temas Süresi (sn)" style="flex: 1; font-size: 0.85em; padding: 8px; border: 1px solid #ccc; border-radius:4px;">
+        
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+            <input type="number" id="step_len_${id}" placeholder="Uzunluk (m) Formülü: |X3 - X1| x K_cal" style="width: 100%; font-size: 0.9em; padding: 8px; border: 1px solid #2980b9; border-radius:4px;">
+            <input type="number" id="step_time_${id}" placeholder="Temas Süresi (sn) Formülü: t3 - t2" style="width: 100%; font-size: 0.9em; padding: 8px; border: 1px solid #c0392b; border-radius:4px;">
         </div>
     `;
     
@@ -156,13 +162,13 @@ document.getElementById('btnAddSprintStep').addEventListener('click', function()
         // Eğer ID 1 ise 3 tıklama yapılacak, 1'den büyükse ilk veri otomatik dolduğu için 2 tıklama yapılacak.
         if (id === 1) {
             activeStepMode.phase = 1;
-            this.textContent = `👉 Adım 1 Yerden Kesilme anına tıklayın...`;
+            this.textContent = `👉 (1) Yerden Kesilmeye Tıklayın`;
         } else {
             activeStepMode.phase = 2; 
-            this.textContent = `👉 Adım ${id} Yere Temas anına tıklayın...`;
+            this.textContent = `👉 (2) Yere Temasa Tıklayın`;
         }
         this.style.backgroundColor = "#d35400";
     });
     
-    updateSprintAutoSummary(); // Yeni satır eklendiğinde tabloyu boş dahi olsa renderla
+    updateSprintAutoSummary(); 
 });
