@@ -16,9 +16,13 @@ function getStudentHeader() {
 function getVal(id) { 
     const el = document.getElementById(id);
     if (!el) return NaN;
-    // İçeriği temizle ve virgülü noktaya çevir (Türkçe standart desteği)
-    const val = (el.textContent || el.value).replace(',', '.').trim();
+    
+    // Değeri al, virgülü noktaya çevir ve boşlukları sil
+    const val = (el.textContent || el.value).replace(/,/g, '.').trim();
+    
+    // Eğer kutu boşsa veya tire varsa NaN döndür (böylece 0 üzerinden Hatalı Puan verilmesini önler)
     if (val === '' || val === '-') return NaN;
+    
     return parseFloat(val); 
 }
 
