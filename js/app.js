@@ -525,35 +525,7 @@ mainVideo.addEventListener('mousedown', function(event) {
     document.dispatchEvent(new CustomEvent('videoTiklandi', { detail: { x: lastX, y: lastY, zaman: timeStr } }));
 });
 
-// --- GÖNDER BUTONLARINI İNAKTİF ETME (YAKINDA AKTİF) ---
-    const submitBtns = document.querySelectorAll('.submit-btn');
-    submitBtns.forEach(btn => {
-        // 1. Butonu klonlayarak üzerindeki eski "tıklama / dosya gönderme" özelliklerini tamamen siliyoruz (Güvenlik)
-        const newBtn = btn.cloneNode(true);
-        btn.parentNode.replaceChild(newBtn, btn);
-        
-        // 2. Butonu görsel olarak pasif (gri) ve yasaklı imleç hale getiriyoruz
-        newBtn.style.backgroundColor = '#95a5a6';
-        newBtn.style.color = '#ffffff';
-        newBtn.style.opacity = '0.8';
-        newBtn.style.cursor = 'not-allowed';
-        newBtn.style.transition = '0.3s';
-        
-        // 3. Orijinal metni ("📤 Değerlendirme Dosyasını Gönder") hafızaya alıyoruz
-        const originalText = newBtn.innerHTML;
-        
-        // 4. İmleç butonun üzerine geldiğinde (Hover)
-        newBtn.addEventListener('mouseenter', () => {
-            newBtn.innerHTML = '⏳ YAKINDA AKTİF';
-            newBtn.style.backgroundColor = '#7f8c8d'; // Biraz daha koyu gri
-        });
-        
-        // 5. İmleç butonun üzerinden çekildiğinde
-        newBtn.addEventListener('mouseleave', () => {
-            newBtn.innerHTML = originalText;
-            newBtn.style.backgroundColor = '#95a5a6'; // Eski griye dön
-        });
-    });
+
     // --- HIZLI HESAP MAKİNESİ İŞLEMLERİ ---
     const btnCalcToggle = document.getElementById('btnCalcToggle');
     const floatingCalc = document.getElementById('floatingCalc');
@@ -597,3 +569,30 @@ mainVideo.addEventListener('mousedown', function(event) {
             }
         });
     }
+    // --- TÜRKÇE ONDALIK FORMATI (VİRGÜL) DÜZENLEMESİ ---
+document.addEventListener('DOMContentLoaded', () => {
+    // Tüm sayısal inputları seç
+    const numericInputs = document.querySelectorAll('input[type="number"], input[type="text"][placeholder*="Hesabı"]');
+    
+    numericInputs.forEach(input => {
+        // 1. Nokta tuşunu virgüle çevir
+        input.addEventListener('keypress', (e) => {
+            if (e.key === '.') {
+                e.preventDefault();
+                input.value += ',';
+            }
+        });
+
+        // 2. Sadece sayı ve virgül girişine izin ver, harfleri engelle
+        input.addEventListener('input', (e) => {
+            // Virgülü noktaya çevirerek hafızaya al (Hesaplamalar nokta ile çalışır)
+            let val = input.value;
+            val = val.replace(',', '.');
+            
+            // Eğer giriş geçersiz bir sayıysa temizle (RegEx: Sadece sayı ve tek nokta)
+            if (val !== "" && isNaN(val)) {
+                input.value = input.value.slice(0, -1);
+            }
+        });
+    });
+});

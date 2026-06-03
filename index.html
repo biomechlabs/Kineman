@@ -214,11 +214,15 @@
                             <tr><td>3 (%80)</td><td id="sumW_3">-</td><td id="sumS_3">-</td></tr>
                         </table>
                         <div class="instruction-box">
-                            <div style="font-size: 0.85em; color: #2c3e50; background: #e8f8f5; padding: 10px; border-left: 4px solid #1abc9c; margin-bottom: 15px;">
-                                <strong>💡 MVT (Minimum Hız Eşiği) Değerleri:</strong><br>
-                                • Bench Press: 0.15 m/sn &nbsp;|&nbsp; • Squat: 0.30 m/sn<br>
-                                • Deadlift: 0.30 m/sn &nbsp;|&nbsp; • Overhead Press: 0.20 m/sn
-                            </div>
+                            <label style="font-weight:bold; color:#c0392b; font-size: 1.1em; display:block; margin-bottom: 8px;">👉 Analiz Edilen Hareketi Seçin:</label>
+                            <select id="vbt_exercise_select" style="width: 100%; padding: 10px; border: 2px solid #3498db; border-radius: 4px; margin-bottom: 15px; font-weight:bold; background: var(--input-bg); color: var(--text-main);">
+                                <option value="">Lütfen Bir Hareket Seçin...</option>
+                                <option value="0.15">Bench Press (MVT: 0.15 m/sn)</option>
+                                <option value="0.30">Squat (MVT: 0.30 m/sn)</option>
+                                <option value="0.30">Deadlift (MVT: 0.30 m/sn)</option>
+                                <option value="0.20">Overhead Press (MVT: 0.20 m/sn)</option>
+                            </select>
+                            
                             <label style="font-weight:bold;">Öğrenci Hesabı: Eğimi girin</label>
                             <input type="number" id="inputSlope" placeholder="Formül: (Hız3 - Hız1) / (Yük3 - Yük1)">
                             
@@ -226,11 +230,10 @@
                             <input type="number" id="inputIntercept" placeholder="Formül: Hız1 - (Eğim x Yük1)">
                             
                             <label style="font-weight:bold; margin-top:10px; display:block;">Öğrenci Hesabı: 1TM değerini girin</label>
-                            <input type="number" id="input1RM" placeholder="Formül: (MVT - Kesişim) / Eğim">
+                            <input type="number" id="input1RM" placeholder="Formül: (Seçilen MVT - Kesişim) / Eğim">
                         </div>
                         <div style="display: flex; gap: 10px; margin-top: 15px;">
                             <button class="print-btn" id="btnPrintReportVbt">🖨️ Raporu Oluştur</button>
-                            <button class="submit-btn" id="btnSubmitFormVbt">📤 Değerlendirme Dosyasını Gönder</button>
                         </div>
                     </div>
                 </div>
@@ -316,7 +319,7 @@
                         </table>
                         <div style="display: flex; gap: 10px; margin-top: 15px;">
                             <button class="print-btn" id="btnSprintPrint">🖨️ Raporu Oluştur</button>
-                            <button class="submit-btn" id="btnSprintSubmit">📤 Değerlendirme Dosyasını Gönder</button>
+                          
                         </div>
                     </div>
                 </div>
@@ -444,7 +447,7 @@
                         
                         <div style="display: flex; gap: 10px; margin-top: 20px;">
                             <button class="print-btn" id="btnOhsPrint">🖨️ Raporu Oluştur</button>
-                            <button class="submit-btn" id="btnOhsSubmit">📤 Değerlendirme Dosyasını Gönder</button>
+                            
                         </div>
                     </div>
                 </div>
@@ -577,7 +580,7 @@
 
                         <div style="display: flex; gap: 10px; margin-top: 20px;">
                             <button class="print-btn" id="btnPosPrint">🖨️ Raporu Oluştur</button>
-                            <button class="submit-btn" id="btnPosSubmit">📤 Değerlendirme Dosyasını Gönder</button>
+                            
                         </div>
                     </div>
                 </div>
@@ -626,7 +629,7 @@
                         
                         <div style="display: flex; gap: 10px; margin-top: 20px;">
                             <button class="print-btn" id="btnJumpPrint">🖨️ Raporu Oluştur</button>
-                            <button class="submit-btn" id="btnJumpSubmit">📤 Değerlendirme Dosyasını Gönder</button>
+                            
                         </div>
                     </div>
                 </div>
@@ -736,7 +739,7 @@
                         
                         <div style="display: flex; gap: 10px; margin-top: 20px;">
                             <button class="print-btn" id="btnAgilityPrint">🖨️ Raporu Oluştur</button>
-                            <button class="submit-btn" id="btnAgilitySubmit">📤 Değerlendirme Dosyasını Gönder</button>
+                            
                         </div>
                     </div>
                 </div>
@@ -751,6 +754,7 @@
         <input type="text" id="calcInput" class="calc-input" placeholder="İşlem girip Enter'a basın (Örn: (5+3)*2)">
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="js/app.js"></script>
     <script src="js/vbt_hesapla.js"></script>
     <script src="js/sprint_hesapla.js"></script>
