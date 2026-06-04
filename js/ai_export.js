@@ -16,9 +16,7 @@ function getStudentHeader() {
 function getVal(id) { 
     const el = document.getElementById(id);
     if (!el) return NaN;
-    // Değeri al, virgülü noktaya çevir ve boşlukları sil
     const val = (el.textContent || el.value).replace(/,/g, '.').trim();
-    // Eğer kutu boşsa veya tire varsa NaN döndür (böylece 0 üzerinden Hatalı Puan verilmesini önler)
     if (val === '' || val === '-') return NaN;
     return parseFloat(val); 
 }
@@ -29,14 +27,12 @@ async function captureVideoFrameAsync(videoUrl, timeSec, points = []) {
         if (!videoUrl || isNaN(timeSec)) { resolve(""); return; }
         const vid = document.createElement('video');
         
-        // Safari'de Blob URL'lerde CORS hatasını önlemek için kontrol
         if (!videoUrl.startsWith('blob:')) {
             vid.crossOrigin = "anonymous";
         }
         vid.muted = true;
         vid.playsInline = true;
 
-        // Safari'de sonsuz döngüyü engellemek için 2 saniyelik zaman aşımı koruması
         const timer = setTimeout(() => { resolve(""); }, 2000);
 
         vid.addEventListener('loadeddata', () => {
@@ -44,7 +40,7 @@ async function captureVideoFrameAsync(videoUrl, timeSec, points = []) {
         });
 
         vid.addEventListener('seeked', () => {
-            clearTimeout(timer); // Başarılıysa zamanlayıcıyı iptal et
+            clearTimeout(timer); 
             try {
                 const canvas = document.createElement('canvas');
                 canvas.width = vid.videoWidth; canvas.height = vid.videoHeight;
@@ -74,14 +70,13 @@ async function captureVideoFrameAsync(videoUrl, timeSec, points = []) {
         });
 
         vid.src = videoUrl;
-        vid.load(); // Safari tetikleyicisi
+        vid.load(); 
     });
 }
 
-// MAC/SAFARİ UYUMLU, GÜVENLİ RESİM YÜKLEME MOTORU
 async function loadImage(src) {
     return new Promise((resolve) => {
-        if (!src) { resolve(null); return; } // Safari'nin boş src'de kilitlenmesini önler
+        if (!src) { resolve(null); return; } 
         const img = new Image(); 
         img.onload = () => resolve(img); 
         img.onerror = () => resolve(null); 
@@ -135,10 +130,14 @@ async function drawJointLines(imgSrc, pointsArray) {
 // 1. VBT KOMBİNE RAPOR VE DEĞERLENDİRME MOTORU
 // -----------------------------------------------------------------------------
 document.getElementById('btnPrintReportVbt')?.addEventListener('click', async function() {
-    const btn = this;
     const mvtSelect = document.getElementById('vbt_exercise_select');
     if (!mvtSelect || !mvtSelect.value) { alert("Lütfen önce değerlendirilecek hareketi seçin! (MVT)"); return; }
     
+    const printWin = window.open('', '_blank');
+    if (!printWin) { alert("Lütfen tarayıcınızın 'Açılır Pencere (Popup)' engelleyicisini kapatıp tekrar deneyin."); return; }
+    printWin.document.write("<h2 style='font-family:sans-serif; text-align:center; margin-top:10%; color:#2c3e50;'>⏳ Rapor oluşturuluyor, lütfen bekleyin...</h2>");
+
+    const btn = this; 
     const selectedMVT = parseFloat(mvtSelect.value);
     btn.textContent = "⏳ Analiz ve Rapor Oluşturuluyor..."; btn.disabled = true;
 
@@ -230,8 +229,13 @@ document.getElementById('btnPrintReportVbt')?.addEventListener('click', async fu
                     setTimeout(() => { window.print(); }, 1000);
                 </script>
             </body></html>`;
-        const w = window.open('','_blank'); w.document.write(reportContent); w.document.close();
+        
+        printWin.document.open();
+        printWin.document.write(reportContent);
+        printWin.document.close();
+
     } catch(err) {
+        if(printWin) printWin.close();
         alert("Rapor oluşturulurken bir hata meydana geldi: " + err.message);
     } finally {
         btn.textContent = "🖨️ Raporu Oluştur"; btn.disabled = false;
@@ -242,6 +246,10 @@ document.getElementById('btnPrintReportVbt')?.addEventListener('click', async fu
 // 2. SPRINT KOMBİNE RAPOR VE DEĞERLENDİRME MOTORU
 // -----------------------------------------------------------------------------
 document.getElementById('btnSprintPrint')?.addEventListener('click', async function() {
+    const printWin = window.open('', '_blank');
+    if (!printWin) { alert("Lütfen tarayıcınızın 'Açılır Pencere (Popup)' engelleyicisini kapatıp tekrar deneyin."); return; }
+    printWin.document.write("<h2 style='font-family:sans-serif; text-align:center; margin-top:10%; color:#2c3e50;'>⏳ Rapor oluşturuluyor, lütfen bekleyin...</h2>");
+
     const btn = this; btn.textContent = "⏳ Analiz ve Rapor Oluşturuluyor..."; btn.disabled = true;
     
     try {
@@ -315,8 +323,13 @@ document.getElementById('btnSprintPrint')?.addEventListener('click', async funct
                     setTimeout(() => { window.print(); }, 1000);
                 </script>
             </body></html>`;
-        const w = window.open('','_blank'); w.document.write(reportContent); w.document.close();
+        
+        printWin.document.open();
+        printWin.document.write(reportContent);
+        printWin.document.close();
+
     } catch(err) {
+        if(printWin) printWin.close();
         alert("Rapor oluşturulurken bir hata meydana geldi: " + err.message);
     } finally {
         btn.textContent = "🖨️ Raporu Oluştur"; btn.disabled = false;
@@ -327,6 +340,10 @@ document.getElementById('btnSprintPrint')?.addEventListener('click', async funct
 // 3. FMS (OHS) KOMBİNE RAPOR VE DEĞERLENDİRME MOTORU
 // -----------------------------------------------------------------------------
 document.getElementById('btnOhsPrint')?.addEventListener('click', async function() {
+    const printWin = window.open('', '_blank');
+    if (!printWin) { alert("Lütfen tarayıcınızın 'Açılır Pencere (Popup)' engelleyicisini kapatıp tekrar deneyin."); return; }
+    printWin.document.write("<h2 style='font-family:sans-serif; text-align:center; margin-top:10%; color:#2c3e50;'>⏳ Rapor oluşturuluyor, lütfen bekleyin...</h2>");
+
     const btn = this; btn.textContent = "⏳ Analiz ve Rapor Oluşturuluyor..."; btn.disabled = true;
     
     try {
@@ -383,8 +400,13 @@ document.getElementById('btnOhsPrint')?.addEventListener('click', async function
                 <h2 style="color:#c0392b; text-align:center;">Nihai FMS Skoru: ${document.getElementById('final_fms_score_display').textContent}</h2>
                 <script>setTimeout(() => { window.print(); }, 800);</script>
             </body></html>`;
-        const w = window.open('','_blank'); w.document.write(reportContent); w.document.close();
+        
+        printWin.document.open();
+        printWin.document.write(reportContent);
+        printWin.document.close();
+
     } catch(err) {
+        if(printWin) printWin.close();
         alert("Rapor oluşturulurken bir hata meydana geldi: " + err.message);
     } finally {
         btn.textContent = "🖨️ Raporu Oluştur"; btn.disabled = false;
@@ -395,6 +417,10 @@ document.getElementById('btnOhsPrint')?.addEventListener('click', async function
 // 4. POSTURE KOMBİNE RAPOR VE DEĞERLENDİRME MOTORU
 // -----------------------------------------------------------------------------
 document.getElementById('btnPosPrint')?.addEventListener('click', async function() {
+    const printWin = window.open('', '_blank');
+    if (!printWin) { alert("Lütfen tarayıcınızın 'Açılır Pencere (Popup)' engelleyicisini kapatıp tekrar deneyin."); return; }
+    printWin.document.write("<h2 style='font-family:sans-serif; text-align:center; margin-top:10%; color:#2c3e50;'>⏳ Rapor oluşturuluyor, lütfen bekleyin...</h2>");
+
     const btn = this; btn.textContent = "⏳ Analiz ve Rapor Oluşturuluyor..."; btn.disabled = true;
     
     try {
@@ -454,8 +480,13 @@ document.getElementById('btnPosPrint')?.addEventListener('click', async function
                 <h2 style="color:#c0392b; text-align:center;">Nihai Postür Skoru: ${document.getElementById('final_posture_score_display').textContent}</h2>
                 <script>setTimeout(() => { window.print(); }, 800);</script>
             </body></html>`;
-        const w = window.open('','_blank'); w.document.write(reportContent); w.document.close();
+        
+        printWin.document.open();
+        printWin.document.write(reportContent);
+        printWin.document.close();
+
     } catch(err) {
+        if(printWin) printWin.close();
         alert("Rapor oluşturulurken bir hata meydana geldi: " + err.message);
     } finally {
         btn.textContent = "🖨️ Raporu Oluştur"; btn.disabled = false;
@@ -466,6 +497,10 @@ document.getElementById('btnPosPrint')?.addEventListener('click', async function
 // 5. JUMP KOMBİNE RAPOR VE DEĞERLENDİRME MOTORU
 // -----------------------------------------------------------------------------
 document.getElementById('btnJumpPrint')?.addEventListener('click', async function() { 
+    const printWin = window.open('', '_blank');
+    if (!printWin) { alert("Lütfen tarayıcınızın 'Açılır Pencere (Popup)' engelleyicisini kapatıp tekrar deneyin."); return; }
+    printWin.document.write("<h2 style='font-family:sans-serif; text-align:center; margin-top:10%; color:#2c3e50;'>⏳ Rapor oluşturuluyor, lütfen bekleyin...</h2>");
+
     const btn = this; btn.textContent = "⏳ Analiz Çıkarılıyor..."; btn.disabled = true;
 
     try {
@@ -505,8 +540,13 @@ document.getElementById('btnJumpPrint')?.addEventListener('click', async functio
                 <div style="text-align:center; margin-bottom:20px;"><img src="${chronoJump}" class="img-box"><br><i>Sıçrama Çoklu Pozlama</i></div>
                 <script>setTimeout(() => { window.print(); }, 800);</script>
             </body></html>`;
-        const printWin = window.open('','_blank'); printWin.document.write(reportContent); printWin.document.close();
+        
+        printWin.document.open();
+        printWin.document.write(reportContent);
+        printWin.document.close();
+
     } catch(err) {
+        if(printWin) printWin.close();
         alert("Rapor oluşturulurken bir hata meydana geldi: " + err.message);
     } finally {
         btn.textContent = "🖨️ Raporu Oluştur"; btn.disabled = false;
@@ -517,6 +557,10 @@ document.getElementById('btnJumpPrint')?.addEventListener('click', async functio
 // 6. AGILITY KOMBİNE RAPOR VE DEĞERLENDİRME MOTORU
 // -----------------------------------------------------------------------------
 document.getElementById('btnAgilityPrint')?.addEventListener('click', function() { 
+    const printWin = window.open('', '_blank');
+    if (!printWin) { alert("Lütfen tarayıcınızın 'Açılır Pencere (Popup)' engelleyicisini kapatıp tekrar deneyin."); return; }
+    printWin.document.write("<h2 style='font-family:sans-serif; text-align:center; margin-top:10%; color:#2c3e50;'>⏳ Rapor oluşturuluyor, lütfen bekleyin...</h2>");
+
     const btn = this; btn.textContent = "⏳ Analiz Çıkarılıyor..."; btn.disabled = true;
 
     try {
@@ -555,8 +599,13 @@ document.getElementById('btnAgilityPrint')?.addEventListener('click', function()
                 <h2 style="color:#c0392b; text-align:center;">Nihai Karar: ${document.getElementById('final_agility_score_display').textContent}</h2>
                 <script>setTimeout(() => { window.print(); }, 500);</script>
             </body></html>`;
-        const printWin = window.open('','_blank'); printWin.document.write(reportContent); printWin.document.close();
+        
+        printWin.document.open();
+        printWin.document.write(reportContent);
+        printWin.document.close();
+
     } catch(err) {
+        if(printWin) printWin.close();
         alert("Rapor oluşturulurken bir hata meydana geldi: " + err.message);
     } finally {
         btn.textContent = "🖨️ Raporu Oluştur"; btn.disabled = false;
