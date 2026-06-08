@@ -15,7 +15,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const savedSession = localStorage.getItem('kineman_session');
     if (savedSession) {
         window.studentData = JSON.parse(savedSession);
-        enterApp(); // Otomatik giriş yap
+        
+        // DİKKAT: enterApp(); komutu kaldırılarak otonom geçiş engellendi.
+        // Bunun yerine önceki oturum verileri giriş kutularına otomatik dolduruluyor.
+        const noInput = document.getElementById('lpNo');
+        const nameInput = document.getElementById('lpName');
+        const emailInput = document.getElementById('lpEmail');
+        
+        if(noInput && nameInput && emailInput) {
+            noInput.value = window.studentData.no;
+            nameInput.value = window.studentData.name;
+            emailInput.value = window.studentData.email;
+        }
     }
 
     // 2. Giriş yap butonu tetikleyici
@@ -300,11 +311,11 @@ window.openGuide = function(module) {
             </ul>
 
             <h3>Değerlendirme ve Notlandırma</h3>
-            <p>Nihai proje notunuz, aşağıdaki üç değerlendirme aşamasının toplamından oluşacaktır:</p>
+            <p>Nihai proje notunuz, aşağıdaki üç değerlendirme aşamasının toplamından oluşacaktır. <strong>RAPORLARDAKİ ELDE ETTİĞİNİZ PUANLAR SADECE FORMÜL HESAPLAMA PUANINIZI OLUŞTURUR.</strong></p>
             <ul>
                 <li>• Hesaplama Doğruluğu: Manuel girdiğiniz verilerin otonom sistemle karşılaştırılması (Raporlardaki otonom değerlendirmeler)</li>
-                <li>• YZ Kontrolü: Kritik nokta ve zaman işaretlemelerinizin yapay zeka araçlarıyla teyit edilmesi.</li>
-                <li>• Manuel Kontrol: İşaretleme ve analizlerinizin eğitmen tarafından incelenmesi.</li>
+                <li>• YZ Kontrolü: Kritik nokta ve zaman işaretlemelerinizin doğruluğunun yapay zeka araçlarıyla teyit edilmesi.</li>
+                <li>• Manuel Kontrol: İşaretleme ve analizlerinizin doğruluğunun eğitmen tarafından incelenmesi.</li>
             </ul>
 
             <h3>Teslim Formatı ve Tarihi</h3>

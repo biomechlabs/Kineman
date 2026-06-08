@@ -295,12 +295,55 @@ document.getElementById('btnSprintPrint')?.addEventListener('click', async funct
 
         const scorePct = totalParams > 0 ? Math.round((correctParams / totalParams) * 100) : 0;
         
+        // --- KRONOFOTOGRAFİ DÜZELTMESİ BAŞLANGICI ---
         const vidUrl = window.videoMemory['sprint'];
-        const img_step1 = await captureVideoFrameAsync(vidUrl, getVal('step_t1_1'));
-        const img_step2 = await captureVideoFrameAsync(vidUrl, getVal('step_t1_2'));
-        const chronoSprint = await createChronophotography(img_step1, img_step2);
+        let capturedImages = [];
+        
+        // 1'den 6'ya kadar olan tüm adımların zamanlarını (step_t1_x) tarayıp yakalar
+        for(let i=1; i<=6; i++) {
+            let timeVal = getVal(`step_t1_${i}`);
+            if(!isNaN(timeVal) && timeVal > 0) {
+                let imgSrc = await captureVideoFrameAsync(vidUrl, timeVal);
+                if(imgSrc) {
+                    // String (Base64) formatındaki veriyi gerçek bir HTMLImageElement objesine dönüştür
+                    let imgObj = new Image();
+                    await new Promise((resolve) => {
+                        imgObj.onload = resolve;
+                        imgObj.src = imgSrc;
+                    });
+                    capturedImages.push(imgObj);
+                }
+            }
+        }
+
+        // Resimleri Canvas üzerinde ideal opaklıkta birleştiriyoruz
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        let chronoSprint = "";
+
+        if(capturedImages.length > 0) {
+            canvas.width = capturedImages[0].width;
+            canvas.height = capturedImages[0].height;
+            
+            // İlk kareyi %100 netlikle çiz (Arkaplan referansı)
+            ctx.globalAlpha = 1.0;
+            ctx.drawImage(capturedImages[0], 0, 0);
+            
+            // Diğer tüm kareleri %75 belirginlikle (0.75) üst üste bindir
+            ctx.globalAlpha = 0.75; 
+            for(let i=1; i<capturedImages.length; i++) {
+                ctx.drawImage(capturedImages[i], 0, 0);
+            }
+            
+            // İşlemi sıfırla ve resmi JPEG olarak dışa aktar
+            ctx.globalAlpha = 1.0;
+            chronoSprint = canvas.toDataURL('image/jpeg', 0.85);
+        }
+        // --- KRONOFOTOGRAFİ DÜZELTMESİ BİTİŞİ ---
 
         const reportContent = `
+
+        
             <html><head><title>KINEMAN Sprint Raporu</title><script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
             <style>body{font-family:Arial,sans-serif; padding:20px;} table{width:100%; border-collapse:collapse; margin-bottom:20px;} th,td{border:1px solid #bdc3c7; padding:8px; text-align:center; font-size:13px;} th{background:#34495e; color:white;} .img-box{width:100%; max-height:250px; object-fit:contain;} .score-card{background:#ecf0f1; border-left:5px solid #27ae60; padding:15px; margin-bottom:20px;}</style></head><body>
                 <h1 style="text-align:center;">20m Sprint Analiz Raporu</h1>${getStudentHeader()}
