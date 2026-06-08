@@ -4,13 +4,72 @@
     <meta charset="UTF-8">
     <title>Eğitim Videosu - KINEMAN</title>
     <style>
-        body { background: #2c3e50; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; font-family: 'Inter', sans-serif; }
-        .wrapper { width: 90%; max-width: 900px; text-align: center; }
-        h2 { color: white; margin-bottom: 20px; }
-        #videoContainer { width: 100%; height: 500px; background: black; border-radius: 12px; overflow: hidden; }
-        iframe { width: 100%; height: 100%; border: none; }
-        .fallback { margin-top: 20px; display: none; }
-        .btn { display: inline-block; padding: 15px 30px; background: #e74c3c; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; }
+        body { 
+            background: #2c3e50; 
+            margin: 0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            min-height: 100vh; 
+            font-family: 'Inter', sans-serif; 
+            padding: 20px 0;
+            box-sizing: border-box;
+        }
+        .wrapper { 
+            width: 95%; /* Ekran genişliğinin %95'ini kullanır */
+            max-width: 1600px; /* Çok geniş ekranlar için maksimum sınır */
+            text-align: center; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h2 { 
+            color: white; 
+            margin-bottom: 20px; 
+            font-size: 1.8em;
+        }
+        #videoContainer { 
+            width: 100%; 
+            max-height: 80vh; /* Ekran yüksekliğinin %80'ini aşmamasını sağlar */
+            aspect-ratio: 16 / 9; /* Genişliğe göre otomatik video yüksekliği ayarlar */
+            background: black; 
+            border-radius: 12px; 
+            overflow: hidden; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); /* Estetik derinlik */
+        }
+        iframe { 
+            width: 100%; 
+            height: 100%; 
+            border: none; 
+        }
+        .fallback { 
+            margin-top: 20px; 
+            display: none; 
+        }
+        .btn { 
+            display: inline-block; 
+            padding: 15px 30px; 
+            background: #e74c3c; 
+            color: white; 
+            text-decoration: none; 
+            border-radius: 6px; 
+            font-weight: bold; 
+        }
+        .btn-back {
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.1); 
+            border: 1px solid rgba(255, 255, 255, 0.3); 
+            color: white; 
+            padding: 12px 25px;
+            border-radius: 6px;
+            cursor: pointer; 
+            font-size: 1em;
+            transition: 0.3s;
+        }
+        .btn-back:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
     </style>
 </head>
 <body>
@@ -25,8 +84,7 @@
             <a id="ytLink" href="" target="_blank" class="btn">Videoyu YouTube'da İzle</a>
         </div>
         
-        <br><br>
-        <button onclick="window.history.back()" style="background:none; border:none; color:#bdc3c7; cursor:pointer; font-size: 1em;">&larr; Eğitim Videolarına Dön</button>
+        <button class="btn-back" onclick="window.close()">Sekmeyi Kapat ve Analize Dön</button>
     </div>
 
     <script>
@@ -38,12 +96,10 @@
         const player = document.getElementById('youtubePlayer');
         player.src = "https://www.youtube.com/embed/" + videoId;
         
-        // Hata durumunda (Gömülü oynatıcı açılmazsa)
         player.onerror = function() {
             document.getElementById('fallbackArea').style.display = 'block';
         };
 
-        // Eğer 5 saniye içinde video yüklenmezse fallback'i göster (Güvenlik önlemi)
         setTimeout(() => {
             document.getElementById('fallbackArea').style.display = 'block';
         }, 5000);
