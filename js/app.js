@@ -300,11 +300,11 @@ window.openGuide = function(module) {
             </ul>
 
             <h3>Değerlendirme ve Notlandırma</h3>
-            <p>Final notunuz, KINEMAN platformunun ürettiği PDF raporlarında yer alan "Otonom Değerlendirme" puanları üzerinden hesaplanacaktır:</p>
+            <p>Nihai proje notunuz, aşağıdaki üç değerlendirme aşamasının toplamından oluşacaktır:</p>
             <ul>
-                <li>• Sisteme manuel girdiğiniz veriler, yazılımın arka planda yaptığı bağımsız hesaplamalarla karşılaştırılır.</li>
-                <li>• Hata payınız bilimsel tolerans sınırları içerisindeyse o işlemden "Doğru" onayı ve tam puan alırsınız.</li>
-                <li>• Raporlardaki "Hatalı" tespitlerini inceleyerek analiz sekmesine dönebilir, hesaplamalarınızı düzeltip raporu yeniden oluşturabilirsiniz.</li>
+                <li>• Hesaplama Doğruluğu: Manuel girdiğiniz verilerin otonom sistemle karşılaştırılması (Raporlardaki otonom değerlendirmeler)</li>
+                <li>• YZ Kontrolü: Kritik nokta ve zaman işaretlemelerinizin yapay zeka araçlarıyla teyit edilmesi.</li>
+                <li>• Manuel Kontrol: İşaretleme ve analizlerinizin eğitmen tarafından incelenmesi.</li>
             </ul>
 
             <h3>Teslim Formatı ve Tarihi</h3>
