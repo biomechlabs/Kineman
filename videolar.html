@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Eğitim Videoları - KINEMAN</title>
+    <style>
+        body { background: #2c3e50; font-family: 'Inter', sans-serif; color: white; margin: 0; padding: 40px; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 40px; }
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; }
+        .card { background: white; color: #2c3e50; border-radius: 10px; padding: 15px; cursor: pointer; transition: 0.3s; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        .card img { width: 100%; border-radius: 6px; }
+        .card h3 { font-size: 0.9em; margin-top: 10px; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header"><h1>Eğitim Videoları</h1></div>
+        <div class="grid">
+            <div class="card" onclick="window.location.href='video_player.html?id=cZ4hbwUrwpg&title=Halter Hızı Analizi'">
+                <img src="https://img.youtube.com/vi/cZ4hbwUrwpg/0.jpg">
+                <h3>Halter Hızı (VBT) Analizi</h3>
+            </div>
+            <div class="card" onclick="window.location.href='video_player.html?id=F9rDV3nOgrI&title=20m Sprint Analizi'">
+                <img src="https://img.youtube.com/vi/F9rDV3nOgrI/0.jpg">
+                <h3>20m Sprint (İvmelenme) Analizi</h3>
+            </div>
+            <div class="card" onclick="window.location.href='video_player.html?id=cBcDJplUou0&title=FMS Analizi'">
+                <img src="https://img.youtube.com/vi/cBcDJplUou0/0.jpg">
+                <h3>FMS: Overhead Squat Analizi</h3>
+            </div>
+            <div class="card" onclick="window.location.href='video_player.html?id=wtlFHzg2fnI&title=Statik Postür Analizi'">
+                <img src="https://img.youtube.com/vi/wtlFHzg2fnI/0.jpg">
+                <h3>Statik Postür Analizi</h3>
+            </div>
+            <div class="card" onclick="window.location.href='video_player.html?id=87Z3pQYlG1Y&title=Dikey Sıçrama Analizi'">
+                <img src="https://img.youtube.com/vi/87Z3pQYlG1Y/0.jpg">
+                <h3>Dikey Sıçrama Analizi</h3>
+            </div>
+            <div class="card" onclick="window.location.href='video_player.html?id=wSpbdwz7t5Q&title=505 Çeviklik Analizi'">
+                <img src="https://img.youtube.com/vi/wSpbdwz7t5Q/0.jpg">
+                <h3>505 Çeviklik Analizi</h3>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

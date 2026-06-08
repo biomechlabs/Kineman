@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Örnek Video Materyalleri - KINEMAN</title>
+    <style>
+        body { background: #2c3e50; font-family: 'Inter', sans-serif; color: white; margin: 0; padding: 40px; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #3498db; padding-bottom: 20px; }
+        .header h1 { margin: 0 0 10px 0; color: #ecf0f1; font-weight: 800; }
+        .header p { color: #bdc3c7; font-size: 1.1em; line-height: 1.5; }
+        
+        .alert-box { background: rgba(52, 152, 219, 0.1); border-left: 4px solid #3498db; padding: 15px 20px; border-radius: 6px; margin-bottom: 40px; color: #ecf0f1; font-size: 0.95em; }
+        .alert-box strong { color: #3498db; }
+
+        .category-title { font-size: 1.4em; border-bottom: 1px solid #7f8c8d; padding-bottom: 5px; margin-bottom: 20px; color: #ecf0f1; font-weight: bold; }
+        
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-bottom: 40px; }
+        
+        .card { 
+            background: white; color: #2c3e50; border-radius: 10px; padding: 25px; 
+            display: flex; flex-direction: column; justify-content: space-between;
+            border-left: 6px solid #e74c3c;
+            transition: transform 0.3s, box-shadow 0.3s; 
+        }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        
+        .card h3 { font-size: 1.2em; margin: 0 0 10px 0; color: #2c3e50; font-weight: 800; }
+        .card p { font-size: 0.9em; color: #7f8c8d; margin: 0 0 20px 0; line-height: 1.4; }
+        
+        .btn-download { 
+            display: block; text-align: center; background: #3498db; color: white; 
+            text-decoration: none; padding: 12px; border-radius: 6px; font-weight: bold; 
+            transition: background 0.3s; 
+        }
+        .btn-download:hover { background: #2980b9; }
+        .btn-back { display: inline-block; padding: 10px 20px; color: #bdc3c7; text-decoration: none; border: 1px solid #bdc3c7; border-radius: 6px; transition: 0.3s; }
+        .btn-back:hover { background: #bdc3c7; color: #2c3e50; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Örnek Video Kütüphanesi</h1>
+            <p>Dönem sonu projeniz veya pratik çalışmalarınız için KINEMAN analiz platformuna uygun formatta çekilmiş, <br>mekansal kalibrasyon referanslarını barındıran ham analiz videoları.</p>
+        </div>
+
+        <div class="alert-box">
+            <strong>Nasıl İndirilir?</strong> Aşağıdaki butonlara tıkladığınızda video Google Drive üzerinde yeni bir sekmede açılacaktır. Videoyu bilgisayarınıza kaydetmek için açılan sayfanın <strong>sol üst köşesindeki İndir (⬇️) ikonuna</strong> tıklayınız.
+        </div>
+
+        <div class="category-title">İvmelenme ve Çeviklik Analizleri</div>
+        <div class="grid">
+            <div class="card" style="border-left-color: #3498db;">
+                <div>
+                    <h3>20m Sprint (İvmelenme)</h3>
+                    <p>Tam paralel açı, geçiş kapıları (0-5-10-15-20m) işaretli ham koşu videosu.</p>
+                </div>
+                <a href="https://drive.google.com/file/d/1QbEy57KapGLwTe5fW6J3Jx9Qu5cfUtl-/view?usp=drive_link" target="_blank" class="btn-download">Videoyu Görüntüle / İndir</a>
+            </div>
+
+            <div class="card" style="border-left-color: #3498db;">
+                <div>
+                    <h3>505 Çeviklik - Sağ Bacak</h3>
+                    <p>Frenleme ve yön değiştirme analizi için 180 derece sağ bacak dönüş fazı.</p>
+                </div>
+                <a href="https://drive.google.com/file/d/1axHhLJ-xSgYnB1_4KuhZ2v0NYiCISba1/view?usp=drive_link" target="_blank" class="btn-download">Videoyu Görüntüle / İndir</a>
+            </div>
+
+            <div class="card" style="border-left-color: #3498db;">
+                <div>
+                    <h3>505 Çeviklik - Sol Bacak</h3>
+                    <p>Frenleme ve yön değiştirme analizi için 180 derece sol bacak dönüş fazı.</p>
+                </div>
+                <a href="https://drive.google.com/file/d/18Qcsz0j670lMZKuZ-CRExjPZhH2oNaQS/view?usp=drive_link" target="_blank" class="btn-download">Videoyu Görüntüle / İndir</a>
+            </div>
+        </div>
+
+        <div class="category-title">Patlayıcı Güç ve VBT Analizleri</div>
+        <div class="grid">
+            <div class="card" style="border-left-color: #e67e22;">
+                <div>
+                    <h3>Dikey Sıçrama (CMJ)</h3>
+                    <p>Yüksek kare hızında, uçuş (Δt) süresi tespiti için net kalkış ve iniş açıları.</p>
+                </div>
+                <a href="https://drive.google.com/file/d/1lzZoLpMkHc9_DNuWivhcBWwg3TLsHU_v/view?usp=drive_link" target="_blank" class="btn-download">Videoyu Görüntüle / İndir</a>
+            </div>
+
+            <div class="card" style="border-left-color: #e67e22;">
+                <div>
+                    <h3>Halter Hızı (VBT) - Set 1</h3>
+                    <p>50 kg dış yük ile gerçekleştirilen patlayıcı konsantrik faz videosu.</p>
+                </div>
+                <a href="https://drive.google.com/file/d/1A0DVehv_pmkK3L1SYKqXnVcNQ4pgxwMt/view?usp=drive_link" target="_blank" class="btn-download">Videoyu Görüntüle / İndir</a>
+            </div>
+
+            <div class="card" style="border-left-color: #e67e22;">
+                <div>
+                    <h3>Halter Hızı (VBT) - Set 2</h3>
+                    <p>70 kg dış yük ile gerçekleştirilen patlayıcı konsantrik faz videosu.</p>
+                </div>
+                <a href="https://drive.google.com/file/d/1Mi5kmRlCXXP0RvaRGpSVwlsZuGpCt16z/view?usp=drive_link" target="_blank" class="btn-download">Videoyu Görüntüle / İndir</a>
+            </div>
+
+            <div class="card" style="border-left-color: #e67e22;">
+                <div>
+                    <h3>Halter Hızı (VBT) - Set 3</h3>
+                    <p>96 kg dış yük ile gerçekleştirilen patlayıcı konsantrik faz videosu.</p>
+                </div>
+                <a href="https://drive.google.com/file/d/1KPJuN1k8j4E8iJ1YOi2CTNzZQLlTN6m_/view?usp=drive_link" target="_blank" class="btn-download">Videoyu Görüntüle / İndir</a>
+            </div>
+        </div>
+
+        <div class="category-title">Mobilite ve Postür Analizleri</div>
+        <div class="grid">
+            <div class="card" style="border-left-color: #8e44ad;">
+                <div>
+                    <h3>FMS: Overhead Squat (Ön)</h3>
+                    <p>Anterior düzlem analizi: Valgus/Varus ve frontal asimetri tespiti için.</p>
+                </div>
+                <a href="https://drive.google.com/file/d/1utDfDc-vLvHCuUiortuh9Vo_vMP4Gwdw/view?usp=drive_link" target="_blank" class="btn-download">Videoyu Görüntüle / İndir</a>
+            </div>
+
+            <div class="card" style="border-left-color: #8e44ad;">
+                <div>
+                    <h3>FMS: Overhead Squat (Yan)</h3>
+                    <p>Lateral düzlem analizi: Uyluk, gövde paralelliği ve kinematik zincir uyumu.</p>
+                </div>
+                <a href="https://drive.google.com/file/d/1GYW14zdSBo1oSWpPuXxLetAhHtNIwn8v/view?usp=drive_link" target="_blank" class="btn-download">Videoyu Görüntüle / İndir</a>
+            </div>
+
+            <div class="card" style="border-left-color: #8e44ad;">
+                <div>
+                    <h3>Statik Postür (Önden)</h3>
+                    <p>Anterior düzlemde omuz ve pelvik bölge asimetrilerinin ölçümü.</p>
+                </div>
+                <a href="https://drive.google.com/file/d/1KLN8Fp4fuCFg1YhcIN6hojLqguoUHTvJ/view?usp=drive_link" target="_blank" class="btn-download">Videoyu Görüntüle / İndir</a>
+            </div>
+
+            <div class="card" style="border-left-color: #8e44ad;">
+                <div>
+                    <h3>Statik Postür (Yandan)</h3>
+                    <p>Lateral düzlemde Kraniovertebral Açı (CVA) ve şakül hattı hizalaması.</p>
+                </div>
+                <a href="https://drive.google.com/file/d/1TOPcFZZ1uk2YuuXnQBFX8IwJr6FNotH4/view?usp=drive_link" target="_blank" class="btn-download">Videoyu Görüntüle / İndir</a>
+            </div>
+        </div>
+
+        <div style="text-align: center;">
+            <a href="javascript:window.close()" class="btn-back">Sekmeyi Kapat ve Analize Dön</a>
+        </div>
+    </div>
+</body>
+</html>

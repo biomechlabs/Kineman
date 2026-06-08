@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Eğitim Videosu - KINEMAN</title>
+    <style>
+        body { background: #2c3e50; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; font-family: 'Inter', sans-serif; }
+        .wrapper { width: 90%; max-width: 900px; text-align: center; }
+        h2 { color: white; margin-bottom: 20px; }
+        #videoContainer { width: 100%; height: 500px; background: black; border-radius: 12px; overflow: hidden; }
+        iframe { width: 100%; height: 100%; border: none; }
+        .fallback { margin-top: 20px; display: none; }
+        .btn { display: inline-block; padding: 15px 30px; background: #e74c3c; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <h2 id="videoTitle"></h2>
+        <div id="videoContainer">
+            <iframe id="youtubePlayer" src="" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+        </div>
+        
+        <div id="fallbackArea" class="fallback">
+            <p style="color: #ecf0f1;">Video bu sayfada oynatılamadı. Lütfen YouTube üzerinden izleyin:</p>
+            <a id="ytLink" href="" target="_blank" class="btn">Videoyu YouTube'da İzle</a>
+        </div>
+        
+        <br><br>
+        <button onclick="window.history.back()" style="background:none; border:none; color:#bdc3c7; cursor:pointer; font-size: 1em;">&larr; Eğitim Videolarına Dön</button>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const videoId = params.get('id');
+        const title = params.get('title');
+        
+        document.getElementById('videoTitle').innerText = title;
+        const player = document.getElementById('youtubePlayer');
+        player.src = "https://www.youtube.com/embed/" + videoId;
+        
+        // Hata durumunda (Gömülü oynatıcı açılmazsa)
+        player.onerror = function() {
+            document.getElementById('fallbackArea').style.display = 'block';
+        };
+
+        // Eğer 5 saniye içinde video yüklenmezse fallback'i göster (Güvenlik önlemi)
+        setTimeout(() => {
+            document.getElementById('fallbackArea').style.display = 'block';
+        }, 5000);
+
+        document.getElementById('ytLink').href = "https://www.youtube.com/watch?v=" + videoId;
+    </script>
+</body>
+</html>

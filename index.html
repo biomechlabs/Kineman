@@ -3,59 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KINEMAN eğitim (beta)</title>
+    <title>KINEMAN eğitim</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <div id="landingPage" class="landing-overlay">
-        <div class="landing-container">
-            <div class="landing-header">
-                <h1 class="brand-title" style="font-size: 3.5em; color: var(--text-main);">KINEMAN <span>eğitim</span> <small>(beta)</small></h1>
-                <p style="color: var(--text-muted); margin-top: 5px;">Spor Biyomekaniği ve Kinematik Analiz Platformu</p>
-            </div>
-            
-            <div class="landing-body">
-                <div class="landing-videos">
-                    <div class="video-card">
-                        <h3>▶ Bu Uygulama Nedir?</h3>
-                        <div class="vid-placeholder">
-                            <span>(Platform Tanıtım Videosu Eklenecek)</span>
-                        </div>
-                    </div>
-                    <div class="video-card">
-                        <h3>▶ Ödev Nedir & Kriterler</h3>
-                        <div class="vid-placeholder">
-                            <span>(Final Ödevi Yönerge Videosu Eklenecek)</span>
-                        </div>
-                    </div>
-                </div>
+    <div class="landing-container" style="max-width: 900px; margin: 0 auto; padding: 40px 20px;">
+        
+        <div class="landing-header" style="text-align: center; margin-bottom: 50px; color: white;">
+            <h1 style="font-size: 3.5em; font-weight: 800; margin: 0;">
+    KINEMAN <span style="color: #3498db; font-weight: normal;">eğitim</span> 
+    <small style="font-size: 0.4em; vertical-align: middle; color: #bdc3c7;">v1.1</small>
+</h1>
+            <p style="font-size: 1.2em; font-weight: 300; margin-top: 10px; opacity: 0.9;">Spor Biyomekaniği ve Kinematik Analiz Platformu</p>
+        </div>
 
-                <div class="landing-login">
-                    <h2>Öğrenci Girişi</h2>
-                    <p style="font-size:0.85em; color:#7f8c8d; margin-bottom:15px;">Analize başlamak için bilgilerinizi eksiksiz girin.</p>
-                    
-                    <label>Öğrenci No</label>
-                    <input type="text" id="lpNo" placeholder="Örn: 2026123456">
-                    
-                    <label>Ad Soyad</label>
-                    <input type="text" id="lpName" placeholder="Örn: Ali Yılmaz">
-                    
-                    <label>E-posta Adresi</label>
-                    <input type="email" id="lpEmail" placeholder="Örn: ali@ogrenci.edu.tr">
-                    
-                    <button id="btnEnterSystem" class="primary-btn">Sisteme Giriş Yap</button>
-                    <p id="lpError" style="color:#e74c3c; display:none; font-size:0.85em; font-weight:bold; margin-top:10px;">Lütfen tüm bilgileri eksiksiz doldurunuz!</p>
+        <div class="landing-body" style="display: flex; gap: 40px; align-items: start;">
+            
+            <div class="landing-left" style="flex: 1;">
+                <h2 style="color: white; margin-bottom: 20px; font-weight: 300; font-size: 1.5em;">Analiz Modülleri</h2>
+                <div class="landing-btns" style="display: flex; flex-direction: column; gap: 15px;">
+                    <button class="landing-btn" onclick="openGuide('announcement')">
+                        <strong>ANT306 Spor Biyomekaniği Dersi</strong>
+                        <span>Dönem Sonu Projesi Duyurusu</span>
+                    </button>
+                    <button class="landing-btn" onclick="window.open('videolar.html', '_blank')">
+                        <strong>Eğitim Videoları</strong>
+                        <span>Analizlerin KINEMAN'da açıklamalı uygulanışı</span>
+                    </button>
+                    <button class="landing-btn" onclick="window.open('indirilebilir_icerikler.html', '_blank')">
+                        <strong>İndirilebilir İçerikler</strong>
+                        <span>Örnek/deneme analiz videoları</span>
+                    </button>
                 </div>
+            </div>
+
+            <div class="login-section" style="flex: 1; background: #ffffff; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.3);">
+                <h3 style="margin-bottom: 20px; color: #2c3e50; font-size: 1.4em;">Öğrenci Girişi</h3>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="font-weight: 600;">Öğrenci No:</label>
+                    <input type="text" id="lpNo" placeholder="211902000" style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px;">
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="font-weight: 600;">Adınız Soyadınız:</label>
+                    <input type="text" id="lpName" placeholder="Ahmet Yılmaz" style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px;">
+                </div>
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label style="font-weight: 600;">E-posta:</label>
+                    <input type="email" id="lpEmail" placeholder="ahmet@gazi.edu.tr" style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px;">
+                </div>
+                <button id="btnEnterSystem" style="width: 100%; padding: 15px; background: #2c3e50; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">Sisteme Giriş Yap</button>
             </div>
         </div>
+        <div style="margin-top: 20px; padding: 12px; background: #fef2f2; border: 1px solid #fee2e2; border-radius: 6px; color: #991b1b; font-size: 0.85em; text-align: center;">
+    ⚠️ <strong>Uyarı:</strong> Platformdan en yüksek verimi almak için lütfen bilgisayar (PC/Mac) ve Google Chrome kullanınız.
+</div>
     </div>
+</div>
+
+</div>
 
     <div id="mainAppContainer" style="display: none; flex-direction: column; min-height: 100vh;">
         <header class="navbar" style="display: flex; padding: 10px 20px; gap: 20px; align-items: center;">
             <div style="flex: 0 0 65%; display: flex; justify-content: space-between; align-items: center;">
-                <h1 class="brand-title" style="color: #ffffff;">KINEMAN <span>eğitim</span> <small>(beta)</small></h1>
+                <h1 class="brand-title" style="color: #ffffff;">KINEMAN <span>eğitim</span> <small>v1.1</small></h1>
                 
                 <div style="display: flex; align-items: center; gap: 15px; padding-right: 15px; border-right: 2px solid rgba(255,255,255,0.1);">
                     <div id="studentInfoDisplay" style="text-align: right; display: flex; flex-direction: column; gap: 2px;">
@@ -64,9 +77,9 @@
                     <button id="btnCalcToggle" title="Hızlı Hesap Makinesi" style="background: transparent; border: none; font-size: 1.8em; cursor: pointer; padding: 0;">🧮</button>
 
                     <div style="display: flex; flex-direction: column; gap: 4px;">
-                        <button id="btnThemeToggle" class="control-btn">🌙 Koyu Mod</button>
-                        <button id="btnLogout" class="control-btn">🚪 Çıkış</button>
-                    </div>
+    <button id="btnThemeToggle" class="control-btn">🌙 Koyu Mod</button>
+    <button id="btnHome" class="control-btn">🏠 Ana Sayfa</button> <button id="btnLogout" class="control-btn">🚪 Çıkış</button>
+</div>
                 </div>
             </div>
             
@@ -115,10 +128,13 @@
             <section class="right-panel">
                 
                 <div id="module-vbt" class="module-content active">
-                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-bottom: 15px;">
-                        <h2 style="margin: 0; border: none; padding: 0;">Halter Hızı Analizi</h2>
-                        <button class="guide-btn" onclick="openGuide('vbt')">📖 Kılavuz</button>
-                    </div>
+                    <div class="analysis-header" style="border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-bottom: 15px;">
+    <h2 class="analysis-title" style="margin: 0; border: none; padding: 0;">Halter Hızı Analizi</h2>
+    <div class="button-group">
+        <button class="btn-video" onclick="window.open('video_player.html?id=cZ4hbwUrwpg&title=Halter Hızı Analizi', '_blank')">Eğitim Videosu</button>
+        <button class="guide-btn btn-guide" onclick="openGuide('vbt')">📖 Kılavuz</button>
+    </div>
+</div>
                     <div class="data-group">
                         <h3 class="step-title">Aşama 1: Kalibrasyon <span class="tooltip-container">?<span class="tooltip-content">Piksel/metre dönüşümü yapabilmek için videodaki referans objesinin gerçek ölçüsünün sisteme tanıtıldığı mekansal kalibrasyon aşamasıdır.</span></span></h3>
                         <button id="btnCalibrate" class="action-btn">🎯 Kalibrasyon İçin Tıkla</button>
@@ -239,10 +255,13 @@
                 </div>
 
                 <div id="module-sprint" class="module-content">
-                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-bottom: 15px;">
-                        <h2 style="margin: 0; border: none; padding: 0;">20m Sprint (İvmelenme) Analizi</h2>
-                        <button class="guide-btn" onclick="openGuide('sprint')">📖 Kılavuz</button>
-                    </div>
+                    <div class="analysis-header" style="border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-bottom: 15px;">
+    <h2 class="analysis-title" style="margin: 0; border: none; padding: 0;">20m Sprint (İvmelenme) Analizi</h2>
+    <div class="button-group">
+        <button class="btn-video" onclick="window.open('video_player.html?id=F9rDV3nOgrI&title=20m Sprint Analizi', '_blank')">Eğitim Videosu</button>
+        <button class="guide-btn btn-guide" onclick="openGuide('sprint')">📖 Kılavuz</button>
+    </div>
+</div>
                     <div class="data-group">
                         <h3 class="step-title">Aşama 1: Kalibrasyon <span class="tooltip-container">?<span class="tooltip-content">Sprint koridorundaki 5. ve 10. metre hunileri referans alınarak piksel boyutlarının metreye dönüştürüldüğü aşamadır.</span></span></h3>
                         <button id="btnSprintCalibrate" class="action-btn">🎯 Kalibrasyon İçin Tıkla (5m ve 10m Hunisi)</button>
@@ -325,10 +344,13 @@
                 </div>
                 
                 <div id="module-fms" class="module-content">
-                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-bottom: 15px;">
-                        <h2 style="margin: 0; border: none; padding: 0;">FMS: Overhead Squat Analizi</h2>
-                        <button class="guide-btn" onclick="openGuide('fms')">📖 Kılavuz</button>
-                    </div>
+                    <div class="analysis-header" style="border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-bottom: 15px;">
+    <h2 class="analysis-title" style="margin: 0; border: none; padding: 0;">FMS: Overhead Squat Analizi</h2>
+    <div class="button-group">
+        <button class="btn-video" onclick="window.open('video_player.html?id=cBcDJplUou0&title=FMS Analizi', '_blank')">Eğitim Videosu</button>
+        <button class="guide-btn btn-guide" onclick="openGuide('fms')">📖 Kılavuz</button>
+    </div>
+</div>
                     <div class="tabs">
                         <button class="mod-tab-btn ohs-tab-btn active" data-target="ohs-side">Yandan Görünüm Analizi</button>
                         <button class="mod-tab-btn ohs-tab-btn" data-target="ohs-front">Önden Görünüm Analizi</button>
@@ -453,100 +475,104 @@
                 </div>
 
                 <div id="module-posture" class="module-content">
-                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-bottom: 15px;">
-                        <h2 style="margin: 0; border: none; padding: 0;">Statik Postür Analizi</h2>
-                        <button class="guide-btn" onclick="openGuide('posture')">📖 Kılavuz</button>
-                    </div>
+                    <div class="analysis-header" style="border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-bottom: 15px;">
+    <h2 class="analysis-title" style="margin: 0; border: none; padding: 0;">Statik Postür Analizi</h2>
+    <div class="button-group">
+        <button class="btn-video" onclick="window.open('video_player.html?id=wtlFHzg2fnI&title=Statik Postür Analizi', '_blank')">Eğitim Videosu</button>
+        <button class="guide-btn btn-guide" onclick="openGuide('posture')">📖 Kılavuz</button>
+    </div>
+</div>
                     <div class="tabs">
                         <button class="mod-tab-btn pos-tab-btn active" data-target="pos-side">Yandan Görünüm Analizi</button>
                         <button class="mod-tab-btn pos-tab-btn" data-target="pos-front">Önden Görünüm Analizi</button>
                     </div>
                     
-                    <div id="pos-side" class="pos-tab-content active" style="margin-top: 15px;">
-                        <div class="data-group">
-                            <h3 class="step-title">A. Başın Öne Kayması (Kraniovertebral Açı) <span class="tooltip-container">?<span class="tooltip-content">Boyun düzleşmesi veya ileri baş postürünü tespit etmek için boyun kökü ve kulak arasındaki açının ölçüldüğü aşamadır.</span></span></h3>
-                            <button id="btnPosHead" class="action-btn">🎯 Eklemleri İşaretle (C7 Omuru ve Kulak)</button>
-                            <table class="coord-table">
-                                <tr><th>Anatomik Nokta</th><th>X Koordinatı</th><th>Y Koordinatı</th></tr>
-                                <tr><td>C7 Omuru (Boyun Kökü) <span class="tooltip-container">?<span class="tooltip-content">Boynu büktüğünüzde ensenin alt kısmında en çok çıkıntı yapan omur.</span></span></td><td id="pos_c7_x">-</td><td id="pos_c7_y">-</td></tr>
-                                <tr><td>Tragus (Kulak Deliği) <span class="tooltip-container">?<span class="tooltip-content">Dış kulak yolunun hemen önündeki küçük kıkırdak çıkıntısı.</span></span></td><td id="pos_ear_x">-</td><td id="pos_ear_y">-</td></tr>
-                            </table>
-                            <label>Öğrenci Hesabı: Kraniovertebral Eğim (m):</label>
-                            <input type="number" id="pos_cva_m" placeholder="Formül: (Y_Kulak - Y_Boyun) / (X_Kulak - X_Boyun)">
-                            <label>Öğrenci Hesabı: Kraniovertebral Açı (CVA Derecesi):</label>
-                            <input type="number" id="pos_cva_deg" placeholder="Formül: =DERECE(MUTLAK(ATAN(m)))">
-                            <label>Başın Öne Kayması Değerlendirmesi:</label>
-                            <select id="pos_cva_eval" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; margin-top: 5px;">
-                                <option value="">Seçiniz...</option>
-    <option value="100">Kusursuz (CVA ≥ 50°)</option>
-    <option value="70">Hafif Kayma (CVA 45° - 49°)</option>
-    <option value="0">İleri Derece (CVA < 45°)</option>
-                            </select>
-                        </div>
-                        <div class="data-group">
-                            <h3 class="step-title">B. Şakül Çizgisi (Vücut Dikey Hizalanması) <span class="tooltip-container">?<span class="tooltip-content">Vücudun genel ağırlık merkezinin öne veya arkaya ne kadar kaydığını belirlemek için tam dikey referans hattının ölçümüdür.</span></span></h3>
-                            <button id="btnPosPlumb" class="action-btn" style="background-color: #34495e;">🎯 Eklemleri İşaretle (Ayak Bileği ve Omuz)</button>
-                            <table class="coord-table">
-                                <tr><th>Anatomik Nokta</th><th>X Koordinatı</th><th>Y Koordinatı</th></tr>
-                                <tr><td>Ayak Bileği Dış Kemik <span class="tooltip-container">?<span class="tooltip-content">Lateral malleol. Dış ayak bileği çıkıntısı.</span></span></td><td id="pos_ankle_x">-</td><td id="pos_ankle_y">-</td></tr>
-                                <tr><td>Omuz Üst Noktası <span class="tooltip-container">?<span class="tooltip-content">Akromion süreci. Omzun tam üst merkezi.</span></span></td><td id="pos_shoulder_x">-</td><td id="pos_shoulder_y">-</td></tr>
-                            </table>
-                            <label>Öğrenci Hesabı: Vücut Dikey Eğimi (m):</label>
-                            <input type="number" id="pos_plumb_m" placeholder="Formül: (Y_Omuz - Y_Bilek) / (X_Omuz - X_Bilek)">
-                            <label>Öğrenci Hesabı: Dikey Açı (Derece):</label>
-                            <input type="number" id="pos_plumb_deg" placeholder="Formül: =DERECE(MUTLAK(ATAN(m)))">
-                            <label>Şakül Çizgisi Değerlendirmesi:</label>
-                            <select id="pos_plumb_eval" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; margin-top: 5px;">
-                                <option value="">Seçiniz...</option>
-    <option value="100">Kusursuz (Dikey Açı ≥ 87°)</option>
-    <option value="70">Sınırda (Dikey Açı 83° - 86°)</option>
-    <option value="0">Disfonksiyonel (Dikey Açı < 83°)</option
-                            </select>
-                        </div>
-                    </div>
+                    <div id="pos-side" class="pos-tab-content" style="display: block; margin-top: 15px;">
+    <div class="data-group">
+        <h3 class="step-title">A. Kraniovertebral Açı (CVA) <span class="tooltip-container">?<span class="tooltip-content">Başın öne doğru kayma miktarını ve servikal omurga duruşunu ölçen aşamadır.</span></span></h3>
+        <button id="btnPosHead" class="action-btn" style="background-color: #2980b9;">🎯 Baş Pozisyonunu İşaretle (C7 ve Kulak)</button>
+        <table class="coord-table">
+            <tr><th>Anatomik Nokta</th><th>X Koordinatı</th><th>Y Koordinatı</th></tr>
+            <tr><td>C7 Omuru <span class="tooltip-container">?<span class="tooltip-content">Boynun arkasındaki en belirgin omur çıkıntısı.</span></span></td><td id="pos_c7_x">-</td><td id="pos_c7_y">-</td></tr>
+            <tr><td>Kulak (Tragus) <span class="tooltip-container">?<span class="tooltip-content">Kulağın önündeki kıkırdak çıkıntı.</span></span></td><td id="pos_ear_x">-</td><td id="pos_ear_y">-</td></tr>
+        </table>
+        <label>Öğrenci Hesabı: CVA Eğimi (m):</label>
+        <input type="number" id="pos_cva_m" placeholder="Formül: (Y_Kulak - Y_C7) / (X_Kulak - X_C7)">
+        <label>Öğrenci Hesabı: Kraniovertebral Açı (Derece):</label>
+        <input type="number" id="pos_cva_deg" placeholder="Formül: =DERECE(MUTLAK(ATAN(m)))">
+        <label>Baş Pozisyonu Değerlendirmesi:</label>
+        <select id="pos_cva_eval" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; margin-top: 5px;">
+            <option value="">Seçiniz...</option>
+            <option value="100">Normal (Açı ≥ 50°)</option>
+            <option value="0">Baş Öne Kayması (Açı &lt; 50°)</option>
+        </select>
+    </div>
 
-                    <div id="pos-front" class="pos-tab-content" style="display: none; margin-top: 15px;">
-                        <div class="data-group">
-                            <h3 class="step-title">C. Omuz ve Pelvis (Leğen Kemiği) Asimetrisi <span class="tooltip-container">?<span class="tooltip-content">Vücudun sağ ve sol yarıları arasındaki yatay eşitsizlikleri ve omurga eğrilik şüphelerini ölçen aşamadır.</span></span></h3>
-                            <button id="btnPosShoulderAsym" class="action-btn" style="background-color: #d35400;">🎯 Omuzları İşaretle (Sağ ve Sol Akromion)</button>
-                            <table class="coord-table">
-                                <tr><th>Anatomik Nokta</th><th>X Koordinatı</th><th>Y Koordinatı</th></tr>
-                                <tr><td>Sağ Omuz <span class="tooltip-container">?<span class="tooltip-content">Sağ akromion. Sağ omzun tam üst noktası.</span></span></td><td id="pos_rs_x">-</td><td id="pos_rs_y">-</td></tr>
-                                <tr><td>Sol Omuz <span class="tooltip-container">?<span class="tooltip-content">Sol akromion. Sol omzun tam üst noktası.</span></span></td><td id="pos_ls_x">-</td><td id="pos_ls_y">-</td></tr>
-                            </table>
-                            <label>Öğrenci Hesabı: Omuz Asimetrisi Eğimi (m):</label>
-                            <input type="number" id="pos_sa_m" placeholder="Formül: (Y_SolOmuz - Y_SagOmuz) / (X_SolOmuz - X_SagOmuz)">
-                            <label>Öğrenci Hesabı: Omuz Asimetrisi (Derece):</label>
-                            <input type="number" id="pos_sa_deg" placeholder="Formül: =DERECE(MUTLAK(ATAN(m)))">
-                            <label>Omuz Asimetrisi Değerlendirmesi:</label>
-                            <select id="pos_shoulder_eval" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; margin-top: 5px;">
-                                <option value="">Seçiniz...</option>
-    <option value="100">Kusursuz (Sapma ≤ 2°)</option>
-    <option value="70">Hafif Asimetri (Sapma 3° - 5°)</option>
-    <option value="0">Belirgin Asimetri (Sapma > 5°)</option>
-                            </select>
-                            
-                            <hr style="border: 1px solid #ecf0f1; margin: 15px 0;">
-                            
-                            <button id="btnPosPelvisAsym" class="action-btn" style="background-color: #27ae60;">🎯 Pelvisi İşaretle (Sağ ve Sol ASIS)</button>
-                            <table class="coord-table">
-                                <tr><th>Anatomik Nokta</th><th>X Koordinatı</th><th>Y Koordinatı</th></tr>
-                                <tr><td>Sağ Kalça Çıkıntısı <span class="tooltip-container">?<span class="tooltip-content">Sağ ASIS. Leğen kemiğinin sağ öndeki sivri çıkıntısı.</span></span></td><td id="pos_rp_x">-</td><td id="pos_rp_y">-</td></tr>
-                                <tr><td>Sol Kalça Çıkıntısı <span class="tooltip-container">?<span class="tooltip-content">Sol ASIS. Leğen kemiğinin sol öndeki sivri çıkıntısı.</span></span></td><td id="pos_lp_x">-</td><td id="pos_lp_y">-</td></tr>
-                            </table>
-                            <label>Öğrenci Hesabı: Pelvis Asimetrisi Eğimi (m):</label>
-                            <input type="number" id="pos_pa_m" placeholder="Formül: (Y_SolKalca - Y_SagKalca) / (X_SolKalca - X_SagKalca)">
-                            <label>Öğrenci Hesabı: Pelvis Asimetrisi (Derece):</label>
-                            <input type="number" id="pos_pa_deg" placeholder="Formül: =DERECE(MUTLAK(ATAN(m)))">
-                            <label>Pelvis Asimetrisi Değerlendirmesi:</label>
-                            <select id="pos_pelvis_eval" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; margin-top: 5px;">
-                                <option value="">Seçiniz...</option>
-    <option value="100">Kusursuz (Sapma ≤ 2°)</option>
-    <option value="70">Hafif Asimetri (Sapma 3° - 5°)</option>
-    <option value="0">Belirgin Asimetri (Sapma > 5°)</option>
-                            </select>
-                        </div>
-                    </div>
+    <hr style="border: 1px solid #ecf0f1; margin: 20px 0;">
+
+    <div class="data-group">
+        <h3 class="step-title">B. Dikey Şakül Çizgisi Açısı <span class="tooltip-container">?<span class="tooltip-content">Vücut ağırlık merkezinin dikey hat üzerindeki hizalanmasını ölçen aşamadır.</span></span></h3>
+        <button id="btnPosPlumb" class="action-btn" style="background-color: #2980b9;">🎯 Dikey Hizayı İşaretle (Ayak Bileği ve Omuz)</button>
+        <table class="coord-table">
+            <tr><th>Anatomik Nokta</th><th>X Koordinatı</th><th>Y Koordinatı</th></tr>
+            <tr><td>Ayak Bileği <span class="tooltip-container">?<span class="tooltip-content">Dış malleol. Ayak bileğinin dış yan çıkıntısı.</span></span></td><td id="pos_ankle_x">-</td><td id="pos_ankle_y">-</td></tr>
+            <tr><td>Omuz Üst Noktası <span class="tooltip-container">?<span class="tooltip-content">Akromionun yan profildeki orta noktası.</span></span></td><td id="pos_shoulder_x">-</td><td id="pos_shoulder_y">-</td></tr>
+        </table>
+        <label>Öğrenci Hesabı: Dikey Hiza Eğimi (m):</label>
+        <input type="number" id="pos_plumb_m" placeholder="Formül: (Y_Omuz - Y_Bilek) / (X_Omuz - X_Bilek)">
+        <label>Öğrenci Hesabı: Dikey Şakül Çizgisi Açısı (Derece):</label>
+        <input type="number" id="pos_plumb_deg" placeholder="Formül: =DERECE(MUTLAK(ATAN(m)))">
+        <label>Dikey Hizalanma Değerlendirmesi:</label>
+        <select id="pos_plumb_eval" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; margin-top: 5px;">
+            <option value="">Seçiniz...</option>
+            <option value="100">Dengeli (Açı ≥ 85°)</option>
+            <option value="0">Postüral Sapma (Açı &lt; 85°)</option>
+        </select>
+    </div>
+</div>
+
+<div id="pos-front" class="pos-tab-content" style="display: none; margin-top: 15px;">
+    <div class="data-group">
+        <h3 class="step-title">C. Omuz ve Pelvis (Leğen Kemiği) Asimetrisi <span class="tooltip-container">?<span class="tooltip-content">Vücudun sağ ve sol yarıları arasındaki yatay eşitsizlikleri ve omurga eğrilik şüphelerini ölçen aşamadır.</span></span></h3>
+        <button id="btnPosShoulderAsym" class="action-btn" style="background-color: #d35400;">🎯 Omuzları İşaretle (Sağ ve Sol Akromion)</button>
+        <table class="coord-table">
+            <tr><th>Anatomik Nokta</th><th>X Koordinatı</th><th>Y Koordinatı</th></tr>
+            <tr><td>Sağ Omuz <span class="tooltip-container">?<span class="tooltip-content">Sağ akromion. Sağ omzun tam üst noktası.</span></span></td><td id="pos_rs_x">-</td><td id="pos_rs_y">-</td></tr>
+            <tr><td>Sol Omuz <span class="tooltip-container">?<span class="tooltip-content">Sol akromion. Sol omzun tam üst noktası.</span></span></td><td id="pos_ls_x">-</td><td id="pos_ls_y">-</td></tr>
+        </table>
+        <label>Öğrenci Hesabı: Omuz Asimetrisi Eğimi (m):</label>
+        <input type="number" id="pos_sa_m" placeholder="Formül: (Y_SolOmuz - Y_SagOmuz) / (X_SolOmuz - X_SagOmuz)">
+        <label>Öğrenci Hesabı: Omuz Asimetrisi (Derece):</label>
+        <input type="number" id="pos_sa_deg" placeholder="Formül: =DERECE(MUTLAK(ATAN(m)))">
+        <label>Omuz Asimetrisi Değerlendirmesi:</label>
+        <select id="pos_shoulder_eval" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; margin-top: 5px;">
+            <option value="">Seçiniz...</option>
+            <option value="100">Kusursuz (Sapma ≤ 2°)</option>
+            <option value="70">Hafif Asimetri (Sapma 3° - 5°)</option>
+            <option value="0">Belirgin Asimetri (Sapma > 5°)</option>
+        </select>
+        
+        <hr style="border: 1px solid #ecf0f1; margin: 15px 0;">
+        
+        <button id="btnPosPelvisAsym" class="action-btn" style="background-color: #27ae60;">🎯 Pelvisi İşaretle (Sağ ve Sol ASIS)</button>
+        <table class="coord-table">
+            <tr><th>Anatomik Nokta</th><th>X Koordinatı</th><th>Y Koordinatı</th></tr>
+            <tr><td>Sağ Kalça Çıkıntısı <span class="tooltip-container">?<span class="tooltip-content">Sağ ASIS. Leğen kemiğinin sağ öndeki sivri çıkıntısı.</span></span></td><td id="pos_rp_x">-</td><td id="pos_rp_y">-</td></tr>
+            <tr><td>Sol Kalça Çıkıntısı <span class="tooltip-container">?<span class="tooltip-content">Sol ASIS. Leğen kemiğinin sol öndeki sivri çıkıntısı.</span></span></td><td id="pos_lp_x">-</td><td id="pos_lp_y">-</td></tr>
+        </table>
+        <label>Öğrenci Hesabı: Pelvis Asimetrisi Eğimi (m):</label>
+        <input type="number" id="pos_pa_m" placeholder="Formül: (Y_SolKalca - Y_SagKalca) / (X_SolKalca - X_SagKalca)">
+        <label>Öğrenci Hesabı: Pelvis Asimetrisi (Derece):</label>
+        <input type="number" id="pos_pa_deg" placeholder="Formül: =DERECE(MUTLAK(ATAN(m)))">
+        <label>Pelvis Asimetrisi Değerlendirmesi:</label>
+        <select id="pos_pelvis_eval" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; margin-top: 5px;">
+            <option value="">Seçiniz...</option>
+            <option value="100">Kusursuz (Sapma ≤ 2°)</option>
+            <option value="70">Hafif Asimetri (Sapma 3° - 5°)</option>
+            <option value="0">Belirgin Asimetri (Sapma > 5°)</option>
+        </select>
+    </div>
+</div>
 
                     <div class="summary-section">
                         <h3 class="step-title">Aşama 3: Statik Postür Puanlaması <span class="tooltip-container">?<span class="tooltip-content">Kullanıcının girdiği mekanik veri ve kararlar doğrultusunda nihai Statik Postür Skorunun otonom olarak üretildiği sonuç tablosudur.</span></span></h3>
@@ -586,10 +612,13 @@
                 </div>
 
                 <div id="module-jump" class="module-content">
-                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-bottom: 15px;">
-                        <h2 style="margin: 0; border: none; padding: 0;">Dikey Sıçrama (SJ / CMJ) Yükseklik ve Güç Analizi</h2>
-                        <button class="guide-btn" onclick="openGuide('jump')">📖 Kılavuz</button>
-                    </div>
+                    <div class="analysis-header" style="border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-bottom: 15px;">
+    <h2 class="analysis-title" style="margin: 0; border: none; padding: 0;">Dikey Sıçrama Analizi</h2>
+    <div class="button-group">
+        <button class="btn-video" onclick="window.open('video_player.html?id=87Z3pQYlG1Y&title=Dikey Sıçrama Analizi', '_blank')">Eğitim Videosu</button>
+        <button class="guide-btn btn-guide" onclick="openGuide('jump')">📖 Kılavuz</button>
+    </div>
+</div>
                     
                     <div class="data-group">
                         <h3 class="step-title">Aşama 1: Sporcu Verisi <span class="tooltip-container">?<span class="tooltip-content">Zirve güç hesabında kullanılmak üzere sporcunun kütlesinin sisteme girildiği aşamadır.</span></span></h3>
@@ -635,10 +664,13 @@
                 </div>
 
                 <div id="module-agility" class="module-content">
-                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-bottom: 15px;">
-                        <h2 style="margin: 0; border: none; padding: 0;">505 Çeviklik ve Yön Değiştirme Analizi</h2>
-                        <button class="guide-btn" onclick="openGuide('agility')">📖 Kılavuz</button>
-                    </div>
+                    <div class="analysis-header" style="border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-bottom: 15px;">
+    <h2 class="analysis-title" style="margin: 0; border: none; padding: 0;">505 Çeviklik Analizi</h2>
+    <div class="button-group">
+        <button class="btn-video" onclick="window.open('video_player.html?id=wSpbdwz7t5Q&title=505 Çeviklik Analizi', '_blank')">Eğitim Videosu</button>
+        <button class="guide-btn btn-guide" onclick="openGuide('agility')">📖 Kılavuz</button>
+    </div>
+</div>
                     
                     <div class="tabs">
                         <button class="mod-tab-btn agility-tab-btn active" data-target="agility-right">Sağ Bacak Dönüşü (Video 1)</button>
